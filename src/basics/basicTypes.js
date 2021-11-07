@@ -31,9 +31,13 @@ function basicTypes() {
 }
 
 function nullAndUndefined() {
-  // 已声明但未赋值的变量值为 undefined
+  // 已声明但未赋值的变量值为 undefined，undefined属于单独一个类型
   let v1;
-  console.log("v1: " + v1);
+  console.log("v1: " + v1 + ", type: " + typeof v1);
+
+  // null的类型是object
+  v1 = null;
+  console.log("v1: " + v1 + ", type: " + typeof v1);
 }
 
 basicTypes();
