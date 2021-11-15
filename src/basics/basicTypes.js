@@ -27,7 +27,13 @@ function basicTypes() {
 
   //* Boolean 类型
   let plainTrue = true;
-  // TODO:
+  if (plainTrue) {
+    console.log("calculated true: " + (1 == 1));
+  }
+
+  //* undefined
+  let undefinedValue;
+  console.log(undefinedValue);
 }
 
 function nullAndUndefined() {

@@ -1,4 +1,4 @@
-# JavaScript基础
+# JavaScript基础 - 代码结构和变量类型
 ## 位置
 1. 行内（inline）
    ```html
@@ -112,4 +112,52 @@ console.log(isGreater); // true
 ### undefined
 `undefined`同样也是自成类型的一个特殊值，当一个变量已被声明但未被赋值时，它的值就是undefined。
 
-### object
+### object 和 symbol
+object和symbol以外为“原始类型”。对Object的笔记参见[这个链接]()。
+
+symbol用于创建对象的唯一标识符。
+
+### typeof 运算符
+typeof用于返回参数的类型，支持以下两种语法形式：
+- 运算符：`typeof param`
+- 函数：`typeof(param)`
+单独调用typeof会返回字符串形式的数据类型。
+示例如下：
+```js
+typeof undefined // "undefined"
+
+typeof 0 // "number"
+
+typeof 10n // "bigint"
+
+typeof true // "boolean"
+
+typeof "foo" // "string"
+
+typeof Symbol("id") // "symbol"
+
+typeof Math // "object"； Math是一个JS内建对象
+
+typeof null // "object"
+
+typeof alert // "function"
+```
+
+## 总结
+JavaScript 中有八种基本的数据类型（前七种为基本数据类型，也称为原始类型，而 object 为复杂数据类型）。
+
+- number 用于任何类型的数字：整数或浮点数，在 ±(253-1) 范围内的整数。
+- bigint 用于任意长度的整数。
+- string 用于字符串：一个字符串可以包含 0 个或多个字符，所以没有单独的单字符类型。
+- boolean 用于 true 和 false。
+- null 用于未知的值 —— 只有一个 null 值的独立类型。
+- undefined 用于未定义的值 —— 只有一个 undefined 值的独立类型。
+- symbol 用于唯一的标识符。
+- object 用于更复杂的数据结构。
+
+我们可以通过 typeof 运算符查看存储在变量中的数据类型。
+
+两种形式：typeof x 或者 typeof(x)。
+以字符串的形式返回类型名称，例如 "string"。
+
+typeof null 会返回 "object" —— 这是 JavaScript 编程语言的一个错误，实际上它并不是一个 object。
