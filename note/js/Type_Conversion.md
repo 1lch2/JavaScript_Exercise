@@ -48,3 +48,9 @@ Boolean(0); // false
 
 Boolean("0"); // true；常见陷阱
 ```
+
+除了上述方法，还可以使用两个“非”运算符来将一个值转换为布尔类型。因为一个`!`会将值转换为布尔型并取反，使用`!!`就可以实现转换的效果。
+```js
+console.log(!!""); // false
+console.log(!!"non-empty"); // true
+```
