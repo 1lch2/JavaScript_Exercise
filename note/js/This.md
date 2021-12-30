@@ -109,10 +109,44 @@ setTimeout(function(){
 > 换句话说，boundFunc 调用就像绑定了 this 的 func。
 
 ### new 绑定
+构造函数通常有两个约定：
+1. 命名以大写字母开头
+2. 只能使用`new`操作符来执行
 
+使用 new 调用函数会执行以下操作
+1. 创建一个空对象，构造函数中的this指向这个空对象
+2. 这个新对象被执行 [[原型]] 连接
+3. 执行构造函数方法，属性和方法被添加到this引用的对象中
+4. 如果构造函数中没有返回其它对象，那么返回this，即创建的这个的新对象，否则，返回构造函数中返回的对象。
 
 ### 绑定例外
 给bing，apply，call的`thisArg`传入null或undefined时，会忽略这个参数，调用时使用默认绑定规则。
 
 ### 绑定优先级
 new绑定 > 显式绑定 > 隐式绑定 > 默认绑定
+
+
+### 箭头函数
+箭头函数内的this继承自外层代码块
+
+```js
+let obj = {
+    name: "a", 
+    hi: () => {
+        console.log(this)
+    }
+}
+
+obj.hi(); // window
+```
+
+```js
+let ooo = {
+    name: "b",
+    hi: function() {
+        console.log(this)
+    }
+}
+
+ooo.hi(); // ooo
+```
