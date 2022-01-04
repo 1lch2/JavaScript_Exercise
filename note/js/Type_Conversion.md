@@ -23,6 +23,7 @@ console.log(typeof("2" * "3")) // number
 | undefined      | NaN       |
 | null   | 0        |
 | true 或 false   | 1 或 0        |
+
 对于传入String类型的变量，规则如下：
 1. 首先去除字符串首尾的空格，读取剩下的纯数字字符串中的数字
 2. 若剩余字符串为空，即整个字符串都是空格，则返回0
