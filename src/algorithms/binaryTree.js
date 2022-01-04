@@ -1,4 +1,3 @@
-
 /**
  * Binary tree Node
  * @param {Number} val value of the node
