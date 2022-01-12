@@ -4,24 +4,41 @@
  * @param {TreeNode} left left sub-tree node
  * @param {TreeNode} right right sub-tree node
  */
-function TreeNode(val, left, right) {
-  this.val = (val === undefined ? 0 : val)
-  this.left = (left === undefined ? null : left)
-  this.right = (right === undefined ? null : right)
-
-  this.inOrderTraverse = function() {
-    // TODO:
+class TreeNode {
+  constructor(val, left, right) {
+    this.val = (val === undefined ? 0 : val)
+    this.left = (left === undefined ? null : left)
+    this.right = (right === undefined ? null : right)
   }
 
-  this.dfs = function() {
-    // TODO:
+  /**
+   * 先序遍历
+   * @param {String} type "recur" or "stack"
+   */
+  dfs(type) {
+    switch(type) {
+      case "recur": 
+        let res = [];
+        const dfs = (root) => {
+          if (root == null) {
+            return;
+          }
+          res.push(root.val);
+          dfs(root.left);
+          dfs(root.right);
+        }
+        dfs(this);
+        return res;
+        
+      case "stack":
+        break;
+
+      default:
+        console.error("Not valid type");
+    }
   }
 
-  this.bfs = function() {
-    // TODO:
-  }
-
-  this.serialize = function() {
-    // TODO:
+  bfs() {
+    // TODO
   }
 }
