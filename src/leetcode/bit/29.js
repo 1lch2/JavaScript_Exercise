@@ -24,9 +24,52 @@
  * @param {number} divisor
  * @return {number}
  */
-var divide = function(dividend, divisor) {
+var divide = function (dividend, divisor) {
   const MAX_VALUE = 2 ** 31 - 1;
   const MIN_VALUE = -(2 ** 31);
 
-  // TODO:
+  if (dividend === 0) {
+    return 0;
+  }
+
+  if (dividend === MIN_VALUE && divisor === -1) {
+    return MAX_VALUE;
+  }
+
+  // 异或结果为负数时，两数符号相异
+  let negative = (dividend ^ divisor) < 0;
+  // 左移次数之和
+  let res = 0
+
+  dividend = Math.abs(dividend);
+  divisor = Math.abs(divisor);
+
+  if (dividend < divisor) {
+    return 0;
+  }
+
+  // 循环对被除数减去左移后的除数，累加左移次数对应的2次幂
+  // 直到无法被整除为止
+  while (true) {
+    k = divisor; // 保存除数副本
+    let i = 0; // 记录左移次数
+
+    // 循环左移检查，同时注意不能溢出到负数
+    while ((k << 1) < dividend && (k << 1) > 0) {
+      k = k << 1;
+      i++;
+    }
+    res += (1 << i); // 除数左移次数的2次幂，即乘法因数
+    dividend -= k;
+
+    if (dividend < divisor) {
+      // 当被除数已经小于除数时，处理返回结果
+      res = negative ? -res : res;
+      return res > MAX_VALUE ? MAX_VALUE : res
+    }
+  }
 };
+
+(function() {
+  let a = divide(2147483647, 2);
+})();
