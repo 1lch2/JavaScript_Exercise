@@ -38,7 +38,7 @@ class TreeNode {
       dfs(this);
       return res;
     }
-    
+
     // 迭代模式
     const stack = () => {
       let res = [];
@@ -82,18 +82,18 @@ class TreeNode {
   bfs() {
     let res = [];
     let root = this;
-    if(root == null) {
+    if (root == null) {
       return res;
     }
 
     let queue = [root];
-    while(queue.length != 0) {
+    while (queue.length != 0) {
       let current = queue.shift();
       res.push(current.val)
-      if(current.left !== null) {
+      if (current.left !== null) {
         queue.push(current.left)
       }
-      if(current.right !== null) {
+      if (current.right !== null) {
         queue.push(current.right)
       }
     }
@@ -107,22 +107,22 @@ class TreeNode {
   levelOrderTraverse() {
     let res = [];
     let root = this;
-    if(root == null) {
+    if (root == null) {
       return res;
     }
-  
+
     let queue = [root];
-    while(queue.length !== 0) {
+    while (queue.length !== 0) {
       let temp = [];
       let l = queue.length; // 记录当前层的节点数
-      while(l > 0) {
+      while (l > 0) {
         // 将下一层的节点压入队列
         let current = queue.shift();
         temp.push(current.val);
-        if(current.left != null) {
+        if (current.left != null) {
           queue.push(current.left);
         }
-        if(current.right != null) {
+        if (current.right != null) {
           queue.push(current.right)
         }
         l--;
@@ -143,7 +143,7 @@ class TreeNode {
     // 递归方法
     const recur = () => {
       const traverse = (root) => {
-        if(root == null) {
+        if (root == null) {
           return;
         }
         traverse(root.left);
@@ -159,7 +159,7 @@ class TreeNode {
       let stack = [];
       let root = this;
       stack.push(root);
-      while(stack.length !== 0) {
+      while (stack.length !== 0) {
         let current = stack.pop();
         // 避免将空节点压入栈
         if (current === null) {
@@ -171,7 +171,7 @@ class TreeNode {
         // 仅当节点未访问过（判断节点类型）时入栈
         if (current.constructor.name === this._TYPE_NAME) {
           // 按反方向入栈
-          stack.push(current.val);  // 压入值类型，标记为已访问
+          stack.push(current.val); // 压入值类型，标记为已访问
           stack.push(current.right);
           stack.push(current.left);
         } else {
@@ -182,9 +182,9 @@ class TreeNode {
       return res;
     }
 
-    if(type === "recur") {
+    if (type === "recur") {
       return recur();
-    } else if(type === "stack") {
+    } else if (type === "stack") {
       return stack();
     } else {
       console.error("not valid type");
@@ -198,12 +198,12 @@ class TreeNode {
    */
   inorderTraverse(type) {
     let res = [];
-    
+
     // 递归方法
     const recur = () => {
       let root = this;
       const traverse = (root) => {
-        if(root == null) {
+        if (root == null) {
           return;
         }
         traverse(root.left);
@@ -218,12 +218,12 @@ class TreeNode {
     const stack = () => {
       let root = this;
       let stack = [root];
-      while(stack.length !== 0) {
+      while (stack.length !== 0) {
         let current = stack.pop();
-        if(current == null) {
+        if (current == null) {
           continue;
         }
-        if(current.constructor.name === this._TYPE_NAME) {
+        if (current.constructor.name === this._TYPE_NAME) {
           stack.push(current.right);
           stack.push(current.val);
           stack.push(current.left);
@@ -234,14 +234,80 @@ class TreeNode {
       return res;
     }
 
-    if(type === "recur") {
+    if (type === "recur") {
       return recur();
-    } else if(type === "stack") {
+    } else if (type === "stack") {
       return stack();
     } else {
       console.error("not valid type");
     }
   }
+  /**
+   * Encodes a tree to a single string.
+   *
+   * @param {TreeNode} root root node
+   * @return {string} serialized string of nodes
+   */
+  serialize() {
+    let root = this;
+    if (root == null) {
+      return [];
+    }
+
+    let queue = [root];
+    let res = [];
+
+    while (queue.length > 0) {
+      let current = queue.shift();
+      // 将null也推入队列
+      if (current !== null) {
+        res.push(current.val);
+        queue.push(current.left);
+        queue.push(current.right);
+      } else {
+        res.push("null");
+      }
+    }
+    while (res[res.length - 1] === "null") {
+      res.pop()
+    }
+    return res;
+  }
+
+  /**
+   * Decodes your encoded data to tree.
+   *
+   * @param {string} data
+   * @return {TreeNode} root node
+   */
+  deserialize(data) {
+    if (data.length === 0 || data.trim() === "") {
+      return null;
+    }
+
+    let nodeList = data.split(" ");
+    let root = new TreeNode(nodeList.shift());
+    let queue = [root];
+
+    while (nodeList.length > 0) {
+      let currentRoot = queue.shift();
+      let leftVal = nodeList.shift();
+      let rightVal = nodeList.shift();
+
+      if (leftVal !== "null" && leftVal !== undefined) {
+        let left = new TreeNode(leftVal);
+        currentRoot.left = left
+        queue.push(left)
+      }
+      if (rightVal !== "null" && rightVal !== undefined) {
+        let right = new TreeNode(rightVal);
+        currentRoot.right = right;
+        queue.push(right);
+      }
+    }
+    return root;
+  }
+
 }
 
 (function () {
@@ -249,7 +315,7 @@ class TreeNode {
   //      / \
   //     1   2
   //    / \
-  //   3  4
+  //   3   4
   //  /
   // 5
   let root = new TreeNode(0);
@@ -267,4 +333,7 @@ class TreeNode {
 
   let traverseRes = root.dfs("recur");
   console.log(traverseRes);
+
+  let serialized = root.serialize();
+  console.log(serialized.join(" "));
 })();
