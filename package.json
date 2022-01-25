@@ -1,0 +1,22 @@
+{
+  "name": "javascript_exercise",
+  "version": "1.0.0",
+  "description": "This is a personal repository for JavaScript exercices plus some frontend developing notes.",
+  "main": "",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/1lch2/JavaScript_Exercise.git"
+  },
+  "author": "1lch2@163.com",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/1lch2/JavaScript_Exercise/issues"
+  },
+  "homepage": "https://github.com/1lch2/JavaScript_Exercise#readme",
+  "devDependencies": {
+    "eslint": "^8.7.0"
+  }
+}

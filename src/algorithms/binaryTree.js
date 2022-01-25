@@ -11,9 +11,9 @@ class TreeNode {
    * @param {TreeNode} right right sub-tree node
    */
   constructor(val, left, right) {
-    this.val = (val === undefined ? 0 : val)
-    this.left = (left === undefined ? null : left)
-    this.right = (right === undefined ? null : right)
+    this.val = (val === undefined ? 0 : val);
+    this.left = (left === undefined ? null : left);
+    this.right = (right === undefined ? null : right);
   }
 
   /**
@@ -34,10 +34,10 @@ class TreeNode {
         res.push(root.val);
         dfs(root.left);
         dfs(root.right);
-      }
+      };
       dfs(this);
       return res;
-    }
+    };
 
     // 迭代模式
     const stack = () => {
@@ -49,7 +49,7 @@ class TreeNode {
         return stack;
       }
 
-      stack.push(root)
+      stack.push(root);
       while (stack.length !== 0) {
         let current = stack.pop();
         res.push(current.val);
@@ -62,14 +62,14 @@ class TreeNode {
         }
       }
       return res;
-    }
+    };
 
     if (type === "recur") {
       return recur();
     } else if (type === "stack") {
       return stack();
     } else {
-      console.error("not valid type.")
+      console.error("not valid type.");
     }
   }
 
@@ -89,12 +89,12 @@ class TreeNode {
     let queue = [root];
     while (queue.length != 0) {
       let current = queue.shift();
-      res.push(current.val)
+      res.push(current.val);
       if (current.left !== null) {
-        queue.push(current.left)
+        queue.push(current.left);
       }
       if (current.right !== null) {
-        queue.push(current.right)
+        queue.push(current.right);
       }
     }
     return res;
@@ -123,11 +123,11 @@ class TreeNode {
           queue.push(current.left);
         }
         if (current.right != null) {
-          queue.push(current.right)
+          queue.push(current.right);
         }
         l--;
       }
-      res.push(temp)
+      res.push(temp);
     }
     return res;
   }
@@ -149,10 +149,10 @@ class TreeNode {
         traverse(root.left);
         traverse(root.right);
         res.push(root.val);
-      }
+      };
       traverse(this);
       return res;
-    }
+    };
 
     // 迭代方法
     const stack = () => {
@@ -180,7 +180,7 @@ class TreeNode {
         }
       }
       return res;
-    }
+    };
 
     if (type === "recur") {
       return recur();
@@ -209,10 +209,10 @@ class TreeNode {
         traverse(root.left);
         res.push(root.val);
         traverse(root.right);
-      }
+      };
       traverse(root);
       return res;
-    }
+    };
 
     // 迭代方法
     const stack = () => {
@@ -228,11 +228,11 @@ class TreeNode {
           stack.push(current.val);
           stack.push(current.left);
         } else {
-          res.push(current)
+          res.push(current);
         }
       }
       return res;
-    }
+    };
 
     if (type === "recur") {
       return recur();
@@ -269,7 +269,7 @@ class TreeNode {
       }
     }
     while (res[res.length - 1] === "null") {
-      res.pop()
+      res.pop();
     }
     return res;
   }
@@ -296,8 +296,8 @@ class TreeNode {
 
       if (leftVal !== "null" && leftVal !== undefined) {
         let left = new TreeNode(leftVal);
-        currentRoot.left = left
-        queue.push(left)
+        currentRoot.left = left;
+        queue.push(left);
       }
       if (rightVal !== "null" && rightVal !== undefined) {
         let right = new TreeNode(rightVal);
