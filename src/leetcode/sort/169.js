@@ -18,8 +18,53 @@
  * @return {number}
  */
 var majorityElement = function(nums) {
-  const divide = (nums) => {
-    // TODO
+  /**
+   * 统计区间内目标元素的数量
+   * 
+   * @param {Number[]} nums 数组
+   * @param {Number} low 起始下标
+   * @param {Number} high 结束下标
+   * @param {Number} target 待统计数量的元素
+   * @returns 区间内目标元素的数量
+   */
+  const count = (nums, low, high, target) => {
+    let count = 0;
+    for (let i = low; i <= high; i++) {
+      if(nums[i] === target) {
+        count++;
+      }
+    }
+    return count;
   };
 
+  /**
+   * 分治获取区间内数量最多的元素
+   * 
+   * @param {Number[]} nums 输入数组
+   * @param {Number} low 起始下标
+   * @param {Number} high 结束下标
+   * @returns 划分的区间内数量最多的元素
+   */
+  const divide = (nums, low, high) => {
+    // 区间大小为1时直接返回当前元素
+    if(low === high) {
+      return nums[low];
+    }
+
+    let mid = Math.floor((high + low) / 2);
+
+    let left = divide(nums, low, mid);
+    let right = divide(nums, mid + 1, high);
+
+    if(left === right) {
+      return left;
+    }
+
+    let leftCount = count(nums, low, high, left);
+    let rightCount = count(nums, low, high, right);
+
+    return leftCount > rightCount ? left : right;
+  };
+
+  return divide(nums, 0, nums.length - 1);
 };
