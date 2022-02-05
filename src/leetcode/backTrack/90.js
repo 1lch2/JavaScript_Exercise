@@ -36,7 +36,7 @@ var subsetsWithDup = function(nums) {
       backtrack(i+1, path); // 递归进入下一层
       path.pop(); // 撤销本次选择
     }
-  }
-  backtrack(0, [])
+  };
+  backtrack(0, []);
   return res;
-}
+};
