@@ -17,7 +17,7 @@ const conbinationBit = (nums) => {
         temp.push(nums[j]);
       }
     }
-    res.push(temp)
+    res.push(temp);
   }
   return res;
 };
@@ -43,15 +43,15 @@ const conbinationBackTrack = (nums) => {
     res.push(list.slice()); // 复制一份list对象
 
     // 当下标越过数组长度时结束递归
-    for(let i = index; i < nums.length; i++) {
+    for (let i = index; i < nums.length; i++) {
       list.push(nums[i]);
-      backtrack(i+1, list); // 递归进入下一层
+      backtrack(i + 1, list); // 递归进入下一层
       list.pop(); // 撤销当前选择
     }
-  }
-  backtrack(0, [])
+  };
+  backtrack(0, []);
   return res;
-}
+};
 
 /**
  * 全组合（子集）
@@ -61,24 +61,28 @@ const conbinationBackTrack = (nums) => {
 const combinationRepeatable = (nums) => {
   let res = [];
   let len = nums.length;
-  
+
   // 保证元素有序排列
   nums.sort();
 
   const backtrack = (index, path) => {
     res.push(path.slice());
-    for(let i = index; i < len; i++) {
+    for (let i = index; i < len; i++) {
       // 检查是否和前一个元素重复
-      if(i > index && nums[i] === nums[i-1]) {
+      if (i > index && nums[i] === nums[i - 1]) {
         continue;
       }
       path.push(nums[i]);
-      backtrack(i+1, path); // 递归进入下一层
+      backtrack(i + 1, path); // 递归进入下一层
       path.pop(); // 撤销本次选择
     }
-  }
-  backtrack(0, [])
+  };
+  backtrack(0, []);
   return res;
-}
+};
 
-export default {conbinationBit, conbinationBackTrack}
+export default {
+  conbinationBit,
+  conbinationBackTrack,
+  combinationRepeatable
+};
