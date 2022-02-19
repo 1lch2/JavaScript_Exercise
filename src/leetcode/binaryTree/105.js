@@ -1,4 +1,4 @@
-// 同剑指07
+// JZ07
 
 // 给定一棵树的前序遍历 preorder 与中序遍历  inorder。请构造二叉树并返回其根节点。
 
@@ -26,9 +26,9 @@
  * @param {TreeNode} right right sub-tree
  */
 function TreeNode(val, left, right) {
-  this.val = (val === undefined ? 0 : val)
-  this.left = (left === undefined ? null : left)
-  this.right = (right === undefined ? null : right)
+  this.val = (val === undefined ? 0 : val);
+  this.left = (left === undefined ? null : left);
+  this.right = (right === undefined ? null : right);
 }
 
 /**
@@ -47,7 +47,7 @@ var buildTree = function (preorder, inorder) {
   let root = new TreeNode(rootVal);
 
   // 根节点坐标
-  let rootIndex = inorder.indexOf(rootVal)
+  let rootIndex = inorder.indexOf(rootVal);
 
   // 切割中序遍历数组获得左右子树部分
   let leftInorder = inorder.slice(0, rootIndex);
@@ -65,4 +65,48 @@ var buildTree = function (preorder, inorder) {
   root.left = leftTree;
   root.right = rightTree;
   return root;
+};
+
+/**
+ * 二解
+ * @param {Number[]} preorder 先序
+ * @param {Number[]} inorder 中序
+ * @returns {TreeNode} 树的根节点
+ */
+var _buildTree = function(preorder, inorder) {
+  if(preorder.length === 0) {
+    return null;
+  }
+
+  let LEN = preorder.length;
+  // 将中序遍历每个节点值和下标映射到map
+  let map = new Map();
+  for(let i = 0; i < LEN; i++) {
+    map.set(inorder[i], i);
+  }
+
+  /**
+   * 
+   * @param {Number} preroot 先序遍历中的根节点下标
+   * @param {Number} inleft 中序遍历的左边界下标
+   * @param {Number} inright 中序遍历的右边界下标
+   */
+  const getTree = (preroot, inleft, inright) => {
+    // 左右下标相遇代表区间为空
+    if(inleft > inright) {
+      return null;
+    }
+    let rootVal = preorder[preroot];
+    let root = new TreeNode(rootVal);
+
+    let i = map.get(rootVal); // 中序遍历的根节点下标
+    root.left = getTree(preroot + 1, inleft, i - 1);
+
+    // 先序遍历的当前子树起始下标为preroot， 左子树长度为i - inleft
+    // + 1 后即为先序遍历中右子树的第一个下标，为右子树在先序遍历的根节点下标
+    root.right = getTree(i - inleft + 1 + preroot, i + 1, inright);
+    return root;
+  };
+
+  return getTree(0, 0, LEN - 1);
 };
