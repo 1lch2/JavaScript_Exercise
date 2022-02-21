@@ -69,6 +69,8 @@ function Child(name) {
 Child.prototype = new Father();
 // 将构造函数重新指回正确的函数
 Child.prototype.constructor = Child;
+
+new Child("kid").hi(); // kid
 ```
 
 上述操作中，使用`new Father()`重新赋值Child的原型对象后，Child的原型对象的构造函数也会被指向`Father`，导致如下代码成立：
@@ -109,5 +111,107 @@ object()对传入其中的对象执行了一次浅复制，将构造函数F的�
 在ES5中新增了`Object.create()`方法，可以替代上述的`object()`。
 
 ## 寄生式继承
+在原型式继承的基础上，增强对象，返回构造函数。主要作用就是为构造函数新增属性和方法，以增强函数。
 
-待续
+```js
+function object(obj) {
+    // 子类的构造函数
+    function Son() {
+    }
+
+    Son.prototype = obj;
+    return new Son();
+}
+
+function createAnother(original) {
+    let clone = object(original);
+    // 增强对象
+    clone.sayHi = function () {
+        console.log("hi, i'm " + this.name);
+    }
+    return clone
+}
+
+function Father() {
+    this.name = "father";
+}
+
+let father = new Father();
+let son = createAnother(new Father());
+
+console.log(father.name); // father
+console.log(son.name); // father
+```
+
+这种继承方式仍然无法传递参数
+
+## 寄生组合式继承
+寄生模式借用构造函数传递参数
+
+```js
+function inheritPrototype(Son, Father){
+  // 创建对象，创建父类原型的一个副本
+  let prototype = Object.create(Father.prototype); 
+  // 增强对象，弥补因重写原型而失去的默认的constructor 属性
+  prototype.constructor = Son;
+  // 指定对象，将新创建的对象赋值给子类的原型
+  Son.prototype = prototype;
+}
+
+// 父类初始化实例属性和原型属性
+function Father(name){
+  this.name = name;
+  this.colors = ["red", "blue", "green"];
+}
+Father.prototype.sayName = function(){
+  alert(this.name);
+};
+
+// 借用构造函数传递增强子类实例属性（支持传参和避免篡改）
+function Son(name, age){
+  Son.call(this, name);
+  this.age = age;
+}
+
+// 将父类原型指向子类
+inheritPrototype(Son, Father);
+
+// 新增子类原型属性
+Son.prototype.sayAge = function(){
+  alert(this.age);
+}
+
+var son1 = new Son("xyc", 23);
+var son2 = new Son("lxy", 23);
+
+son1.colors.push("2"); // ["red", "blue", "green", "2"]
+son2.colors.push("3"); // ["red", "blue", "green", "3"]
+```
+
+## ES6中的`extends`继承
+不能说和Java非常相似，只能说一模一样。
+
+需要注意的是构造函数并非是和类名同名的函数，而是叫做`constructor()`。如果没有显式指定构造函数，则会添加默认方法。
+
+子类在自己的构造函数中必须调用`super()`来通过父类构造函数完成初始化，否则会报错（ReferenceError）。同时，子类的构造函数中只有在调用`super()`之后才能使用`this`。
+```js
+class Person {
+    constructor(name) {
+        this.name = name || "default";
+    }
+
+    hi() {
+        console.log("hi, i'm " + this.name);
+    }
+}
+
+class Student extends Person {
+    constructor(name, age) {
+        super(name);
+        this.age = age;
+    }
+}
+```
+
+### 关于语法糖
+`class`不完全是语法糖，通过`class`创建的函数具有特殊的内部属性标记 `[[IsClassConstructor]]: true`。同时，类方法不可枚举。 类定义将 "prototype" 中的所有方法的 enumerable 标志设置为 false。

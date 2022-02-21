@@ -16,3 +16,4 @@ See `/src/leetcode` for leetcode exercise answers written in JS.
 ## Reference
 - [MDN](https://developer.mozilla.org/)
 - [JavaScript.Info](https://zh.javascript.info/)
+- [ECMAScript 6 入门](https://es6.ruanyifeng.com/)
