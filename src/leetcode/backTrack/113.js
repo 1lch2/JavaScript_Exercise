@@ -75,8 +75,6 @@ var pathSum = function(root, targetSum) {
     path.pop();
   };
 
-  // TODO: wrong
-
   backtrack(temp, []);
   return res;
 };

@@ -108,21 +108,79 @@ function heapSort(nums) {
 }
 
 
+/**
+ * 并归排序
+ * @param {Number[]} nums 待排序数组
+ * @returns {Number[]}
+ */
+function mergeSort(nums) {
+  
+  /**
+   * 合并两个有序列表
+   * @param {Number[]} list1 
+   * @param {Number[]} list2 
+   * @returns {Number[]}
+   */
+  const merge = (list1, list2) => {
+    let res = [];
+    // 两个列表的下标
+    let i = 0;
+    let j = 0;
+
+    while(i < list1.length && j < list2.length) {
+      if(list1[i] < list2[j]) {
+        res.push(list1[i]);
+        i++;
+      } else {
+        res.push(list2[j]);
+        j++;
+      }
+    }
+
+    if(i === list1.length) {
+      res = res.concat(list2.slice(j));
+    } else {
+      res = res.concat(list1.slice(i));
+    }
+    return res;
+  };
+
+  /**
+   * 
+   * @param {Number[]} nums 
+   * @returns {Number[]}
+   */
+  const divide = (nums) => {
+    if(nums.length <= 1) {
+      return nums;
+    }
+    
+    let mid = Math.floor(nums.length / 2);
+    let left = divide(nums.slice(0, mid));
+    let right = divide(nums.slice(mid));
+  
+    return merge(left, right);
+  };
+
+  return divide(nums);
+}
+
+
 // 测试
 (function() {
-  // let testArr = [2, 3, 10, 1, 21, 4, 7, 5, 9, 12, 0, 1, 1, 30, 8];
+  let testArr = [2, 3, 10, 1, 21, 4, 7, 5, 9, 12, 0, 1, 1, 30, 8];
+  console.log(">>> Original array: " + testArr);
 
-  // console.log(">>> Original array: " + testArr);
   // console.log(">>> Bubble sort: " + bubbleSort(testArr.slice(0)));
   
   // let qsortArr = testArr.slice(0);
   // quickSortRecur(qsortArr, 0, qsortArr.length - 1);
   // console.log(">>> Quick sort: " + qsortArr);
 
+  // let heapsortArr = testArr.slice(0);
+  // heapSort(heapsortArr);
+  // console.log(">>> Heap sort: " + heapsortArr);
 
-  let testArr = [1,2,3];
-
-  let heapsortArr = testArr.slice(0);
-  heapSort(heapsortArr);
-  console.log(">>> Heap sort: " + heapsortArr);
+  let mergeSortArr = mergeSort(testArr.slice(0));
+  console.log(">>> Merge sort: " + mergeSortArr);
 })();
