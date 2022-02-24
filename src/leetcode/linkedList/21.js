@@ -20,8 +20,8 @@
 
 // Definition for singly-linked list.
 function ListNode(val, next) {
-  this.val = (val === undefined ? 0 : val)
-  this.next = (next === undefined ? null : next)
+  this.val = (val === undefined ? 0 : val);
+  this.next = (next === undefined ? null : next);
 }
 
 /**
@@ -32,7 +32,7 @@ function ListNode(val, next) {
 var mergeTwoLists = function(list1, list2) {
   // 任意链表为空则返回另一个
   if (list1 == null || list2 == null) {
-    return (list1 == null ? list2 : list1)
+    return (list1 == null ? list2 : list1);
   }
   
   let dummyHead = new ListNode(0);

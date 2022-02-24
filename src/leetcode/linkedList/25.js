@@ -38,8 +38,8 @@
  * @param {ListNode} next pointer to the next node
  */
 function ListNode(val, next) {
-  this.val = (val === undefined ? 0 : val)
-  this.next = (next === undefined ? null : next)
+  this.val = (val === undefined ? 0 : val);
+  this.next = (next === undefined ? null : next);
 }
 
 /**
@@ -54,12 +54,12 @@ var reverseKGroup = function (head, k) {
 
   // 返回头节点开始的第k个节点
   const jumpToK = (head) => {
-    let temp = head
+    let temp = head;
     for(let i = 0; i < k; i++) {
       temp = temp.next;
     }
     return temp;
-  }
+  };
 
   // 翻转指定数量节点
   const reverse = (pre) => {
@@ -78,7 +78,7 @@ var reverseKGroup = function (head, k) {
     }
     // 将前驱节点连接到反转后的头节点
     pre.next = tail;
-  }
+  };
 
   let dummyHead = new ListNode(0, head);
   let current = dummyHead;

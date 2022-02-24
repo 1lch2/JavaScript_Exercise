@@ -20,20 +20,20 @@
  * Definition for singly-linked list.
  */
 function ListNode(val, next) {
-  this.val = (val === undefined ? 0 : val)
-  this.next = (next === undefined ? null : next)
+  this.val = (val === undefined ? 0 : val);
+  this.next = (next === undefined ? null : next);
 }
 
 /**
  * @param {ListNode} head
  * @return {ListNode}
  */
-var reverseList = function (head) {
+var reverseList = function(head) {
   let p = null;
   let q = head;
   let temp = head;
 
-  while(temp != null) {
+  while (temp != null) {
     temp = q.next;
     q.next = p;
     p = q;
@@ -41,4 +41,4 @@ var reverseList = function (head) {
   }
 
   return p;
-}
+};
