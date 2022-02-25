@@ -37,26 +37,41 @@ var uniquePathsWithObstacles = function(obstacleGrid) {
   let dpState = new Array(M).fill(0).map(() => new Array(N).fill(0));
   
   // 顶部一行的初始值
-  dpState[0] = new Array(N).fill(1);
-  let obsX = obstacleGrid[0].indexOf(1);
-  if(obsX !== -1) {
-    for(let i = obsX; i < N; i++) {
-      dpState[0][i] = 0;
+  for(let obsX = 0; obsX < N; obsX++) {
+    if(obstacleGrid[0][obsX] === 0) {
+      dpState[0][obsX] = 1;
+    } else {
+      break;
     }
   }
 
   // 最左边一列的初始值
-  dpState.forEach((val, index) => {
-    if(obstacleGrid[index][0] !== 1) {
-      val[0] = 1;
+  for(let obsY = 0; obsY < M; obsY++) {
+    if(obstacleGrid[obsY][0] === 0) {
+      dpState[obsY][0] = 1;
+    } else {
+      break;
     }
-  });
+  }
+
+  // 状态方程
+  // dp[i][j] = dp[i-1][j] + dp[i][j-1], obs[i][j] != 0
+  // dp[i][j] = 0 , obs[i][j] = 0
 
   for(let i = 1; i < M; i++) {
     for(let j = 1; j < N; j++) {
-      if(obstacleGrid[i - 1][j] === 1 || obstacleGrid[i][j - 1] === 1) {
-        // TODO:
+      // 仅当当前格子没有障碍时才可到达
+      if(obstacleGrid[i][j] === 0) {
+        dpState[i][j] = dpState[i - 1][j] + dpState[i][j - 1];
       }
     }
   }
+
+  return dpState[M - 1][N - 1];
 };
+
+(function(){
+  console.log(uniquePathsWithObstacles([[0,0,0],[0,1,0],[0,0,0]]));
+  console.log(uniquePathsWithObstacles([[0,1],[0,0]]));
+  console.log(uniquePathsWithObstacles([[0,0]]));
+})();
