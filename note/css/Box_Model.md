@@ -16,5 +16,20 @@
     margin: 10px;
 }
 ```
+所以 .box 元素内容的宽度就为 200px，而实际的宽度则是 
 
-// TODO
+width + padding-left + padding-right + border-left-width + border-right-width = 200 + 10 + 10 + 1 + 1 = 222。
+
+在 CSS3 中新增了一个属性 `box-sizing`，允许开发者来指定盒子使用什么标准，它有 2 个值：
+- `content-box`：标准盒模型；
+- `border-box`：IE 盒模型；
+
+## 叠加原则
+### 行内元素 
+margin-top/margin-bottom对于上下元素无效，margin-left/margin-right有效
+
+### 块级元素
+对于相邻的块级元素margin-top和margin-bottom两者叠加按照一定的规则：
+- 都是正数 `margin` 值取最大值
+- 都是负数 `margin` 值取最小值
+- 两者正负相反，`margin` 值取两者之和
