@@ -1,0 +1,32 @@
+<head>
+    <link rel="stylesheet" href="twoColumns.css">
+</head>
+
+<body>
+    <div class="layout">
+        <!-- 边栏定宽，主栏自适应 -->
+        <h4>方法一：float + overflow (BFC原理)</h4>
+        <section>
+            <aside class="orange float">aside</aside>
+            <main class="green hidden">main</main>
+        </section>
+
+        <h4>方法二：float + margin</h4>
+        <div class="section">
+            <aside class="orange float">aside</aside>
+            <main class="green margin">main</main>
+        </div>
+
+        <h4>方法三：flex</h4>
+        <div class="section flex">
+            <aside class="orange">aside</aside>
+            <main class="green">main</main>
+        </div>
+
+        <h4>方法四：grid</h4>
+        <div class="section grid">
+            <aside class="orange">aside</aside>
+            <main class="green">main</main>
+        </div>
+    </div>
+</body>

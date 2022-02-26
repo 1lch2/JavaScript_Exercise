@@ -1,0 +1,53 @@
+.layout {
+    color: #fff;
+    padding: 0 100px;
+    min-width: 500px;
+  }
+  h4 {
+    position: relative;
+    color: #333;
+    margin: 20px 0 10px;
+  }
+  h4::before {
+    content: '#';
+    position: absolute;
+    left: -20px;
+    top: -1px;
+    font-size: 18px;
+    color: #38ab89;
+  }
+  section {
+    margin-bottom: 50px;
+  }
+  aside {
+    width: 200px;
+    height: 50px;
+  }
+  main {
+    height: 100px;
+  }
+  .margin {
+    margin-left: 200px;
+  }
+  .hidden {
+    overflow: hidden;
+  }
+  .float {
+    float: left;
+  }
+  .orange {
+    background-color: orange;
+  }
+  .green {
+    background-color: #38ab89;
+  }
+  .flex {
+    display: flex;
+  }
+  .flex main {
+    flex: 1;
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: 200px auto;
+  }
