@@ -29,16 +29,57 @@ function ListNode(val, next) {
  * @return {ListNode}
  */
 var reverseList = function(head) {
-  let p = null;
-  let q = head;
-  let temp = head;
+  // 尾指针，指向当前节点被重新定向的目标
+  let prev = null;
+  // 头指针，指向当前准备操作的指针
+  let curr = head;
+  // 由于链表不能反向遍历，必须保存一份下一个目标的指针
+  let temp;
 
-  while (temp != null) {
-    temp = q.next;
-    q.next = p;
-    p = q;
-    q = temp;
+  while(curr != null) {
+    temp = curr; // 保存一份当前指针
+    curr = curr.next; // 指向后一个节点，供下一轮迭代使用
+    temp.next = prev; // 反转指针方向
+    prev = temp; // 尾指针向后移动，准备下一轮迭代
+  }
+  return prev;
+};
+
+/**
+ * 反转链表递归版
+ * @copyright https://labuladong.gitee.io/algo/2/17/17/
+ * @param {ListNode} head root node
+ */
+var reverseListRecur = function(head) {
+  // 只剩下一个节点或到达空节点时，直接返回当前节点
+  if(head == null || head.next == null) {
+    return head;
   }
 
-  return p;
+  let newHead = reverseListRecur(head.next); // 递归进入，反转头结点之后的部分
+  head.next.next = head; // 将反转后的尾节点指向反转前的头结点
+  head.next = null;
+  return newHead;
 };
+
+(function(){
+  let root = new ListNode(0);
+  root.next = new ListNode(1);
+  root.next.next = new ListNode(2);
+  root.next.next.next = new ListNode(3);
+  root.next.next.next.next = new ListNode(4);
+  root.next.next.next.next.next = new ListNode(5);
+
+  const print = (head) => {
+    let temp = head;
+    let res = [];
+    while(temp != null) {
+      res.push(temp.val);
+      temp = temp.next;
+    }
+    return res;
+  };
+
+  let res = reverseList(root);
+  console.log(print(res));
+})();

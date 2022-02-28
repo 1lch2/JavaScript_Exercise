@@ -1,5 +1,8 @@
 /**
  * 节流函数 - 时间戳写法
+ * 
+ * 函数执行一次之后，该函数在指定的时间期限内不再工作
+ * 
  * @param {Function} fn 
  * @param {Number} delay 
  * @returns {Function}

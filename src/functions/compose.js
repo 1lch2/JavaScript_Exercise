@@ -15,9 +15,9 @@ function composeForEach(...funcs) {
       } else {
         res = fn(res);
       }
-    })
+    });
     return res;
-  }
+  };
 }
 
 /**
@@ -28,7 +28,7 @@ function composeForEach(...funcs) {
 function composeReduce(...funcs) {
   return function (input) {
     funcs.reduceRight((prev, fn) => fn(prev), input);
-  }
+  };
 }
 
 function testCompose() {

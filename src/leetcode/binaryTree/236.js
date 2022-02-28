@@ -30,9 +30,9 @@
  * @param {TreeNode} right right sub-tree
  */
 function TreeNode(val, left, right) {
-  this.val = (val === undefined ? 0 : val)
-  this.left = (left === undefined ? null : left)
-  this.right = (right === undefined ? null : right)
+  this.val = (val === undefined ? 0 : val);
+  this.left = (left === undefined ? null : left);
+  this.right = (right === undefined ? null : right);
 }
 
 /**
@@ -41,7 +41,7 @@ function TreeNode(val, left, right) {
  * @param {TreeNode} q
  * @return {TreeNode}
  */
-var lowestCommonAncestor = function (root, p, q) {
+var lowestCommonAncestor = function(root, p, q) {
   if (root === null || p === null || q === null) {
     return null;
   }
@@ -83,7 +83,7 @@ var lowestCommonAncestor = function (root, p, q) {
     if (left !== null && right !== null) {
       return root;
     }
-  }
+  };
 
   return find(root);
 };

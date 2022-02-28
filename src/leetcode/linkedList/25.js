@@ -43,11 +43,60 @@ function ListNode(val, next) {
 }
 
 /**
+ * 
+ * @copyright https://labuladong.gitee.io/algo/2/17/18/
+ * 
  * @param {ListNode} head
  * @param {number} k
  * @return {ListNode}
  */
-var reverseKGroup = function (head, k) {
+var reverseKGroup = function(head, k) {
+  if(head == null) {
+    return null;
+  }
+
+  /**
+   * 反转指定两个节点之间的链表
+   * @param {ListNode} prev 
+   * @param {ListNode} end 
+   */
+  const reverse = (head, end) => {
+    let prev = null;
+    let curr = head;
+    let temp;
+    while(curr != end) {
+      temp = curr;
+      curr = curr.next;
+      temp.next = prev;
+      prev = temp;
+    }
+    return prev;
+  };
+
+
+  let curr = head;
+  let end = head;
+  for(let i = 0; i < k; i++) {
+    if(end == null) {
+      return head;
+    }
+    end = end.next;
+  }
+
+  let newHead = reverse(curr, end);
+  curr.next = reverseKGroup(end, k);
+  return newHead;
+};
+
+
+/**
+ * 原创写法
+ * 
+ * @param {ListNode} head
+ * @param {number} k
+ * @return {ListNode}
+ */
+var reverseKGroupSlow = function(head, k) {
   if (head == null || head.length < k || k == 1) {
     return head;
   }
@@ -55,7 +104,7 @@ var reverseKGroup = function (head, k) {
   // 返回头节点开始的第k个节点
   const jumpToK = (head) => {
     let temp = head;
-    for(let i = 0; i < k; i++) {
+    for (let i = 0; i < k; i++) {
       temp = temp.next;
     }
     return temp;
@@ -66,11 +115,11 @@ var reverseKGroup = function (head, k) {
     let head = pre.next;
     let tail = jumpToK(pre);
     let end = tail.next;
-    
+
     tail = end;
 
     // 尾插法反转
-    while(pre.next != end) {
+    while (pre.next != end) {
       pre.next = head.next;
       head.next = tail;
       tail = head;
@@ -85,7 +134,7 @@ var reverseKGroup = function (head, k) {
 
   let length = 0;
   let temp = head;
-  while(temp != null) {
+  while (temp != null) {
     temp = temp.next;
     length++;
   }
