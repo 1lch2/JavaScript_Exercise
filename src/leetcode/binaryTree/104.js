@@ -1,3 +1,4 @@
+/* eslint-disable no-irregular-whitespace */
 // 给定一个二叉树，找出其最大深度。
 
 // 二叉树的深度为根节点到最远叶子节点的最长路径上的节点数。
@@ -20,10 +21,10 @@
  * @param {TreeNode} left left sub-tree
  * @param {TreeNode} right right sub-tree
  */
- function TreeNode(val, left, right) {
-  this.val = (val === undefined ? 0 : val)
-  this.left = (left === undefined ? null : left)
-  this.right = (right === undefined ? null : right)
+function TreeNode(val, left, right) {
+  this.val = (val === undefined ? 0 : val);
+  this.left = (left === undefined ? null : left);
+  this.right = (right === undefined ? null : right);
 }
 
 /**
@@ -33,7 +34,7 @@
  * @return {number}
  */
 var maxDepth = function(root) {
-  if(root === null) {
+  if (root === null) {
     return 0;
   }
 
@@ -41,16 +42,16 @@ var maxDepth = function(root) {
   let max = 1;
 
   const dfs = (root, level) => {
-    if(root === null) {
+    if (root === null) {
       return;
     }
     // 每层递归不重用level避免重复增加
-    let currentLevel = level
+    let currentLevel = level;
     currentLevel++;
     max = currentLevel > max ? currentLevel : max;
     dfs(root.left, currentLevel);
     dfs(root.right, currentLevel);
-  }
+  };
 
   dfs(root, 0);
   return max;
@@ -62,9 +63,9 @@ var maxDepth = function(root) {
  * @param {TreeNode} root
  * @return {number}
  */
-var maxDepth = function(root) {
+var maxDepthDfs = function(root) {
   const max = (root) => {
-    if(root === null) {
+    if (root === null) {
       return 0;
     } else {
       // 当前节点的深度等于左右子树中最深的那个，再加自身节点的1高度
@@ -72,7 +73,7 @@ var maxDepth = function(root) {
       let rightHeight = max(root.right);
       return Math.max(leftHeight, rightHeight) + 1;
     }
-  }
+  };
 
   return max(root);
-}
+};
