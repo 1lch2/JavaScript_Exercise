@@ -67,12 +67,11 @@ var maxDepthDfs = function(root) {
   const max = (root) => {
     if (root === null) {
       return 0;
-    } else {
-      // 当前节点的深度等于左右子树中最深的那个，再加自身节点的1高度
-      let leftHeight = max(root.left);
-      let rightHeight = max(root.right);
-      return Math.max(leftHeight, rightHeight) + 1;
-    }
+    } 
+    // 当前节点的深度等于左右子树中最深的那个，再加自身节点的1高度
+    let leftHeight = max(root.left);
+    let rightHeight = max(root.right);
+    return Math.max(leftHeight, rightHeight) + 1;
   };
 
   return max(root);

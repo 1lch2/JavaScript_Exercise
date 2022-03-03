@@ -87,3 +87,33 @@ var lowestCommonAncestor = function(root, p, q) {
 
   return find(root);
 };
+
+/**
+ * @param {TreeNode} root
+ * @param {TreeNode} p
+ * @param {TreeNode} q
+ * @return {TreeNode}
+ */
+var lowestCommonAncestor_new = function(root, p, q) {
+
+  const find = (root, p, q) => {
+    if(root === q || root === q || root === null) {
+      return root;
+    }
+
+    let left = find(root.left, p, q);
+    let right = find(root.right, p, q);
+
+    
+
+    if(left === null || right === null) {
+      return right === null ? left : right;
+    }
+
+    if(left !== null && right !== null) {
+      return root;
+    }
+  };
+
+  return find(root, p, q);
+};

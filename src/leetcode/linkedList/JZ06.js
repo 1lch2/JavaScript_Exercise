@@ -18,30 +18,22 @@ function ListNode(val, next) {
  * @return {number[]}
  */
 var reversePrint = function(head) {
-  if(head == null) {
-    return [];
-  }
-
   let res = [];
-  let temp = head;
-  while(temp !== null) {
-    res.push(temp.val);
-    temp = temp.next;
-  }
 
   /**
-   * reverse array
-   * @param {Number[]} nums number array
+   * @param {LIstNode} root 
    */
-  const reverse = (nums) => {
-    let res = [];
-    for(let i = nums.length - 1; i >= 0; i--) {
-      res.push(nums[i]);
+  const traverse = (root) => {
+    if(root == null) {
+      return;
     }
-    return res;
+    // 利用递归压栈倒序输出
+    traverse(root.next);
+    // 递归进入最后一层后开始访问节点
+    res.push(root.val);
   };
-
-  return reverse(res);
+  traverse(head);
+  return res;
 };
 
 (function(){

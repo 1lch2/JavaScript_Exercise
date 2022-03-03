@@ -27,9 +27,9 @@
  * @param {TreeNode} right right sub-tree
  */
 function TreeNode(val, left, right) {
-  this.val = (val === undefined ? 0 : val)
-  this.left = (left === undefined ? null : left)
-  this.right = (right === undefined ? null : right)
+  this.val = (val === undefined ? 0 : val);
+  this.left = (left === undefined ? null : left);
+  this.right = (right === undefined ? null : right);
 }
 
 /**
@@ -53,7 +53,7 @@ var lowestCommonAncestor = function(root, p, q) {
       // 若当前节点值在p，q之间，则当前节点为分叉点，即所要求的最近公共祖先
       return root;
     }
-  }
+  };
 
   return search(root, p, q);
 };

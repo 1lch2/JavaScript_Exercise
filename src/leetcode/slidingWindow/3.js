@@ -46,8 +46,7 @@ var lengthOfLongestSubstring = function(s) {
       j++;
     }
 
-    // 完成一轮遍历后更新最长长度
-    maxLen = Math.max(maxLen, j - i + 1);
+    maxLen = j - i + 1 > maxLen ? j - i + 1 : maxLen;
   }
   return maxLen;
 };

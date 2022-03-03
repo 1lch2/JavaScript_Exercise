@@ -33,11 +33,11 @@ var merge = function(intervals) {
     current = res[len - 1];
 
     // 当前区间存在重叠时则更新右边界
-    if(current[1] >= orderedInterval[i][0]) {
-      if(current[1] < orderedInterval[i][1]) {
+    if (current[1] >= orderedInterval[i][0]) {
+      if (current[1] < orderedInterval[i][1]) {
         current[1] = orderedInterval[i][1];
       }
-      
+
     } else {
       // 没有重叠则将不重叠的第一个加入结果
       res.push(orderedInterval[i]);
@@ -47,8 +47,69 @@ var merge = function(intervals) {
   return res;
 };
 
-(function(){
-  console.log(merge([[1,4],[4,5]]));
-  console.log(merge([[1,3],[2,6],[8,10],[15,18]]));
-  console.log(merge([[1, 2]]));
+/**
+ * @param {number[][]} intervals
+ * @return {number[][]}
+ */
+var merge_dualPointer = function(intervals) {
+  if(intervals.length < 2) {
+    return intervals;
+  }
+
+  // 按区间起始端点升序排列
+  let orderedInterval = intervals.sort((first, second) => {
+    return first[0] - second[0];
+  });
+
+  const LENGTH = orderedInterval.length;
+
+  let i = 0; // 区间下标
+  let right = orderedInterval[0][1]; // 当前连续区间的右端点
+  let temp = orderedInterval[0]; // 临时数组
+  let res = [];
+  while(i < LENGTH) {
+    right = orderedInterval[i][1];
+    temp = orderedInterval[i];
+
+    // 若下一个区间左端点在当前连续区间内，则更新右端点位置
+    while(i + 1 < LENGTH && orderedInterval[i + 1][0] <= right) {
+      right = Math.max(orderedInterval[i + 1][1], right);
+      i++;
+    } 
+    temp[1] = right;
+    res.push(temp.slice(0));
+    i++;
+  }
+
+  return res;
+};
+
+(function() {
+  // console.log(merge([
+  //   [1, 4],
+  //   [4, 5]
+  // ]));
+  // console.log(merge([
+  //   [1, 3],
+  //   [2, 6],
+  //   [8, 10],
+  //   [15, 18]
+  // ]));
+  // console.log(merge([
+  //   [1, 2]
+  // ]));
+
+  console.log(merge_dualPointer([
+    [1, 4],
+    [5, 6]
+  ]));
+  console.log(merge_dualPointer([
+    [1, 3],
+    [2, 6],
+    [8, 10],
+    [15, 18]
+  ]));
+  console.log(merge_dualPointer([
+    [1, 2]
+  ]));
 })();
