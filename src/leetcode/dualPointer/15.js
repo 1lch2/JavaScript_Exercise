@@ -25,8 +25,8 @@
  * @copyright https://leetcode-cn.com/problems/3sum/solution/3sumpai-xu-shuang-zhi-zhen-yi-dong-by-jyd/
  */
 var threeSum = function(nums) {
-  if (nums == null || Math.min(nums) > 0 ||
-    Math.max(nums) < 0 || nums.length < 3) {
+  if (nums == null || Math.min(...nums) > 0 ||
+    Math.max(...nums) < 0 || nums.length < 3) {
     return [];
   }
 
@@ -89,6 +89,72 @@ var threeSum = function(nums) {
   return res;
 };
 
+/**
+ * 双指针法
+ * 
+ * @param {number[]} nums
+ * @return {number[][]}
+ * @copyright https://mp.weixin.qq.com/s/fSyJVvggxHq28a0SdmZm6Q
+ */
+var threeSum_dualPointer = function(nums) {
+  if (nums == null || Math.min(...nums) > 0 ||
+    Math.max(...nums) < 0 || nums.length < 3) {
+    return [];
+  }
+
+  nums.sort((a, b) => a - b);
+
+  const twoSum = (nums, start, target) => {
+    let res = [];
+    let left = start;
+    let right = nums.length - 1;
+
+    while(left < right) {
+      let leftVal = nums[left];
+      let rightVal = nums[right];
+      let sum = leftVal + rightVal;
+
+      if(sum < target) {
+        while(left < right && nums[left] === leftVal) {
+          left++;
+        }
+      } else if (sum > target) {
+        while(left < right && nums[right] === rightVal) {
+          right--;
+        }
+      } else {
+        res.push([leftVal, rightVal]);
+        while(left < right && nums[left] === leftVal) {
+          left++;
+        }
+        while(left < right && nums[right] === rightVal) {
+          right--;
+        }
+      }
+    }
+    return res;
+  };
+
+  let res = [];
+
+  for(let i = 0; i < nums.length; i++) {
+    // 在遍历的当前元素之外寻找符合条件的两个数字
+    let twoSumRes = twoSum(nums, i + 1, 0 - nums[i]);
+
+    for(let tuple of twoSumRes) {
+      tuple.push(nums[i]);
+      res.push(tuple.slice(0));
+    }
+
+    while(i < nums.length - 1 && nums[i] === nums[i + 1]) {
+      i++;
+    }
+  }
+  return res;
+};
+
+
 (function() {
-  console.log(threeSum([-1,0,1,2,-1,-4,-2,-3,3,0,4]));
+  console.log(threeSum([-1, 0, 1, 2, -1, -4, -2, -3, 3, 0, 4]));
+  console.log(threeSum_dualPointer([-1, 0, 1, 2, -1, -4, -2, -3, 3, 0, 4]));
 })();

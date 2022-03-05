@@ -15,8 +15,8 @@
  * Definition for singly-linked list.
  */
 function ListNode(val, next) {
-  this.val = (val === undefined ? 0 : val)
-  this.next = (next === undefined ? null : next)
+  this.val = (val === undefined ? 0 : val);
+  this.next = (next === undefined ? null : next);
 }
 
 /**
@@ -35,7 +35,7 @@ var removeNthNode = function (n, head) {
   let left = dummy;
   let right = dummy;
 
-  // 让两个指针相距 n 举例
+  // 让两个指针相距 n 个单位
   for(let i = 0; i < n; i++) {
     right = right.next;
   }
@@ -50,4 +50,4 @@ var removeNthNode = function (n, head) {
   left.next = left.next.next;
 
   return dummy.next;
-}
+};
