@@ -73,7 +73,7 @@ var reverseKGroup = function(head, k) {
     return prev;
   };
 
-
+  // 找到 k 个单位距离后的节点
   let curr = head;
   let end = head;
   for(let i = 0; i < k; i++) {
@@ -84,6 +84,8 @@ var reverseKGroup = function(head, k) {
   }
 
   let newHead = reverse(curr, end);
+
+  // 递归处理后部未反转的链表
   curr.next = reverseKGroup(end, k);
   return newHead;
 };
