@@ -3,7 +3,7 @@
 表格引用自MDN，[对象模型的细节 - JavaScript](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Guide/Details_of_the_Object_Model)
 
 基于类（Java）和基于原型（JavaScript）的对象系统的比较
-|基于类的（Java | 基于原型的（JavaScript） |
+|基于类的（Java） | 基于原型的（JavaScript） |
 |-------------|-------------------------|
 | 类和实例是不同的事物。| 所有对象均为实例。|
 | 通过类定义来定义类；通过构造器方法来实例化类。| 通过构造器函数来定义和创建一组对象。|

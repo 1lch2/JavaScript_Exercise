@@ -44,4 +44,14 @@ nodeList 中的条目由通过下标有两种方式进行访问：
 ### Attribute
 
 
+## 节点类型的关系
+
+![img](static/DOM_type.jpg)
+
+`getElementById` 获取到的既是 Node 也是 Element，因为 Element 继承于 Node。
+
+从而也可以得出一个结论：**Element 一定是 Node，但 Node 不一定是 Element。**
+
+所以：Element 可以使用 Node 的所有方法。
+
 // TODO: note marker

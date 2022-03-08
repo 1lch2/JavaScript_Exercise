@@ -28,7 +28,7 @@
 
 意外声明全局变量
 ```js
-function hello （）{
+function hello() {
   name = 'tom'
 }
 hello();
