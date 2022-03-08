@@ -25,18 +25,18 @@
  * @param {TreeNode} left left sub-tree
  * @param {TreeNode} right right sub-tree
  */
- function TreeNode(val, left, right) {
-  this.val = (val === undefined ? 0 : val)
-  this.left = (left === undefined ? null : left)
-  this.right = (right === undefined ? null : right)
+function TreeNode(val, left, right) {
+  this.val = (val === undefined ? 0 : val);
+  this.left = (left === undefined ? null : left);
+  this.right = (right === undefined ? null : right);
 }
 
 /**
  * @param {TreeNode} root
  * @return {boolean}
  */
-var isValidBST = function(root) {  
-  if(root == null) {
+var isValidBST = function(root) {
+  if (root == null) {
     return true;
   }
 
@@ -45,12 +45,12 @@ var isValidBST = function(root) {
   // 逐层向上对结果进行与运算得到最终结果
   const compare = (root, lowerBound, upperBound) => {
     // 以叶子节点为根节点的子树属于BST
-    if(root == null) {
+    if (root == null) {
       return true;
     }
 
     // 非叶子节点时比较值
-    if(root.val <= lowerBound || root.val >= upperBound) {
+    if (root.val <= lowerBound || root.val >= upperBound) {
       return false;
     }
 
@@ -58,7 +58,7 @@ var isValidBST = function(root) {
     // 上下界则使用对应的默认值
     return compare(root.left, lowerBound, root.val) && compare(root.right, root.val, upperBound);
 
-  }
+  };
 
   return compare(root, -Infinity, Infinity);
 };
