@@ -58,6 +58,54 @@ function quickSortRecur(numArr, low, high) {
 }
 
 /**
+ * 快排迭代版，原地修改数组
+ * 
+ * @param {Number[]} nums 
+ */
+function quickSortStack(nums) {
+  // 存储排序区间下标的栈
+  let stack = [[0, nums.length - 1]];
+
+  while(stack.length !== 0) {
+    let current = stack.pop();
+    let low = current[0];
+    let high = current[1];
+
+    let base = nums[low];
+
+    // 区间大小为1，直接跳过本地循环
+    if(low >= high) {
+      continue;
+    }
+
+    let i = low;
+    let j = high;
+    while(i < j) {
+      while(i < j && nums[j] > base) {
+        j--;
+      }
+      if(i < j) {
+        nums[i] = nums[j];
+        i++;
+      }
+
+      while(i < j && nums[i] < base) {
+        i++;
+      }
+      if(i < j) {
+        nums[j] = nums[i];
+        j--;
+      }
+    }
+    nums[i] = base;
+
+    // 将子区间压入栈
+    stack.push([low, i - 1]);
+    stack.push([i + 1, high]);
+  }
+}
+
+/**
  * 堆排序
  * @param {Number[]} nums 无序数组
  * @returns {Number[]} 升序排列的数组
@@ -173,13 +221,14 @@ function mergeSort(nums) {
 
   // console.log(">>> Bubble sort: " + bubbleSort(testArr.slice(0)));
   
-  // let qsortArr = testArr.slice(0);
+  let qsortArr = testArr.slice(0);
   // quickSortRecur(qsortArr, 0, qsortArr.length - 1);
-  // console.log(">>> Quick sort: " + qsortArr);
+  quickSortStack(qsortArr);
+  console.log(">>> Quick sort: " + qsortArr);
 
-  // let heapsortArr = testArr.slice(0);
-  // heapSort(heapsortArr);
-  // console.log(">>> Heap sort: " + heapsortArr);
+  let heapsortArr = testArr.slice(0);
+  heapSort(heapsortArr);
+  console.log(">>> Heap sort: " + heapsortArr);
 
   let mergeSortArr = mergeSort(testArr.slice(0));
   console.log(">>> Merge sort: " + mergeSortArr);

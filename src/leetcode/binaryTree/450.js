@@ -85,12 +85,10 @@ var deleteNode = function(root, key) {
     while(temp.left != null) {
       temp = temp.left;
     }
-    // 将找到的最左边节点的左子树设为当前左子树
+    // 将根节点的左子树接到找到的右子树最左边节点下，作为它的左子树
     temp.left = root.left;
     // 将右子树根节点替换掉当前根节点，将删除节点后的子树连接回原本的树
     root = root.right;
   }
   return root;
-
-  // TODO: WA
 };
