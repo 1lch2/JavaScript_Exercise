@@ -63,7 +63,7 @@ const combinationRepeatable = (nums) => {
   let len = nums.length;
 
   // 保证元素有序排列
-  nums.sort();
+  nums.sort((a, b) => a - b);
 
   const backtrack = (index, path) => {
     res.push(path.slice());
