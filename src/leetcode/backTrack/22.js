@@ -20,9 +20,11 @@ var generateParenthesis = function(n) {
 
   /**
    * @param {String} path path
-   * @param {Number} left left parenthes
+   * @param {Number} left left parenthesis
+   * @param {Number} right right parenthesis
    */
   const backtrack = (path, left, right) => {
+    // 数量达标时结束递归
     if (path.length === 2 * n) {
       res.push(path.slice(0));
       return;
@@ -36,6 +38,7 @@ var generateParenthesis = function(n) {
       left--;
     }
 
+    // 不能在出现左括号前加右括号
     if(right < n && right < left) {
       path += ")";
       right++;

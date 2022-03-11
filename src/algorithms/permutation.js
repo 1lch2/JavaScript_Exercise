@@ -31,6 +31,8 @@ const permutation = (nums) => {
 };
 
 /**
+ * 含重复元素的全排列
+ * 
  * @param {number[]} nums
  * @return {number[][]}
  */

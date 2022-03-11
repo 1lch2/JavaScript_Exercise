@@ -52,10 +52,42 @@ var reverseWords_trick = function(s) {
  * @return {string}
  */
 var reverseWords = function(s) {
-  s = s.trim();
-
   let i = 0;
-  while(i < s.length) {
-    // TODO: 
+  let j = s.length - 1;
+
+  // 定位首尾第一个不为空格的元素
+  for(; i < s.length; i++) {
+    if(s[i] !== " ") {
+      break;
+    }
   }
+
+  for(; j >= i; j--) {
+    if(s[j] !== " ") {
+      break;
+    }
+  }
+
+  let res = [];
+  while(i <= j) {
+    while(s[i] === " " && i <= j) {
+      i++;
+    }
+
+    let tempRight = i;
+    while(s[tempRight] !== " " && tempRight <= j) {
+      tempRight++;
+    }
+    if(s[i] !== "") {
+      res.unshift(s.slice(i, tempRight));
+    }
+    i = tempRight;
+  }
+
+  return res.join(" ");
 };
+
+(function(){
+  // console.log(reverseWords("  Bob    Loves  Alice   "));
+  console.log(reverseWords("a good   example"));
+})();

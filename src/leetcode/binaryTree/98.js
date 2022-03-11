@@ -43,6 +43,15 @@ var isValidBST = function(root) {
   // 当前节点和父节点比较，返回的结果用来得出父节点的BST判断
   // 若判断当前节点为叶子节点则返回true，会缺失所有叶子节点的判断
   // 逐层向上对结果进行与运算得到最终结果
+
+  /**
+   * 一个树为BST，当且仅当两个子树均为BST，且左子树最大值小于根，右子树最小值大于根
+   * 
+   * @param {TreeNode}} root 待比较的根节点
+   * @param {Number} lowerBound 当前根节点的值下限
+   * @param {Number} upperBound 当前根节点的值上限
+   * @returns {Boolean} 是否为BST
+   */
   const compare = (root, lowerBound, upperBound) => {
     // 以叶子节点为根节点的子树属于BST
     if (root == null) {
@@ -60,5 +69,6 @@ var isValidBST = function(root) {
 
   };
 
+  // 根节点值初始不受限
   return compare(root, -Infinity, Infinity);
 };

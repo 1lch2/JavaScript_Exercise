@@ -271,7 +271,7 @@ class TreeNode {
     while (res[res.length - 1] === "null") {
       res.pop();
     }
-    return res;
+    return res.join(" ");
   }
 
   /**
@@ -289,6 +289,7 @@ class TreeNode {
     let root = new TreeNode(nodeList.shift());
     let queue = [root];
 
+    // 按层序遍历顺序弹队列重建树
     while (nodeList.length > 0) {
       let currentRoot = queue.shift();
       let leftVal = nodeList.shift();

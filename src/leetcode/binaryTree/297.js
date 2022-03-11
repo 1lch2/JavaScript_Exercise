@@ -31,9 +31,9 @@
  * @param {TreeNode} right right sub-tree
  */
 function TreeNode(val, left, right) {
-  this.val = (val === undefined ? 0 : val)
-  this.left = (left === undefined ? null : left)
-  this.right = (right === undefined ? null : right)
+  this.val = (val === undefined ? 0 : val);
+  this.left = (left === undefined ? null : left);
+  this.right = (right === undefined ? null : right);
 }
 
 /**
@@ -62,7 +62,7 @@ var serialize = function (root) {
     }
   }
   while(res[res.length - 1] === "null") {
-    res.pop()
+    res.pop();
   }
   return res.join(" ");
 };
@@ -89,8 +89,8 @@ var deserialize = function (data) {
 
     if(leftVal !== "null" && leftVal !== undefined) {
       let left = new TreeNode(leftVal);
-      currentRoot.left = left
-      queue.push(left)
+      currentRoot.left = left;
+      queue.push(left);
     }
     if(rightVal !== "null" && rightVal !== undefined) {
       let right = new TreeNode(rightVal);
