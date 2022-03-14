@@ -56,6 +56,21 @@ console.log('Hi!');
 
 Promise的执行器（构造器）内部只能调用一个resolve或reject，一旦调用了其中之一，状态就不会再改变，再次调用另一个方法会被忽略。
 
+`resolve()`后不应该再有其他操作，如果后面有其他操作会在resolve前执行。
+```js
+new Promise((resolve) => {
+  console.log(1);
+  resolve();
+  console.log(2);
+}).then(() => {
+  console.log(3);
+});
+
+// 1
+// 2
+// 3
+```
+
 ### then
 Promise实例生成以后，可以用then方法分别指定resolved状态和rejected状态的回调函数。
 
