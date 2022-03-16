@@ -46,7 +46,7 @@ nodeList 中的条目由通过下标有两种方式进行访问：
 
 ## 节点类型的关系
 
-![img](static/DOM_type.jpg)
+![img](../static/DOM_type.jpg)
 
 `getElementById` 获取到的既是 Node 也是 Element，因为 Element 继承于 Node。
 

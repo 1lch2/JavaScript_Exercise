@@ -31,19 +31,28 @@
 // 1 <= columnNumber <= 231 - 1
 
 /**
+ * @copyright https://leetcode-cn.com/problems/excel-sheet-column-title/solution/
+ *            jin-zhi-zhuan-huan-de-bian-chong-by-qyun-t5e5/
  * @param {number} columnNumber
  * @return {string}
  */
 var convertToTitle = function(columnNumber) {
   let res = "";
   while(columnNumber !== 0) {
-    let divideNum = parseInt(columnNumber / 26);
-    let char = String.fromCharCode("A".charCodeAt() - 1 + divideNum);
-    res += char;
+    // 26进制的数字为 0~25，此处A到Z对应1~26，需要减去 1 来符合映射条件
+    columnNumber--;
+    let residue = columnNumber % 26;
 
-    columnNumber = columnNumber - divideNum * 26;
-    // TODO:
+    // Unicode 按序存储，找到和 A 的偏移即可构造对应字母
+    // 计算结果为从低到高位的基数
+    res = String.fromCharCode("A".charCodeAt() + residue) + res;
+
+    columnNumber = Math.floor(columnNumber / 26);
   }
 
   return res;
 };
+
+(function(){
+  console.log(convertToTitle("2147483647"));
+})();
