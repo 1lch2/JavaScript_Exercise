@@ -35,5 +35,44 @@
  * @return {number[]}
  */
 var findOrder = function(numCourses, prerequisites) {
-  // TODO:
+  let inDegree = new Array(numCourses).fill(0);
+  let adjacent = {};
+
+  for(let edge of prerequisites) {
+    inDegree[edge[0]]++;
+    if(adjacent[edge[1]] === undefined) {
+      adjacent[edge[1]] = [edge[0]];
+    } else {
+      adjacent[edge[1]].push(edge[0]);
+    }
+  }
+
+  let queue = [];
+  for(let i = 0; i < inDegree.length; i++) {
+    if(inDegree[i] === 0) {
+      queue.push(i);
+    }
+  }
+
+  let res = [];
+  while(queue.length !== 0) {
+    let currentNode = queue.shift();
+    res.push(currentNode);
+
+    if(adjacent[currentNode] !== undefined) {
+      for(let node of adjacent[currentNode]) {
+        inDegree[node]--;
+
+        if(inDegree[node] === 0) {
+          queue.push(node);
+        }
+      }
+    }
+  }
+
+  return res.length === numCourses ? res : [];
 };
+
+(function(){
+  console.log(findOrder(4, [[1,0],[2,0],[3,1],[3,2]]));
+})();

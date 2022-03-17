@@ -23,9 +23,9 @@
  * @param {TreeNode} right right sub-tree
  */
 function TreeNode(val, left, right) {
-  this.val = (val === undefined ? 0 : val)
-  this.left = (left === undefined ? null : left)
-  this.right = (right === undefined ? null : right)
+  this.val = (val === undefined ? 0 : val);
+  this.left = (left === undefined ? null : left);
+  this.right = (right === undefined ? null : right);
 }
 
 /**
@@ -44,7 +44,7 @@ var levelOrderBottom = function (root) {
     let temp = [];
     while(len > 0) {
       let current = queue.shift();
-      temp.push(current.val)
+      temp.push(current.val);
       if(current.left != null) {
         queue.push(current.left);
       }

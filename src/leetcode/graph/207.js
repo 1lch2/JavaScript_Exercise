@@ -61,7 +61,7 @@ var canFinish = function(numCourses, prerequisites) {
   // 拓扑排序，不断删除每一个没有入度的节点
   while(queue.length !== 0) {
     // 删除一个没有入度的节点后，将计数减一
-    let currentNode = queue.pop();
+    let currentNode = queue.shift();
     numCourses--;
 
     // 可能存在无邻接的节点，需要多一步判断

@@ -2,7 +2,7 @@
 
 // 本题中，一棵高度平衡二叉树定义为：
 
-// 一个二叉树每个节点 的左右两个子树的高度差的绝对值不超过 1 。
+// 一个二叉树每个节点的左右两个子树的高度差的绝对值不超过 1 。
 
 // 示例 1：
 // 输入：root = [3,9,20,null,null,15,7]
@@ -27,9 +27,9 @@
  * @param {TreeNode} right right sub-tree
  */
 function TreeNode(val, left, right) {
-  this.val = (val === undefined ? 0 : val)
-  this.left = (left === undefined ? null : left)
-  this.right = (right === undefined ? null : right)
+  this.val = (val === undefined ? 0 : val);
+  this.left = (left === undefined ? null : left);
+  this.right = (right === undefined ? null : right);
 }
 
 /**
@@ -47,7 +47,7 @@ var isBalanced = function(root) {
     let leftHeight = getHeight(root.left);
     let rightHeight = getHeight(root.right);
     return Math.max(leftHeight, rightHeight) + 1;
-  }
+  };
 
   const judge = (root) => {
     if(root == null) {
@@ -58,9 +58,9 @@ var isBalanced = function(root) {
 
     // 当前子树为平衡树当且仅当左右子树为平衡树且高度差小于等于1
     return delta <= 1 && judge(root.left) && judge(root.right);
-  }
+  };
 
-  return judge(root)
+  return judge(root);
 };
 
 /**
@@ -72,7 +72,7 @@ var isBalanced = function(root) {
  * @param {TreeNode} root
  * @return {boolean}
  */
-var isBalanced = function(root) {
+var isBalanced_ = function(root) {
   const judge = (root) => {
     if(root == null) {
       return 0;
@@ -89,7 +89,7 @@ var isBalanced = function(root) {
 
     // 若为平衡树则返回高度，否则返回-1
     return Math.abs(left - right) <= 1 ? Math.max(left, right) + 1 : -1;
-  }
+  };
 
   return judge(root) !== -1;
-}
+};
