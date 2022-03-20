@@ -59,7 +59,7 @@ timeout
 
 微任务包括`process.nextTick`（暂不考虑）和`Promise.then`。
 
-宏任务包括`setTimeout`，`setInterval`和`script`（整体代码）。
+宏任务包括`setTimeout`，`setInterval`和`<script>`（整体代码）。
 
 **注意：**`Promise`本身是立即执行的同步任务，只有`then()`才是异步的微任务。
 
