@@ -60,44 +60,44 @@ function hi() {
 
 见下例
 ```js
-// 在全局执行上下文中创建新变量 createCounter，并指定函数定义
+// 1. 在全局执行上下文中创建新变量 createCounter，并指定函数定义
 function createCounter() {
-  // 调用函数并创建行的本地执行上下文
+  // 3. 调用函数并创建行的本地执行上下文
 
-  // 声明本地变量并赋值
+  // 4. 声明本地变量并赋值
   let counter = 0;
 
-  // 在本地执行上下文中声明名为 myFunction 的新变量
+  // 5. 在本地执行上下文中声明名为 myFunction 的新变量
   // 变量内容为另一个函数定义
   // 此时创建了一个闭包并将其作为函数定义的一部分
   // 闭包包含作用域中的变量，这里是 counter
   const myFunction = function() {
-    // increment 变量定义的函数开始执行
+    // 8. increment 变量定义的函数开始执行
 
-    // 寻找变量counter，在查找本地和全局上下文前先查找闭包
+    // 9. 寻找变量counter，在查找本地和全局上下文前先查找闭包
     // 在闭包中找到了变量，+1 后再次存储在闭包中
     counter = counter + 1;
 
-    // 返回值，销毁本地执行上下文
+    // 10. 返回值，销毁本地执行上下文
     return counter;
   }
 
-  // 返回 myFunction 变量的内容并删除本地执行上下文
+  // 6. 返回 myFunction 变量的内容并删除本地执行上下文
   // 之后 myFunction 和 counter 不再存在
   // 控制权移交调用上下文，返回函数定义和它的闭包
   // 闭包中包含创建它时它所在作用域内的变量
   return myFunction;
 }
 
-// 声明名为increment的新变量
+// 2. 声明名为increment的新变量
 // 现在它包含函数定义和闭包
 const increment = createCounter();
 
-// 调用函数并赋值
+// 7. 调用函数并赋值
 // 创建新的执行上下文并开始执行函数
 const c1 = increment();
 
-// 闭包中的 counter 值递增并返回
+// 11. 闭包中的 counter 值递增并返回
 const c2 = increment();
 const c3 = increment();
 console.log('example increment', c1, c2, c3);

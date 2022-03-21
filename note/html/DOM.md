@@ -54,4 +54,42 @@ nodeList 中的条目由通过下标有两种方式进行访问：
 
 所以：Element 可以使用 Node 的所有方法。
 
+## 访问节点
+若访问一个DOM节点的结果为`null`，则该DOM节点不存在。
+
+### 最顶层节点
+最顶层的树节点可以直接作为 document 的属性来使用：
+
+- `<html>` = `document.documentElement`
+
+    最顶层的 document 节点是 document.documentElement。这是对应 `<html>` 标签的 DOM 节点。
+- `<body>` = `document.body`
+    
+    另一个被广泛使用的 DOM 节点是 `<body>` 元素 — document.body。
+
+    脚本无法访问在运行时不存在的元素。
+
+    如果一个脚本是在 `<head>` 中，那么脚本是访问不到 document.body 元素的，因为浏览器还没有读到它。如下例
+    ```html
+    <html>
+      <head>
+        <script>
+          // null，这里目前还没有 <body>
+          alert( "From HEAD: " + document.body ); 
+        </script>
+      </head>
+
+      <body>
+      </body>
+    </html>
+    ```
+
+- `<head>` = `document.head`
+    
+    `<head>` 标签可以通过 document.head 访问。
+
+### 子节点
+`childNodes` 集合列出了所有子节点，包括文本节点。使用方法为 `parentNode.childNodes
+`
+
 // TODO: note marker
