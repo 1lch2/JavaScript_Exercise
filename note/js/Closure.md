@@ -104,3 +104,17 @@ console.log('example increment', c1, c2, c3);
 
 // 1, 2, 3
 ```
+
+## 作用域查找
+```js
+let a = 1
+function foo() {
+  let a = 2
+  function too() {
+    console.log(a)
+  }
+  return too
+}
+foo()() // 2
+```
+`foo()()` 调用时依次执行了 foo、too 函数。too 虽然是在全局作用域里执行的，但是too定义在 foo 作用域里面，根据作用域链规则取最近的嵌套作用域的属性 a = 2。

@@ -4,8 +4,8 @@
  * @param {Number} next pointer to the next node
  */
 function ListNode(val, next) {
-  this.val = (val === undefined ? 0 : val)
-  this.next = (next === undefined ? null : next)
+  this.val = (val === undefined ? 0 : val);
+  this.next = (next === undefined ? null : next);
 }
 
 // Print out the linked list.
@@ -15,7 +15,7 @@ var printLinkedList = function (linkedlist) {
   while (current != null) {
     out += current.val;
     if (current.next != null) {
-      out += " -> "
+      out += " -> ";
     }
     current = current.next;
   }

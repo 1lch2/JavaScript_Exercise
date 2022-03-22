@@ -23,8 +23,8 @@
  * @param {ListNode} next pointer to the next node
  */
 function ListNode(val, next) {
-  this.val = (val===undefined ? 0 : val)
-  this.next = (next===undefined ? null : next)
+  this.val = (val===undefined ? 0 : val);
+  this.next = (next===undefined ? null : next);
 }
 
 var swapPairs = function(head) {
@@ -42,7 +42,7 @@ var swapPairs = function(head) {
     head.next = second.next;
     pre.next = second;
     second.next = head;
-  }
+  };
 
   let dummyHead = new ListNode(0, head);
   let current = dummyHead;

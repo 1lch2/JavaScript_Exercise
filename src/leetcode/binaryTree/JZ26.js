@@ -5,16 +5,16 @@
 // 例如:
 // 给定的树 A:
 
-//      3
-//     / \
-//    4   5
-//   / \
-//  1   2
+//      3
+//     / \
+//    4   5
+//   / \
+//  1   2
 
 // 给定的树 B：
-//    4 
-//   /
-//  1
+//    4 
+//   /
+//  1
 // 返回 true，因为 B 与 A 的一个子树拥有相同的结构和节点值。
 
 // 示例 1：
@@ -60,7 +60,7 @@ var isSubStructure = function (A, B) {
 
     // 值不匹配
     if(A.val !== B.val) {
-      return false
+      return false;
     }
 
     // 递归进入左右子树检查
@@ -68,7 +68,7 @@ var isSubStructure = function (A, B) {
   };
 
   // 检查当前子树，以及A的左右子树中是否存在匹配
-  return check(A, B) || isSubStructure(A.left, B) || isSubStructure(A.right, B)
+  return check(A, B) || isSubStructure(A.left, B) || isSubStructure(A.right, B);
 };
 
 (function(){

@@ -45,5 +45,16 @@ let sum = function(a, b) {
 
 2. 无法作为构造函数使用
 3. 箭头函数的this指向无法改变，使用call，bind，apply传递绑定对象无效，但是可以正常传参
+    > 箭头函数不会创建自己的this，它只会从自己的作用域链的上一层继承this
+
+    ```js
+    const obj = {
+      a: () => {
+        console.log(this)
+      }
+    }
+    obj.a.call('123')  // window
+    ```
+
 4. 箭头函数的`prototype`属性值为`undefined`
 5. 以下三个变量在箭头函数之中也是不存在的，指向外层函数的对应变量：arguments、super、new.target。
