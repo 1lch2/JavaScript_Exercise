@@ -33,11 +33,31 @@
 | vmin | 视窗较小尺寸的1%             |
 | vmax | 视图大尺寸的1%              |
 
-**em 和 rem**
+### em
 
 em 单位的意思是“父元素的字体大小”。
 
+每个浏览器都会给 HTML 根元素 html 设置一个默认的 font-size，而这个值通常是 16px。
+
+### rem
+
 rem单位的意思是“根元素的字体大小”。
+
+rem(root em) 和 em 一样，也是一个相对长度单位，不过 rem 相对的是 HTML 的根元素 html。
+
+rem 由于是基于 html 的 font-size 来计算，所以通常用于自适应网站或者 H5 中。
+
+### vw/vh
+w 和 vh 分别是相对于屏幕窗口宽度和高度而言的长度单位：
+- 1vw = 视口宽度均分成 100 份中 1 份的长度；
+- 1vh = 视口高度均分成 100 份中 1 份的长度；
+
+在 JS 中 有如下换算规则：
+```js
+100vw == window.innerWidth
+100vh == window.innerHeight
+```
+
 
 ### 百分比
 
