@@ -8,8 +8,9 @@ function timediff(postTime) {
   let currentTime = Date.now();
 
   if (postTime > currentTime) {
-    return new Error("future time err.");
+    throw new Error("future time err.");
   }
+
   // 24h, 1h, 1min
   const intervals = {
     "24h": 24 * 60 * 60 * 1000,

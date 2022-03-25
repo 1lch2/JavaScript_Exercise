@@ -4,7 +4,8 @@ class EventEmitter {
    * 构造函数
    */
   constructor() {
-    this.cache = {};
+    // 以事件名为 key，保存对应的回调函数数组
+    this.events = {};
   }
 
   /**
@@ -13,10 +14,10 @@ class EventEmitter {
    * @param {Function} fn 回调函数
    */
   on(name, fn) {
-    if (this.cache[name]) {
-      this.cache[name].push(fn);
+    if (this.events[name]) {
+      this.events[name].push(fn);
     } else {
-      this.cache[name] = [fn];
+      this.events[name] = [fn];
     }
   }
 
@@ -26,7 +27,7 @@ class EventEmitter {
    * @param {Function} fn 
    */
   off(name, fn) {
-    let tasks = this.cache[name];
+    let tasks = this.events[name];
     if (tasks) {
       const index = tasks.findIndex(f => f === fn || f.callback === fn);
       if (index >= 0) {
@@ -42,14 +43,14 @@ class EventEmitter {
    * @param  {...any} args 回调函数的参数
    */
   emit(name, once = false, ...args) {
-    if (this.cache[name]) {
+    if (this.events[name]) {
       // 创建副本，如果回调函数内继续注册相同事件，会造成死循环
-      let tasks = this.cache[name].slice();
+      let tasks = this.events[name].slice();
       for (let fn of tasks) {
         fn(...args);
       }
       if (once) {
-        delete this.cache[name];
+        delete this.events[name];
       }
     }
   }

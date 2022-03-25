@@ -70,7 +70,7 @@ class MyPromise {
  * @param {Promise[]} promises 
  * @returns {Promise} 包含执行结果数组的 promise
  */
-Promise.myAll = function(promises) {
+MyPromise.myAll = function(promises) {
   return new Promise((resolve, reject) => {
     let res = new Array(promises.length).fill(null);
     let counter = 0;

@@ -194,6 +194,7 @@ function mergeSort(nums) {
   };
 
   /**
+   * 递归二分待排数组，再合并分割后的两部分
    * 
    * @param {Number[]} nums 
    * @returns {Number[]}

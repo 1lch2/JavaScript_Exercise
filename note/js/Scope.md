@@ -46,5 +46,7 @@ for(var i = 0; i < 3; i++) {
 ```
 循环结束时，`i`已经变成了 3 ，且三个计时器引用了同一个全局变量，因此输出3个3。而使用`let`声明的`i`，由于闭包机制被保存到了三个不同的闭包中，三个不同的变量互不干扰。
 
+**注意**，如果在`let` 例子中，将`let i = 0`声明提升到循环外部，则结果会是每隔一秒输出一个`3`，原因同 var 的例子
+
 参见：[Why let and var bindings behave differently using setTimeout function?](https://stackoverflow.com/questions/31285911/why-let-and-var-bindings-behave-differently-using-settimeout-function)
 
