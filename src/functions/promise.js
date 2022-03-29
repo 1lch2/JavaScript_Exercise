@@ -6,6 +6,9 @@ class MyPromise {
   static FULFILLED = "fulfilled";
   static REJECTED = "rejected";
 
+  /**
+   * @param {Function} executor 构造器函数
+   */
   constructor(executor) {
     let self = this;
 

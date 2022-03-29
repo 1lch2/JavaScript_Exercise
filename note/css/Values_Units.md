@@ -66,3 +66,21 @@ w 和 vh 分别是相对于屏幕窗口宽度和高度而言的长度单位：
 ## 颜色
 - 十六进制RGB值
 - RGB和RGBA值
+
+## 函数
+`calc()` 函数可以在CSS中进行简单的计算。如下例中，使用calc()使框宽为20% + 100px。20%是根据父容器.wrapper的宽度来计算的，因此如果宽度改变，它也会改变。
+
+```html
+<div class="wrapper">
+  <div class="box">My width is calculated.</div> 
+</div>
+```
+```css
+.wrapper {
+  width: 400px;
+}
+
+.box {
+  width: calc(20% + 100px);
+}
+```
