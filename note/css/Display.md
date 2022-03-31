@@ -2,51 +2,6 @@
 ## 定义
 display 属性规定元素应该生成的框的类型。
 
-主要属性一览
-```css
-/* CSS 1 */
-display: none;
-display: inline;
-display: block;
-display: list-item;
-
-/* CSS 2.1 */
-display: inline-block;
-
-display: table;
-display: inline-table;
-display: table-cell;
-display: table-column;
-display: table-column-group;
-display: table-footer-group;
-display: table-header-group;
-display: table-row;
-display: table-row-group;
-display: table-caption;
-/* CSS 2.1 */
-
-/* CSS 3 */
-display: inline-list-item;
-display: flex;
-display: box;
-display: inline-flex;
-
-display: grid;
-display: inline-grid;
-
-display: ruby;
-display: ruby-base;
-display: ruby-text;
-display: ruby-base-container;
-display: ruby-text-container;
-/* CSS 3 */
-
-/* Global values */
-display: inherit;
-display: initial;
-display: unset;
-```
-
 ## 属性
 ### none
 
@@ -238,6 +193,52 @@ display:table 的CSS声明能够让一个HTML元素和它的子节点像table元
 .td:nth-of-type(3){
   width: 100px;
 }
+```
+
+### 所有属性一览
+
+```css
+/* CSS 1 */
+display: none;
+display: inline;
+display: block;
+display: list-item;
+
+/* CSS 2.1 */
+display: inline-block;
+
+display: table;
+display: inline-table;
+display: table-cell;
+display: table-column;
+display: table-column-group;
+display: table-footer-group;
+display: table-header-group;
+display: table-row;
+display: table-row-group;
+display: table-caption;
+/* CSS 2.1 */
+
+/* CSS 3 */
+display: inline-list-item;
+display: flex;
+display: box;
+display: inline-flex;
+
+display: grid;
+display: inline-grid;
+
+display: ruby;
+display: ruby-base;
+display: ruby-text;
+display: ruby-base-container;
+display: ruby-text-container;
+/* CSS 3 */
+
+/* Global values */
+display: inherit;
+display: initial;
+display: unset;
 ```
 
 ### flex

@@ -45,27 +45,6 @@ transform
 }
 ```
 
-left: 50%
-```css
-.son {
-    position: absolute;
-    width: (宽度);
-    left: 50%;
-    margin-left: -0.5 * (宽度);
-}
-```
-
-left/right: 0
-```css
-.son {
-    position: absolute;
-    width: (宽度);
-    left: 0;
-    right: 0;
-    margin: 0 auto;
-}
-```
-
 ## 垂直居中
 ### 行内元素
 ```css
@@ -102,29 +81,47 @@ left/right: 0
 #### 绝对定位
 transform
 ```css
+.parent {
+    position: relative;
+}
+
 .son {
     position: absolute;
     top: 50%;
-    transform: translate( 0, -50%);
 }
 ```
 
-top: 50%
+## 水平垂直居中
+```html
+<div class="layout">
+    <div class="center"></div>
+</div>
+```
+
+### flex
 ```css
-.son {
-    position: absolute;
-    top: 50%;
-    height: 高度;
-    margin-top: -0.5高度;
+div.layout {
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 ```
 
-top/bottom: 0
+### position: absolute
 ```css
-.son {
+div.layout {
+    position: relative;
+}
+
+div.center {
     position: absolute;
     top: 0;
     bottom: 0;
-    margin: auto 0;
+    left: 0;
+    right: 0;
+    margin: auto;
 }
 ```
+
+
+TODO: fix error
