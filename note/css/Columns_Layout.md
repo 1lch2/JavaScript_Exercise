@@ -5,8 +5,8 @@
 ### 1. float + overflow（BFC 原理）
 ```html
 <div>
-    <main></main>
     <aside></aside>
+    <main></main>
 </div>
 ```
 
@@ -24,8 +24,9 @@ main {
 ### 2. float + margin
 ```html
 <div>
-    <main></main>
+    <!-- aside 必须在前，否则 aside 会在下一行 -->
     <aside></aside>
+    <main></main>
 </div>
 ```
 
@@ -43,8 +44,8 @@ main {
 ### 3. flex
 ```html
 <div class="layout">
-    <main></main>
     <aside></aside>
+    <main></main>
 </div>
 ```
 
@@ -65,8 +66,8 @@ main {
 ### 4. grid
 ```html
 <div class="grid">
-    <main></main>
     <aside></aside>
+    <main></main>
 </div>
 ```
 

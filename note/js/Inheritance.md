@@ -26,6 +26,28 @@ new Father("father").hi(); // father
 new Child("son").hi(); // son
 ```
 
+### 问题
+在使用原型实现继承时，原型实际上变成了另一个类型的实例。这意味着原先的实例属性摇身一变成为了原型属性。
+
+如下例所示：
+```js
+function Father() {
+    this.color = ["red", "orange"];
+}
+
+function Son() {
+}
+
+Son.prototype = new Father();
+
+let son1 = new Son();
+son1.color.push("yellow");
+
+let son2 = new Son();
+console.log(son2.color); // "red", "orange", "yellow"
+```
+
+
 ## 经典继承（借用构造函数来继承）
 使用父类的构造函数来增强子类实例，等同于复制父类的实例给子类（不使用原型）。
 
@@ -45,6 +67,9 @@ console.log(new Child("son").name); // son
 ```
 
 创建子类实例时调用Father构造函数，于是Son的每个实例都会将Father中的属性**复制**一份。换种方式理解，通过call将Father的实例里面的this指向Son。
+
+### 问题
+必须在构造函数中定义方法，因此函数不能重用。
 
 这种只能继承**父类实例**的属性和方法，不能继承**原型**的属性和方法。
 
@@ -106,6 +131,8 @@ console.log(son.name); // father
 
 object()对传入其中的对象执行了一次浅复制，将构造函数F的原型直接指向传入的对象。
 
+这种方法适合直接继承已有的实例，再在这个新对象的基础上进行修改。
+
 该方法无法传递参数，且不能多次继承
 
 在ES5中新增了`Object.create()`方法，可以替代上述的`object()`。
@@ -142,6 +169,9 @@ let son = createAnother(new Father());
 console.log(father.name); // father
 console.log(son.name); // father
 ```
+
+### 问题
+寄生式继承同样适合主要关注对象，而不在乎类型和构造函数的场景。属性中包含的引用值始终会在相关对象间共享，跟使用原型模式是一样的
 
 这种继承方式仍然无法传递参数
 

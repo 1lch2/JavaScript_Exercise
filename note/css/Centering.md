@@ -92,6 +92,7 @@ transform
 ```
 
 ## 水平垂直居中
+HTML如下所示
 ```html
 <div class="layout">
     <div class="center"></div>
@@ -122,6 +123,3 @@ div.center {
     margin: auto;
 }
 ```
-
-
-TODO: fix error
