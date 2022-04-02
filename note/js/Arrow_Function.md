@@ -57,4 +57,5 @@ let sum = function(a, b) {
     ```
 
 4. 箭头函数的`prototype`属性值为`undefined`
-5. 以下三个变量在箭头函数之中也是不存在的，指向外层函数的对应变量：arguments、super、new.target。
+5. 以下三个变量在箭头函数之中也是不存在的，指向外层函数的对应变量：arguments（这个属性只有在以function 关键字声明的函数中才有）、super、new.target。
+6. 箭头函数没有prototype

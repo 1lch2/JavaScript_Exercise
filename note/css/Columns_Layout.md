@@ -82,39 +82,51 @@ main {
 样式：左右两侧栏定宽，主栏自适应
 
 ### 1. 圣杯布局
+样式如图
+![img](../static/Columns_Layout.png)
+
+flex 实现方法如下所示
 ```html
-<section class="layout">
-    <main>main</main>
-    <aside class="left">aside</aside>
-    <aside class="right">aside</aside>
-</section>
+<body class="HolyGrail">
+  <header>...</header>
+  <div class="HolyGrail-body">
+    <main class="HolyGrail-content">...</main>
+    <nav class="HolyGrail-nav">...</nav>
+    <aside class="HolyGrail-ads">...</aside>
+  </div>
+  <footer>...</footer>
+</body>
 ```
 
 ```css
-.layout {
-    padding: 0 200px;
+.HolyGrail {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
 }
 
-main {
-    float: left;
-    width: 100%;
+header,
+footer {
+  flex: 1;
 }
 
-aside {
-    float: left;
-    width: 200px;
+.HolyGrail-body {
+  display: flex;
+  flex: 1;
 }
 
-.left {
-    position: relative;
-    left: -200px;
-    margin-left: -100%;
+.HolyGrail-content {
+  flex: 1;
 }
 
-.right {
-    position: relative;
-    right: -200px;
-    margin-left: -100%;
+.HolyGrail-nav, .HolyGrail-ads {
+  /* 两个边栏的宽度设为12em */
+  flex: 0 0 12em;
+}
+
+.HolyGrail-nav {
+  /* 导航放到最左边 */
+  order: -1;
 }
 ```
 
@@ -123,25 +135,29 @@ aside {
 ### 3. float + overflow（BFC 原理）
 
 ### 4. flex
+效果如图
+
+![img](../static/Columns_Layout_2.png)
+
 ```html
 <section class="layout">
-    <aside class="left">aside</aside>
-    <main>main</main>
-    <aside class="right">aside</aside>
+  <aside>aside</aside>
+  <main>main</main>
+  <aside>aside</aside>
 </section>
 ```
 
 ```css
 .layout {
-    display: flex;
+  display: flex;
 }
 
 aside {
-    width: 200px;
+  width: 200px;
 }
 
 main {
-    flex: 1;
+  flex: 1;
 }
 ```
 

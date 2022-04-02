@@ -37,3 +37,25 @@ for (let i = 0; i < strongElements.length; ++i) {
     strongElements[i].className = "important";
 }
 ```
+
+## HTML5 新增方法
+`getElementsByClassName()`，使用示例如下：
+```js
+// 取得所有类名中包含"username"和"current"元素
+// 这两个类名的顺序无关紧要
+let allCurrentUsernames = document.getElementsByClassName("username current");
+// 取得 ID 为"myDiv"的元素子树中所有包含"selected"类的元素
+let selected = document.getElementById("myDiv").getElementsByClassName("selected");
+```
+
+## 设置样式
+只要获得了有效 DOM 元素的引用，就可以通过 JavaScript 来设置样式。示例如下
+```js
+let myDiv = document.getElementById("myDiv");
+// 设置背景颜色
+myDiv.style.backgroundColor = "red";
+// 修改大小
+myDiv.style.width = "100px"; myDiv.style.height = "200px";
+// 设置边框
+myDiv.style.border = "1px solid black";
+```

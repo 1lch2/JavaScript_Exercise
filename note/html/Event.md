@@ -68,3 +68,70 @@ element.addEventListener(event, function, useCapture);
 ```
 
 `useCapture`代表是否使用事件捕获，默认为`false`，即使用事件冒泡模型。
+
+
+## 处理事件
+### 添加事件回调
+1. 以HTML属性形式指定
+    ```html
+    <input type="button" value="Click Me" onclick="console.log('Clicked')"/>
+    ```
+    
+    或者传入其他地方定义的脚本
+    ```html
+    <input type="button" value="Click Me" onclick="showMessage()"/>
+    ```
+2. （DOM0方式）每个元素(包括 window 和 document)都有通常小写的事件处理程序属性，比如 onclick。只要把这个属性赋值为一个函数即可:
+    事件处理程 序会在元素的作用域中运行，即 this 等于元素
+    ```js
+    let btn = document.getElementById("myBtn");
+    btn.onclick = function() {
+        console.log(this.id); // myBtn
+    };
+    ```
+3. （DOM2方式）`addEventListener()` 和 `removeEventListener()`。
+    它们接收 3 个参数:事件名、事件处理函 数和一个布尔值，true 表示在捕获阶段调用事件处理程序，false(默认值)表示在冒泡阶段调用事件处理程序。
+    ```js
+    let btn = document.getElementById("myBtn");
+    btn.addEventListener("click", () => {
+      console.log(this.id);
+    }, false);
+    ```
+
+    通过 addEventListener()添加的事件处理程序只能使用 removeEventListener()并传入与添加时同样的参数来移除。
+    ```js
+    let btn = document.getElementById("myBtn");
+    let handler = function() {
+      console.log(this.id);
+    };
+    btn.addEventListener("click", handler, false);
+    btn.removeEventListener("click", handler, false); 
+    ```
+
+### 事件对象
+#### DOM事件对象
+event 对象是传给事件处理程序的唯一参数。示例如下
+```js
+let btn = document.getElementById("myBtn");
+btn.onclick = function(event) {
+  console.log(event.type);  // "click"
+};
+btn.addEventListener("click", (event) => {
+  console.log(event.type);  // "click"
+}, false);
+```
+
+在通过 HTML 属性指定的事件处理程序中，同样可以使用变量 event 引用事件对象。
+```html
+<input type="button" value="Click Me" onclick="console.log(event.type)">
+```
+
+#### IE 事件对象
+如果 事件处理程序是使用 DOM0 方式指定的，则 event 对象只是 window 对象的一个属性
+```js
+var btn = document.getElementById("myBtn");
+    btn.onclick = function() {
+    let event = window.event;
+    console.log(event.type);  // "click"
+};
+```

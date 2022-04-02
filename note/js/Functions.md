@@ -106,19 +106,3 @@ function King() {
 new King(); // King instantiated using "new"
 King();     // Error: King must be instantiated using "new"
 ```
-
-## 箭头函数
-### 基本语法
-以下两种方式等价。
-```js
-let sum = (a, b) => a + b;
-```
-```js
-let sum = function(a, b) {
-    return a + b;
-}
-```
-
-### 区别
-1. 箭头函数没有arguments属性，这个属性只有在以function 关键字声明的函数中才有
-2. 箭头函数没有prototype
