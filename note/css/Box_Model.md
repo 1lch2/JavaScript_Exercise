@@ -37,9 +37,40 @@ margin-top/margin-bottom对于上下元素无效，margin-left/margin-right有�
     > margin 取负数时会往反方向拓展。例如，设置了 `margin-top: -100px` ，则对应的元素边距相比父元素会向上拓展 100px
 - 两者正负相反，`margin` 值取两者之和
 
+### auto
+当元素的左右 margin 设为 auto 时，它将会被设置相同的左右边距，结果是这个元素被水平居中了。
+
+元素的上下 margin 设为 auto 时，值会变成 0。因此不能用这种办法垂直居中元素。
+
 ## padding
 内边距位于边框和内容区域之间，通常用于将内容推离边框。
 
 与外边距不同，padding 不能为负数值。应用于元素的任何背景都将显示在内边距后面。
 
+**padding 没有 auto 这个选项**
 
+## 元素默认宽高
+在默认情况下，height 和 width 的值为 auto，两者有不同的表现。
+
+min/max-width/height 会优先于 width/height 生效。
+
+### width
+width 用来设置**内容区域**的宽度，不是整个元素的宽度（即带上内外边距和边框）
+
+默认值为 auto ，意味着元素会占满它的包含块（containing block）的宽度。如果元素还有额外的内外边距，则内容宽度会相应减少，元素的**盒子宽度**保持为父元素的**内容宽度**。
+
+如果设为 auto，则元素宽度会变为它的包含块的内容宽度（即width）再加上额外的元素内外边距。
+
+与 width: 100% 对比如下图所示：
+![img](../static/Box_Model_1.png)
+
+### height
+与 width 相同，height 用来设置**内容区域**的高度。
+
+默认值为 auto ，等于元素的内容高度，如果这个块级元素没有内容则会变为 0。
+
+如果设为 100%，则元素的内容高度会和父元素保持一致
+
+## 参考
+- [Everything About Auto in CSS
+](https://ishadeed.com/article/auto-css/)
