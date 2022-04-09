@@ -16,6 +16,8 @@
 
 ### Layout
 
+### Paint
+
 ## 加载JS等资源
 
 TODO: 
