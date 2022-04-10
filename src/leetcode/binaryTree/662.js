@@ -72,18 +72,50 @@ function TreeNode(val, left, right) {
  * @return {number}
  */
 var widthOfBinaryTree = function(root) {
-  if(root == null) {
+  if (root == null) {
     return 0;
   }
 
   let max = 0;
-  // 修改值为编号
-  root.val = 1;
-  let queue = [root];
+  // 存储 [节点, 序号]
+  let queue = [
+    [root, 1]
+  ];
+  while (queue.length !== 0) {
+    let len = queue.length;
 
-  while(queue.length !== 0) {
-    // TODO:
+    // 直接采用递增序号会整数溢出
+    // 若当前遍历层只有一个节点，则直接把节点需要改成 1 ，避免数值溢出
+    if (len === 1) {
+      queue[0][1] = 1;
+    }
+    // 判断是否为当前层的第一个节点
+    let flag = true;
+    // 记录当前层最左侧和最右侧节点的序号
+    let left = 0;
+    let right = 0;
+    while (len > 0) {
+      let current = queue.shift();
+
+      if (flag) {
+        flag = false;
+        left = current[1];
+      }
+      right = current[1];
+
+      // 当前节点序号为 i ，左右子节点序号等于 2*i ，2*i+1
+      if (current[0].left !== null) {
+        queue.push([current[0].left, current[1] * 2]);
+      }
+      if (current[0].right !== null) {
+        queue.push([current[0].right, current[1] * 2 + 1]);
+      }
+
+      len--;
+    }
+    max = Math.max(max, right - left + 1);
   }
+  return max;
 };
 
 (function() {
