@@ -35,7 +35,7 @@
  */
 var areAlmostEqual = function(s1, s2) {
   if (s1 === s2) {
-    // TODO: 判断是否有重复字符
+    return true;
   }
 
   if (s1.length !== s2.length) {
