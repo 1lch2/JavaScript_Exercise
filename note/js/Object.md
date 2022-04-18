@@ -56,6 +56,14 @@ console.log(obj); // {a: "a", newProp: 42}
 参见：[JS中的原型](./Prototype.md)
 
 ## 实例方法
+### Object.prototype.hasOwnProperty()
+返回一个布尔值，用于表示一个对象自身是否包含指定的属性，该方法并不会查找原型链上继承来的属性。
 
+### Object.prototype.isPrototypeOf()
+返回一个布尔值，用于表示该方法所调用的对象是否在指定对象的原型链中。
 
-TODO: 
+### Object.prototype.toString()
+返回一个代表该对象的字符串。
+
+### Object.prototype.valueOf()
+返回指定对象的原始值。

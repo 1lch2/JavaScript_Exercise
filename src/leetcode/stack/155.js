@@ -34,8 +34,10 @@
 // push, pop, top, and getMin最多被调用 3 * 10^4 次
 
 var MinStack = function() {
-  this.stack = [];
-  this.minVal = [];
+  // 常规栈，按照一般规则压栈
+  this.stackData = [];
+  // 最小值栈，同步压栈弹栈，但是只保存对应的最小值
+  this.stackMin = [];
 };
 
 /** 
@@ -43,29 +45,36 @@ var MinStack = function() {
  * @return {void}
  */
 MinStack.prototype.push = function(val) {
-  this.stack.push(val);
-  // TODO:
+  this.stackData.push(val);
+
+  if(this.stackMin.length !== 0) {
+    let currentMin = Math.min(val, this.stackMin[this.stackMin.length - 1]);
+    this.stackMin.push(currentMin);
+  } else {
+    this.stackMin.push(val);
+  }
 };
 
 /**
  * @return {void}
  */
 MinStack.prototype.pop = function() {
-
+  this.stackData.pop();
+  this.stackMin.pop();
 };
 
 /**
  * @return {number}
  */
 MinStack.prototype.top = function() {
-
+  return this.stackData[this.stackData.length - 1];
 };
 
 /**
  * @return {number}
  */
 MinStack.prototype.getMin = function() {
-
+  return this.stackMin[this.stackMin.length - 1];
 };
 
 /**
