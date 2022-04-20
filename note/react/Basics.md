@@ -72,6 +72,8 @@ class Welcome extends React.Component {
 }
 ```
 
+如何选择类组件和函数组件：当需要用到内部状态和生命周期时候应该选择类组件
+
 ## props
 
 除了使用 HTML 标签，也可以使用 React 组件，当 React 元素为用户自定义组件时，它会将 JSX 所接收的属性（attributes）以及子组件（children）转换为单个对象传递给组件，这个对象被称之为 “props”。如下例所示，Welcome 组件接受了从外部传入的一个键值对参数 `{"name": "Sara"}`，并在组件内部通过 `pros` 属性解析获取。

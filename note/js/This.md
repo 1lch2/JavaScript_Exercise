@@ -150,3 +150,57 @@ let ooo = {
 
 ooo.hi(); // ooo
 ```
+
+## ES6 class 中的 this
+当调用静态或原型方法时没有指定 this 的值，那么方法内的 this 值将被置为 undefined。
+
+```js
+class Animal {
+  speak() {
+    return this;
+  }
+  static eat() {
+    return this;
+  }
+}
+
+let obj = new Animal();
+obj.speak(); // Animal {}
+let speak = obj.speak;
+speak(); // undefined
+
+Animal.eat() // class Animal
+let eat = Animal.eat;
+eat(); // undefined
+```
+
+
+## 如何访问到自己想要的 this ？
+引用自 Stack Overflow：[How to access the correct `this` inside a callback](https://stackoverflow.com/questions/20279484/how-to-access-the-correct-this-inside-a-callback)
+
+### 1. 使用箭头函数
+箭头函数没有自己的this，它会在作用域内找到最近的this
+
+### 2. 不用 this
+用别的变量指向 this，再使用那个对象访问this
+
+```js
+function Method(data) {
+    this.data = data;
+    let self = this;
+    this.func = function() {
+        console.log(self.data);
+    }
+}
+```
+
+### 3. 为回调绑定this
+```js
+function Method(data) {
+    this.data = data;
+    // 使用括号是为了增强可读性
+    this.func = (function() {
+        console.log(this.data);
+    }).bind(this);
+}
+```
