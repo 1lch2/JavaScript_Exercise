@@ -45,27 +45,37 @@ var findTargetSumWays = function(nums, target) {
   };
 
   const SUM = nums.sum();
-  // 数字之和小于目标，或 sum(P) 目标数不是偶数时无解
-  if(SUM < target || (SUM + target) % 2 === 1) {
+  // 数字之和小于目标绝对值，或 sum(P) 目标数不是偶数时无解
+  if(SUM < Math.abs(target) || (SUM + target) % 2 === 1) {
     return 0;
   }
 
   // 0-1背包问题的目标重量
   const W = (SUM + target) / 2;
 
-  // dp[i] : 当目标重量为 i 时的选择数量
-  // 初始化为 1 ，即当目标重量为 0 时，不选择就是一种方案
-  let dp = [1];
+  // dp[i][j] : 已经考虑前 i 个物品，重量为 j 时的最大选择数
+  // 重量需要取到 W
+  let dp = new Array(nums.length + 1).fill(0).map(() => new Array(W + 1).fill(0));
+  // 初始状态，由于可能存在 0 元素，不应该对所有物品项的 0 重量都初始化为只有 1 个选项
+  dp[0][0] = 1;
 
-  // 外层循环待选物品
-  for(let num of nums) {
-    // 内层循环倒序
-    for(let i = W; i >= num; i--) {
-      dp[i] = dp[i] + dp[i - num];
+  // 先遍历物品，再遍历背包重量
+  for(let i = 1; i <= nums.length; i++) {
+    for(let j = 0; j <= W; j++) {
+      // nums[i-1] 代表第 i 个物品
+      // 若当前物品不可选，则选项数和同重量时的前一物品相同
+      if(nums[i - 1] > j) {
+        dp[i][j] = dp[i - 1][j];
+      } else {
+        // 若可选，则将选择第 i 个物品和不选的选择数相加
+        // 这里本质是 max(dp[i-1][j], dp[i-1][j] + dp[i-1][j-nums[i-1]])
+        // 由于后一项必定大于前一项，所以结果简化为下方写法
+        dp[i][j] = dp[i - 1][j - nums[i - 1]] + dp[i - 1][j];
+      }
     }
   }
 
-  // TODO:
-
-  return dp[W];
+  return dp[nums.length][W];
 };
+
+console.log(findTargetSumWays([0,0,0,0,0,0,0,0,1], 1));
