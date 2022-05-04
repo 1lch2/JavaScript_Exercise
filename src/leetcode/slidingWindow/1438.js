@@ -40,5 +40,43 @@
  * @return {number}
  */
 var longestSubarray = function(nums, limit) {
-  // TODO:
+  if(nums.length <= 1) {
+    return nums.length;
+  }
+
+  let res = 0;
+
+  // 维护窗口内的最大最小值
+  let max = nums[0];
+  let min = nums[0];
+
+  // 窗口左边界
+  let left = 0;
+  for(let right = 0; right < nums.length; right++) {
+    // 确定当前窗口的最大最小值
+    max = Math.max(max, nums[right]);
+    min = Math.min(min, nums[right]);
+
+    // 若窗口不符合要求则将左边界收缩到右边界左侧
+    if(max - min > limit) {
+      // 重新从右边界开始拓展窗口
+      max = nums[right];
+      min = nums[right];
+      left = right - 1;
+
+      // 单位长度的窗口必定符合要求，因此判断新的长度为 2 的窗口是否符合要求
+      // 不断向左移动左边界，定位到最左侧符合要求的边界
+      while(Math.abs(nums[left] - nums[right]) <= limit) {
+        max = Math.max(nums[left], max);
+        min = Math.min(nums[left], min);
+        left--;
+      }
+      // 收缩左边界，准备检查下一端右边界移动后的窗口
+      left++;
+    }
+    // 取最长的窗口长度
+    res = Math.max(right - left + 1, res);
+  }
+
+  return res;
 };

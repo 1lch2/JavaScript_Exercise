@@ -18,42 +18,11 @@
 // 0 <= nums[i] <= 1000
 
 /**
+ * 三指针法
  * @param {number[]} nums
  * @return {number}
  */
 var triangleNumber = function(nums) {
-  if (nums.length < 3) {
-    return 0;
-  }
-
-  nums.sort((a, b) => a - b);
-
-  const LEN = nums.length;
-
-  let count = 0;
-
-  // 遍历所有可能的前两条边，在右侧找符合要求的第三条边
-  for (let i = 0; i < LEN - 2; i++) {
-    if (nums[i] === 0) {
-      continue;
-    }
-    for (let j = i + 1; j < LEN - 1; j++) {
-      let k = j + 1;
-      while (k < LEN && nums[k] < nums[i] + nums[j]) {
-        count++;
-        k++;
-      }
-    }
-  }
-
-  return count;
-};
-
-/**
- * @param {number[]} nums
- * @return {number}
- */
-var triangleNumber_2 = function(nums) {
   const LEN = nums.length;
   if (LEN < 3) {
     return 0;
@@ -63,14 +32,14 @@ var triangleNumber_2 = function(nums) {
 
   let count = 0;
   // 最右侧指针
-  for(let k = 2; k < LEN; k++) {
+  for (let k = 2; k < LEN; k++) {
     // 前两个指针在 k 的左侧空间的起始和末尾
     // 在遍历中互相靠近
     let i = 0;
     let j = k - 1;
 
-    while(i < j) {
-      if(nums[i] + nums[j] > nums[k]) {
+    while (i < j) {
+      if (nums[i] + nums[j] > nums[k]) {
         // 若成立，则 i 左侧到 j 之间的数字全部都成立
         count += j - i;
         j--;
@@ -82,5 +51,5 @@ var triangleNumber_2 = function(nums) {
   return count;
 };
 
-console.log(triangleNumber_2([2, 2, 3, 4]));
-console.log(triangleNumber_2([4, 2, 3, 4]));
+console.log(triangleNumber([2, 2, 3, 4]));
+console.log(triangleNumber([4, 2, 3, 4]));
