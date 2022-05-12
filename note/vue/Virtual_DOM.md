@@ -185,6 +185,55 @@ function dfsWalk(oldNode, newNode, index, patches) {
 } 
 ```
 
-#### 对原有的DOM树进行操作
+#### 将虚拟DOM树差异应用到真实DOM
+对最开始构建的虚拟DOM树也进行DFS，遍历时和上一步生成的patches进行对比，并应用差异
+```js
+function patch (node, patches) {
+  var walker = {index: 0};
+  dfsWalk(node, walker, patches);
+}
 
-TODO:
+function dfsWalk (node, walker, patches) {
+  // 从patches拿出当前节点的差异
+  var currentPatches = patches[walker.index];
+
+  var len = node.childNodes ? node.childNodes.length : 0;
+  // 深度遍历子节点
+  for (var i = 0; i < len; i++) {
+    var child = node.childNodes[i];
+    walker.index++;
+    dfsWalk(child, walker, patches);
+  }
+  // 对当前节点进行DOM操作
+  if (currentPatches) {
+    applyPatches(node, currentPatches);
+  }
+}
+```
+
+根据不同差异类型对节点进行对应操作。
+```js
+function applyPatches (node, currentPatches) {
+  currentPatches.forEach(currentPatch => {
+    switch (currentPatch.type) {
+      case REPLACE:
+        var newNode = (typeof currentPatch.node === 'string')
+          ? document.createTextNode(currentPatch.node)
+          : currentPatch.node.render();
+        node.parentNode.replaceChild(newNode, node);
+        break;
+      case REORDER:
+        reorderChildren(node, currentPatch.moves);
+        break;
+      case PROPS:
+        setProps(node, currentPatch.props);
+        break;
+      case TEXT:
+        node.textContent = currentPatch.content;
+        break;
+      default:
+        throw new Error('Unknown patch type ' + currentPatch.type);
+    }
+  })
+} 
+```

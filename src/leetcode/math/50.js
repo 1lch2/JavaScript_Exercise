@@ -20,10 +20,37 @@
 // -10^4 <= xn <= 10^4
 
 /**
+ * @copyright https://leetcode-cn.com/problems/powx-n/solution/50-powx-n-kuai-su-mi-qing-xi-tu-jie-by-jyd/
  * @param {number} x
  * @param {number} n
  * @return {number}
  */
 var myPow = function(x, n) {
-  // TODO:
+  if(x === 0) {
+    return 0;
+  }
+
+  if(x === 1 || n === 0) {
+    return 1;
+  }
+
+  // 负数次幂时做转换
+  if(n < 0) {
+    x = 1 / x;
+    n = -n;
+  }
+
+  let res = 1;
+  while(n !== 0) {
+    // 当前幂次为奇数
+    if(n % 2 === 1) {
+      res *= x;
+    }
+    x *= x;
+    // 无符号右移
+    // 当 n 为 -2^31 时，转换后的值符号位为 1，需要使用无符号右移
+    n = n >>> 1;
+  }
+  
+  return res;
 };

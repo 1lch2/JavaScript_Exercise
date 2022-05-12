@@ -27,3 +27,8 @@
 ## 销毁阶段
 - beforeDestroy： 执行该方法的时候，Vue的生命周期已经进入销毁阶段，但是实例上的各种数据还出于可用状态
 - destroyed： 组件已经全部销毁，Vue实例已经被销毁，Vue中的任何数据都不可用
+
+## 嵌套组件的生命周期
+- 挂载阶段：父组件 beforeMount -> 子组件 created -> 子组件 mounted -> 父组件 mounted
+- 更新阶段：父组件 beforeUpdate -> 子组件 beforeUpdate -> 子组件 updated -> 父组件 updated
+- 销毁阶段：父组件 beforeDestroy -> 子组件 beforeDestroy -> 子组件 destroyed -> 父组件 destroyed
