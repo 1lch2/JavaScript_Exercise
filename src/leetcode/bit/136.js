@@ -17,6 +17,6 @@
  */
 var singleNumber = function(nums) {
   return nums.reduce((previous, current, index, array) => {
-    return previous ^ current
-  })
+    return previous ^ current;
+  });
 };

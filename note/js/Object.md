@@ -55,6 +55,30 @@ console.log(obj); // {a: "a", newProp: 42}
 
 参见：[JS中的原型](./Prototype.md)
 
+### 访问对象属性
+JS中可以使用`.property`和`["property"]`两种方法访问对象属性，包括对象上定义的方法。以下两种方式等价.
+
+```js
+let obj = {
+  val: 1,
+  hi: function(name) {
+    console.log("hello " + name);
+  }
+}
+
+obj.val; // 1
+obj.hi("world"); // hello world
+
+obj["val"]; // 1
+obj["hi"]("world"); // hello world
+```
+
+如果对数字字面量使用方法，并且数字文字没有指数且没有小数点，请在方法调用之前的点之前留出空格，以防止点被解释为小数点。
+```js
+12.toString(); // Uncaught SyntaxError: Invalid or unexpected token
+12 .toString(); // "12"
+```
+
 ## 实例方法
 ### Object.prototype.hasOwnProperty()
 返回一个布尔值，用于表示一个对象自身是否包含指定的属性，该方法并不会查找原型链上继承来的属性。
