@@ -1,23 +1,23 @@
 # 从输入URL到加载网页的过程
 
-## DNS
+## 1. DNS
 
-## HTTP
+## 2. HTTP
 
-## TCP
+## 3. TCP
 
-## 渲染
+## 4. 渲染
 
-### DOM tree
+### 4.1 DOM tree
 
-### CSSOM tree
+### 4.2 CSSOM tree
 
-### Render tree
+### 4.3 Render tree
 
-### Layout
+### 4.4 Layout
 
-### Paint
+### 4.5 Paint
 
-## 加载JS等资源
+## 5. 加载JS等资源
 
 TODO: 

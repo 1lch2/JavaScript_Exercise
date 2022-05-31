@@ -39,6 +39,12 @@ let f = new F();
 f.__proto__ === F.prototype; // true
 ```
 
+> 注意：对于 `Function` 函数，由它使用`new`操作符创建的对象是一个函数，但同时也是一个对象，因此以下表达式的结果为 true。
+> ```js
+> let f = new Function();
+> f.__proto__ == Function.prototype; // true
+> ```
+
 通过修改构造函数的原型对象，可以实现从另一个构造函数继承属性和方法。举例如下:
 ```js
 function A(id) {
