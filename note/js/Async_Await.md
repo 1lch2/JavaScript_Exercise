@@ -138,4 +138,55 @@ console.log(3);
 7. 打印 4
 8. foo 返回
 
-TODO
+当 await 后面是一个 promise 时，为了执行异步函数，会有两个任务被加到消息队列，并被异步求值。如下例所示：
+```js
+async function foo() {
+  console.log(2);
+  console.log(await Promise.resolve(8));
+  console.log(9);
+}
+
+async function bar() {
+  console.log(4);
+  console.log(await 6);
+  console.log(7);
+}
+
+console.log(1);
+foo();
+console.log(3);
+bar();
+console.log(5);
+
+// 1
+// 2
+// 3
+// 4
+// 5
+// 6
+// 7
+// 8
+// 9
+```
+
+具体执行过程如下：
+1. 打印 1
+2. 调用异步函数 foo()，打印 2
+3. 遇到 await ，暂停执行，向消息队列中添加一个 promise 完成后执行的任务
+4. promise 马上完成，将给 await 提供值的任务添加到消息队列
+5. foo() 退出
+6. 打印 3
+7. 调用异步函数 bar()，打印 4
+8. 遇到 await ，暂停执行，将立即可用的值 6 添加到消息队列任务
+9. bar() 退出
+10. 打印 5
+11. 此时顶级线程执行完毕，开始从消息队列中取出任务
+12. 取出解决 await promise 的任务，将解决的值 8 提供给它
+13. 向消息队列中添加一个恢复执行 foo() 的任务
+14. 从消息队列中取出恢复执行 bar() 的任务和值 6
+15. bar() 先恢复执行，await 取得 6，打印 6
+16. 打印 7
+17. bar() 返回，从消息队列中取出恢复 foo() 执行的任务和值 8
+18. 打印 8
+19. 打印 9
+20. foo() 返回
