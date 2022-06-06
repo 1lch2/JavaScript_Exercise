@@ -87,19 +87,19 @@ main {
 
 flex 实现方法如下所示
 ```html
-<body class="HolyGrail">
+<body>
   <header>...</header>
-  <div class="HolyGrail-body">
-    <main class="HolyGrail-content">...</main>
-    <nav class="HolyGrail-nav">...</nav>
-    <aside class="HolyGrail-ads">...</aside>
+  <div class="main">
+    <nav class="left">...</nav>
+    <main class="content">...</main>
+    <aside class="aside">...</aside>
   </div>
   <footer>...</footer>
 </body>
 ```
 
 ```css
-.HolyGrail {
+body {
   display: flex;
   min-height: 100vh;
   flex-direction: column;
@@ -107,26 +107,22 @@ flex 实现方法如下所示
 
 header,
 footer {
+  /* flex设为 1 会导致header和主体部分等高 */
   flex: 1;
 }
 
-.HolyGrail-body {
+div.main {
   display: flex;
   flex: 1;
 }
 
-.HolyGrail-content {
+main.content {
   flex: 1;
 }
 
-.HolyGrail-nav, .HolyGrail-ads {
+.left .right {
   /* 两个边栏的宽度设为12em */
   flex: 0 0 12em;
-}
-
-.HolyGrail-nav {
-  /* 导航放到最左边 */
-  order: -1;
 }
 ```
 

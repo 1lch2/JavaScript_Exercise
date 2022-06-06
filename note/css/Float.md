@@ -45,3 +45,45 @@ clear 可以取三个值：
 - left：
 - right：
 - both：
+
+## 宽度问题
+如下例所示：
+```html
+<main class="container">
+    <aside class="left"></aside>
+    <aside class="right"></aside>
+</main>
+```
+
+```css
+main.container {
+    height: 200px;
+    padding: 20px 20px;
+    background-color: antiquewhite;
+}
+
+aside {
+    height: inherit
+}
+
+.left {
+    background-color: burlywood;
+    float: left;
+    width: 50%;
+    padding: 0 10px;
+
+    /** box-sizing: border-box; */
+}
+
+.right {
+    background-color: teal;
+    float: right;
+    width: 50%;
+}
+```
+
+左侧float元素由于存在内边距，按照默认标准盒模型计算宽度会超出50%，导致右侧浮动元素换行，效果如下：
+![img](../static/Float_1.png)
+
+而解决办法是将该float元素的宽度计算方法改成IE盒模型，不加入内边距，即注释中的一行 `box-sizing: border-box`。修改后效果如下：
+![img](../static/Float_2.png)

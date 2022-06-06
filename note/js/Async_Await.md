@@ -66,6 +66,8 @@ async function test() {
     await new Promise(() => {
       throw new Error("errrrrr");
     }).then();
+    // 若在此处使用catch()语句捕获reject状态
+    // 则下方的 catch 代码块不会捕获到错误
 
     console.log("err happened");
   } catch(err) {
@@ -83,8 +85,6 @@ test();
 // catched an err: Error: errrrrr
 // end
 ```
-
-TODO:
 
 ## await
 await 操作符用于等待一个Promise 对象。它只能在异步函数 `async function` 中使用。
