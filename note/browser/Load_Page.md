@@ -15,6 +15,8 @@
 #### 请求支持对象（support objects）
 support objects 通常指 `<link>` 里的CSS链接，和`<img>` 中的图片链接。构造DOM树和请求支持对象会同时发生。
 
+当初始的 HTML 文档被完全加载和解析完成之后，`DOMContentLoaded` 事件被触发，而无需等待 CSS、图像和子框架的完全加载。
+
 ### 4.2 CSSOM tree
 在收到CSS文件后，浏览器就会开始分析语法并将 CSS 规则转换为可以理解和使用的样式映射。浏览器遍历 CSS 中的每个规则集，根据 CSS 选择器创建具有父、子和兄弟关系的节点树。
 

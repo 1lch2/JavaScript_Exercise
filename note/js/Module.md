@@ -71,6 +71,145 @@ let readfile = _fs.readfile;
 ```
 上面代码的实质是整体加载fs模块（即加载fs的所有方法），生成一个对象（_fs），然后再从这个对象上面读取 3 个方法。
 
-
 ## ES6
-TODO
+ES6 模块不是对象，而是通过export命令显式指定输出的代码，再通过import命令输入。
+```js
+// ES6模块
+import { stat, exists, readFile } from 'fs';
+```
+上面代码的实质是从fs模块加载 3 个方法，其他方法不加载。这种加载称为“编译时加载”或者静态加载，即 ES6 可以在编译时就完成模块加载，效率要比 CommonJS 模块的加载方式高。
+
+### 严格模式
+ES6 模块默认采用严格模式，严格模式的限制参考[严格模式](./Strict_Mode.md)
+
+除此之外，ES6 模块之中，顶层的this指向undefined，即不应该在顶层代码使用this
+
+### export
+**注意区别于CommonJS规范的`exports`，不是一回事**
+
+export 命令用于规定模块的对外接口，import 命令用于输入其他模块提供的功能。同CommonJS规范一样，一个ES6模块就是一个文件，文件内部变量和方法外部无法访问，只能通过 export 关键字输出变量。
+
+```js
+export var firstName = 'Michael';
+export var lastName = 'Jackson';
+export var year = 1958;
+
+// 或者使用另一种写法
+var firstName = 'Michael';
+var lastName = 'Jackson';
+var year = 1958;
+export { firstName, lastName, year };
+```
+
+export 也可以输出函数或者类，用法如下。
+```js
+export function hi() {
+    console.log("hi");
+}
+
+// 或者
+function hi() {
+    console.log("hi");
+}
+export { hi };
+// 也可以使用 as 来指定输出的名字
+export { hi as hello};
+
+// 下方写法会报错
+export hi;
+```
+
+export 可以出现在模块的任何位置，只要处于模块顶层就可以。如果处于块级作用域内，就会报错，import命令也是如此。
+
+### import
+import命令接受一对大括号，里面指定要从其他模块导入的变量名。大括号里面的变量名，必须与被导入模块对外接口的名称相同。
+
+import 也可以使用 as 来重命名导入的模块变量，用法同 export。
+```js
+import { hi } from "./greeting.js";
+
+hi();
+```
+
+import后面的from指定模块文件的位置，可以是相对路径，也可以是绝对路径。如果不带有路径，只是一个模块名，那么必须有配置文件，告诉 JavaScript 引擎该模块的位置。
+```js
+import { myMethod } from 'util';
+```
+上面代码中，util是模块文件名，由于不带有路径，必须通过配置，告诉引擎怎么取到这个模块。
+
+import 中可以使用 `*` 来整体加载模块，而不用逐一加载每个变量和函数。
+```js
+// greeting.js
+export function hi() {
+}
+
+export function hello() {
+}
+
+// main.js
+import * as greeting from "./greeting";
+
+greeting.hi();
+greeting.hello();
+```
+
+### export default
+export default命令可以为模块指定默认输出。当导入模块时，可以为匿名变量或函数指定任意名字，示例如下。
+
+```js
+// export-default.js
+export default function () {
+  console.log('foo');
+}
+
+// import-default.js
+import customName from './export-default';
+customName(); // 'foo'
+```
+
+export default 也可以用在非匿名函数上。
+```js
+export default function foo() {
+  console.log('foo');
+}
+
+// 以下代码效果相同
+function foo() {
+  console.log('foo');
+}
+export default foo;
+```
+
+和默认方式对比如下：
+```js
+// export 输出，import { name } 导入
+export function crc32() {
+  // ...
+};
+
+import {crc32} from 'crc32';
+
+//-----------------------------------
+
+// export default 输出，import 重命名导入
+export default function crc32() {
+  // ...
+}
+
+import crc32 from 'crc32';
+```
+
+export default 只能使用一次，本质上是输出一个叫做 default 的变量或方法，然后系统允许你为它取任意名字。
+
+
+## CommonJS 模块与 ES6 模块的差异
+主要差异有三点：
+- CommonJS 模块输出的是一个值的拷贝，ES6 模块输出的是值的引用。
+- CommonJS 模块是运行时加载，ES6 模块是编译时输出接口。
+- CommonJS 模块的require()是同步加载模块，ES6 模块的import命令是异步加载，有一个独立的模块依赖的解析阶段。
+
+### Node.js
+Node.js 要求 ES6 模块采用 `.mjs` 后缀文件名。也就是说，只要脚本文件里面使用 import 或者 export 命令，那么就必须采用.mjs后缀名。
+
+Node.js 遇到.mjs文件，就认为它是 ES6 模块，默认启用严格模式，不必在每个模块文件顶部指定"use strict"。
+

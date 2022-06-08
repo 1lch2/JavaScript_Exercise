@@ -32,6 +32,18 @@
 
     考虑到约定俗成和最大限度的浏览器兼容性，目前 type 属性的值依旧还是 text/javascript 。不过，这个属性并不是必需的，如果没有指定这个属性，则其默认值仍为text/javascript 。
 
+### type="module"
+浏览器加载ES6模块需要为script标签使用`type="module"`属性。
+
+```html
+<script type="module" src="./foo.js"></script>
+```
+
+浏览器对于带有type="module"的`<script>`，都是异步加载，不会造成堵塞浏览器，即等到整个页面渲染完，再执行模块脚本，等同于打开了`<script>`标签的defer属性。
+
+如果网页有多个`<script type="module">`，它们会按照在页面出现的顺序依次执行。
+
+
 ## 引入JS的方式
 ### 内联形式
 即使用`<script>`标签将JS嵌入在HTML中
@@ -120,6 +132,23 @@ HTML5新增了`async`属性， async 只适用于外部脚本文件，并告诉�
 
 ### 对比
 ![img](../static/Script_Element.webp)
+
+关于`<script>` 不同属性对加载顺序的影响，参考HTML5规范中的插图
+![img](../static/Script_Tag.png)
+
+## 阻塞
+引入外部CSS的标签如果位于`<script>`前，则会阻塞JS语句的执行。示例如下：
+
+```html
+<link rel="stylesheet" href="css.php">
+<script>
+document.addEventListener('DOMContentLoaded',function(){
+    console.log('3 seconds passed');
+});
+</script>
+```
+
+上述代码会在 3 秒后打印，而如果将`<link>`和`<script>`调换，则会立刻打印。
 
 ## 参考
 - [谈谈 \<script\> 标签以及其加载顺序问题，包含 defer & async](https://segmentfault.com/a/1190000013615988)
