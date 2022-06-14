@@ -44,7 +44,7 @@ Cross-Site Scripting（跨站脚本攻击）简称 XSS，是一种代码注入�
 ### 反射型 XSS
 #### 攻击步骤
 1. 攻击者构造出特殊的 URL，其中包含恶意代码。
-2. 用户打开带有恶意代码的 URL 时，网站服务端将恶意代码从 URL 中取出，拼接在 HTML 中返回给浏览器。
+2. 用户打开带有恶意代码的 URL 时，网站**服务端**将恶意代码从 URL 中取出，拼接在 HTML 中返回给浏览器。
 3. 用户浏览器接收到响应后解析执行，混在其中的恶意代码也被执行。
 4. 恶意代码窃取用户数据并发送到攻击者的网站，或者冒充用户的行为，调用目标网站接口执行攻击者指定的操作。
 
@@ -61,5 +61,23 @@ POST 的内容也可以触发反射型 XSS，只不过其触发条件比较苛�
 4. 过滤不必要的HTML标签，例如：iframe, alt, script 和特殊字符。过滤一些事件，例如 onclick, onfocus等。
 
 ### DOM 型 XSS
+#### 攻击步骤
+- 攻击者构造出特殊的 URL，其中包含恶意代码。
+- 用户打开带有恶意代码的 URL。
+- 用户浏览器接收到响应后解析执行，**前端** JavaScript 取出 URL 中的恶意代码并执行。
+- 恶意代码窃取用户数据并发送到攻击者的网站，或者冒充用户的行为，调用目标网站接口执行攻击者指定的操作。
 
-TODO:
+跟前两种 XSS 的区别：DOM 型 XSS 攻击中，取出和执行恶意代码由浏览器端完成，属于前端 JavaScript 自身的安全漏洞，而其他两种 XSS 都属于服务端的安全漏洞。
+
+对比:
+|    类型    |          存储区         |      插入点     |
+|:----------:|:-----------------------:|:---------------:|
+| 存储型 XSS | 后端数据库              | HTML            |
+| 反射型 XSS | URL                     | HTML            |
+| DOM 型 XSS | 后端数据库/前端存储/URL | 前端 JavaScript |
+
+#### 防御方式
+1. 在使用 .innerHTML、.outerHTML、document.write() 时要特别小心，不要把不可信的数据作为 HTML 插到页面上，而应尽量使用 .textContent、.setAttribute() 等。
+2. 对于 Vue/React 技术栈，并且不使用 v-html/dangerouslySetInnerHTML 功能，就在前端 render 阶段避免 innerHTML、outerHTML 的 XSS 隐患。
+3. DOM 中的内联事件监听器，如 location、onclick、onerror、onload、onmouseover 等，`<a>` 标签的 href 属性，JavaScript 的 eval()、setTimeout()、setInterval() 等，都能把字符串作为代码运行。如果不可信的数据拼接到字符串中传递给这些 API，很容易产生安全隐患，请务必避免。
+
