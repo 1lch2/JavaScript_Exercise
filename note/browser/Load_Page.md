@@ -17,14 +17,32 @@ support objects 通常指 `<link>` 里的CSS链接，和`<img>` 中的图片链�
 
 当初始的 HTML 文档被完全加载和解析完成之后，`DOMContentLoaded` 事件被触发，而无需等待 CSS、图像和子框架的完全加载。
 
+#### script 标签
+当浏览器的HTML解析器遇到一个`<script>`标签时会暂停构建DOM，然后将控制权移交至JavaScript引擎，这时引擎会开始执行JavaScript脚本，直到执行结束后，浏览器才会从之前中断的地方恢复，然后继续构建DOM。
+
 ### 4.2 CSSOM tree
 在收到CSS文件后，浏览器就会开始分析语法并将 CSS 规则转换为可以理解和使用的样式映射。浏览器遍历 CSS 中的每个规则集，根据 CSS 选择器创建具有父、子和兄弟关系的节点树。
 
 UA样式会覆盖浏览器的默认样式
 
 #### 阻塞渲染的CSS
-TODO:
+通过 `<link>` 标签的 `media` 属性，可以指定首次加载时先不进行构建CSSOM树，只有在符合特定条件时，才会让浏览器进行阻塞渲染然后构建CSSOM树。
 
+示例如下：
+```html
+<!-- 默认 media 属性设置为 "all"，即阻塞渲染 -->
+<link href="style.css" rel="stylesheet">
+<!-- 效果同上 -->
+<link href="style.css" rel="stylesheet" media="all">
+
+<!-- 根据网页加载时设备的方向，portrait.css 可能阻塞渲染，也可能不阻塞渲染 -->
+<link href="portrait.css" rel="stylesheet" media="orientation:portrait">
+
+<!-- 只在打印网页时应用，因此网页首次在浏览器中加载时，它不会阻塞渲染。 -->
+<link href="print.css"    rel="stylesheet" media="print">
+```
+
+使用媒体查询可以让CSS资源不在首次加载中阻塞渲染，但不管是哪种CSS资源它们的下载请求都不会被忽略，**浏览器仍然会先下载CSS文件**
 
 ### 4.3 Render tree
 渲染树由合并DOM树和CSSOM树构成，构造过程如下：

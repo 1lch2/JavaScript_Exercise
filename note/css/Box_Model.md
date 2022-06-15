@@ -71,6 +71,40 @@ width 用来设置**内容区域**的宽度，不是整个元素的宽度（即�
 
 如果设为 100%，则元素的内容高度会和父元素保持一致
 
+## 获取元素的宽高
+有如下HTML和CSS
+```html
+<div id="test">
+    test
+</div>
+```
+
+```css
+div#test {
+    height: 50px;
+    width: 50px;
+}
+```
+使用如下JS代码无法获取到元素的宽高
+```js
+let test = document.getElementById("test");
+console.log(test.style.height);
+// ""
+```
+
+原因是 `element.style.height` 这样的方式仅能获取到内联样式。对于外部样式，应该参考以下方式：
+```js
+let test = document.getElementById("test");
+
+// 方法一，getComputedStyle
+window.getComputedStyle(test).height; // "50px"
+// 方法二，clientHeight/clientWidth 属性
+// 获取到的是内容区域加上下 padding 的大小
+test.clientHeight; // 50
+```
+
+除此之外，通过元素的`offsetHeight、offsetWidth`可以获取到包含 padding 和 margin 的尺寸值。
+
 ## 参考
 - [Everything About Auto in CSS
 ](https://ishadeed.com/article/auto-css/)
