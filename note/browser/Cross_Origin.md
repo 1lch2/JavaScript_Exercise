@@ -34,7 +34,7 @@
 两个网页一级域名相同，只是二级域名不同，浏览器允许通过设置document.domain共享 Cookie。
 
 举例:
-A网页是http://w1.example.com/a.html，B网页是http://w2.example.com/b.html，那么只要设置相同的`document.domain`，两个网页就可以共享Cookie。
+A网页是 `http://w1.example.com/a.html` ，B网页是 `http://w2.example.com/b.html`，那么只要设置相同的`document.domain`，两个网页就可以共享Cookie。
 ```js
 document.domain = 'example.com';
 ```

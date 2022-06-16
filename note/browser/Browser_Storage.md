@@ -46,11 +46,11 @@ SameSite 可以有下面三种值：
 ### 使用
 #### 添加 cookie
 当服务器收到 HTTP 请求时，服务器可以在响应头里面添加一个 `Set-Cookie` 选项。
-```
+```http
 Set-Cookie: <cookie名>=<cookie值>
 ```
 对应的HTTP响应示例：
-```
+```http
 HTTP/1.0 200 OK
 Content-type: text/html
 Set-Cookie: yummy_cookie=choco
