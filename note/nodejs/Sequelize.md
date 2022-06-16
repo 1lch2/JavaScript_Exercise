@@ -144,5 +144,22 @@ let res = await Person.update(
 let result = JSON.parse(res)[0] == 0;
 ```
 
+## 插入或更新
+```sql
+INSERT INTO persons (id, name, city, age)
+VALUES (1, "AA", "Beijing", 42) 
+ON DUPLICATE KEY
+UPDATE name="AA", city="Beijing", age=42
+```
+
+```js
+let res = await Person.upsert({
+    id: 1,
+    name: "AA",
+    city: "Beijing",
+    age: 42
+});
+```
+
 ## 删除
 TODO:
