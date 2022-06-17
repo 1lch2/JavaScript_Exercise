@@ -163,3 +163,62 @@ let res = await Person.upsert({
 
 ## 删除
 TODO:
+
+
+## 事务
+### 非托管事务
+提交和回滚事务应该手动完成(通过调用适当的 Sequelize 方法)
+
+```js
+// 首先,我们开始一个事务并将其保存到变量中
+const t = await sequelize.transaction();
+
+try {
+  // 然后,我们进行一些调用以将此事务作为参数传递:
+  const user = await User.create({
+    firstName: '张',
+    lastName: '三'
+  }, { transaction: t });
+
+  await user.addSibling({
+    firstName: '李',
+    lastName: '四'
+  }, { transaction: t });
+
+  // 如果执行到此行,且没有引发任何错误.
+  // 我们提交事务.
+  await t.commit();
+} catch (error) {
+  // 如果执行到达此行,则抛出错误.
+  // 我们回滚事务.
+  await t.rollback();
+}
+```
+
+### 托管事务
+如果抛出任何错误, Sequelize 将会自动回滚事务, 否则将提交事务
+
+不需要直接调用 t.commit() 和 t.rollback()
+```js
+try {
+  const result = await sequelize.transaction(async (t) => {
+    const user = await User.create({
+        firstName: '张',
+        lastName: '三'
+    }, { transaction: t });
+
+    await user.setShooter({
+        firstName: '李',
+        lastName: '四'
+    }, { transaction: t });
+
+    return user;
+  });
+
+  // 如果执行到此行,则表示事务已成功提交,`result`是事务返回的结果
+  // `result` 就是从事务回调中返回的结果(在这种情况下为 `user`)
+} catch (error) {
+  // 如果执行到此,则发生错误.
+  // 该事务已由 Sequelize 自动回滚！
+}
+```
