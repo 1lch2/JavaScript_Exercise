@@ -61,7 +61,7 @@ console.log(arr); // [undefined] x 10
 
 正确操作是，使用 `Array.from()` 从新创建的数组构造新的数组后，再调用 map，如下所示：
 ```js
-let arr = Array.from(new Array(10)).map(val, index => index);
+let arr = Array.from(new Array(10)).map((val, index) => index);
 console.log(arr); // [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 ]
 ```
 
