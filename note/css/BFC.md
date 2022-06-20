@@ -20,9 +20,9 @@ BFC是一个完全独立的空间（布局环境），让空间里的子元素�
 ```css
 {
     overflow: hidden;
-    display: inline-block;
     position: absolute;
     position: fixed;
+    display: inline-block;
     display: table-cell;
     display: flex;
 }

@@ -14,6 +14,8 @@ BOM 提供了与网页无关的浏览器功能对象
 ## window
 BOM 的核心是 window 对象，表示浏览器的实例。window 对象在浏览器中有两重身份，一个是 ECMAScript 中的 Global 对象，另一个就是浏览器窗口的 JavaScript 接口。
 
+**`document`是`window`对象的属性**
+
 ### global 作用域
 所有通过`var`声明的全局变量和函数都会变成 window 对象的属性和方法。
 
