@@ -142,10 +142,10 @@ obj.hi(); // window
 
 ```js
 let ooo = {
-    name: "b",
-    hi: function() {
-        console.log(this)
-    }
+  name: "b",
+  hi: function() {
+      console.log(this)
+  }
 }
 
 ooo.hi(); // ooo
@@ -174,6 +174,28 @@ let eat = Animal.eat;
 eat(); // undefined
 ```
 
+### class 中的 this 指向问题
+为了解决上述问题，保证将class 中的方法赋值给其他变量再调用时的this指向不变，可以在对象实例化时将sum中的this绑定到实例化对象中，示例如下:
+
+```js
+class A {
+  constructor(a, b) {
+    this.a = a;
+    this.b = b;
+  
+    // 显式绑定this
+    this.sum = this.sum.bind(this);
+  }
+  
+  sum() {
+    return this.a + this.b;
+  }
+}
+
+let a = new A(1, 2);
+let s = a.sum;
+s(); // 3
+```
 
 ## 如何访问到自己想要的 this ？
 引用自 Stack Overflow：[How to access the correct `this` inside a callback](https://stackoverflow.com/questions/20279484/how-to-access-the-correct-this-inside-a-callback)
