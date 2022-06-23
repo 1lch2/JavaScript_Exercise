@@ -17,7 +17,7 @@
 ```
 ```css
 .positioned {
-    position: static;
+  position: static;
   top: 30px;
   left: 30px;
   background: yellow;

@@ -85,10 +85,10 @@ before 将在被选择元素前插入元素， after 则是在之后。
 <p>Title</p>
 
 <style>
-p:before {
+p::before {
   content: open-quote;
 }
-p:after {
+p::after {
   content: close-quote;
 }
 </style>

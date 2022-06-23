@@ -100,3 +100,45 @@ MyPromise.myAll = function(promises) {
     }
   });
 };
+
+/**
+ * 返回所有promise的执行结果，不论成功或失败
+ * @param {Array<Promise>} promises 
+ * @returns {Array} 每个promise的结果
+ */
+Promise.myAllSettled = function(promises) {
+  return new Promise((resolve, reject) => {
+    if(!(promises instanceof Array)) {
+      reject("not an array");
+    }
+    if(promises.length === 0) {
+      resolve([]);
+    }
+
+    let res = new Array(promises.length).fill(null);
+    let counter = 0;
+
+    function trigger(data, index) {
+      res[index] = data;
+      counter++;
+
+      if(counter === promises.length) {
+        resolve(res);
+      }
+    }
+
+    for(let i = 0; i < promises.length; i++) {
+      let current = promises[i];
+
+      if(!(current instanceof Promise)) {
+        reject("not valid input");
+      }
+
+      current.then((data) => {
+        trigger(data, i);
+      }).catch((err) => {
+        trigger(err, i);
+      });
+    }
+  });
+};
