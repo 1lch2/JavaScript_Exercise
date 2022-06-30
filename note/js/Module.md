@@ -21,6 +21,21 @@ CommonJS规范特点如下：
 ### module.exports 和 exports变量
 CommonJS规范规定，每个模块内部， `module` 变量代表当前模块。这个变量是一个对象，它的 `exports `属性（即`module.exports`）是对外的接口。加载某个模块，其实是加载该模块的`module.exports`属性。
 
+使用示例如下：
+```js
+// logger.js
+const logger = function(req) {
+  console.log("Request URL: ", req.url);
+}
+
+// app.js
+const logger = require("./logger");
+
+logger({ url: "localhost:8080" });
+
+// Request URL: localhost:8080
+```
+
 为了方便，Node为每个模块提供一个 `exports` 变量，指向 `module.exports` 。这等同在每个模块头部，有一行这样的命令。
 ```js
 var exports = module.exports;
