@@ -187,6 +187,21 @@ app.use((req, res, next) => {
 - `express.text()`： 解析Content-Type为text/plain格式的请求体
 - `express.static()`： 托管静态资源文件
 
+## 结束响应
+res对象上的方法可以将响应发送到客户端，并终止请求-响应周期。如果没有从路由处理程序调用这些方法，则客户端请求将被挂起。
+
+|       方法       |                        描述                        |
+|:----------------:|:--------------------------------------------------:|
+| res.download()   | 提示要下载的文件                                   |
+| res.end()        | 结束响应过程                                       |
+| res.json()       | 发送JSON响应                                       |
+| res.jsonp()      | 发送带有JSONP支持的JSON响应                        |
+| res.redirect()   | 重定向请求                                         |
+| res.render()     | 渲染视图模板                                       |
+| res.send()       | 发送各种类型的响应                                 |
+| res.sendFile()   | 将文件作为八位字节流发送                           |
+| res.sendStatus() | 设置响应状态码，并将其字符串表示形式发送为响应正文 |
+
 
 ## Express 与 Koa 的区别
 - express内置了许多中间件可供使用，而koa没有。

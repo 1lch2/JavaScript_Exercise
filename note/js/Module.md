@@ -30,7 +30,6 @@ const logger = function(req) {
 
 // app.js
 const logger = require("./logger");
-
 logger({ url: "localhost:8080" });
 
 // Request URL: localhost:8080
@@ -85,6 +84,22 @@ let exists = _fs.exists;
 let readfile = _fs.readfile;
 ```
 上面代码的实质是整体加载fs模块（即加载fs的所有方法），生成一个对象（_fs），然后再从这个对象上面读取 3 个方法。
+
+若 module.exports 导出了多个方法或对象，但是并不需要全部导入，则必须将导入的部分对象用`{}`包裹起来，示例如下
+```js
+// ---- module.js ----
+function a(){
+  //...
+}
+function b() {
+  //...
+}
+module.exports = { a, b }
+
+// ---- app.js ----
+const { a } = require("./moduls")
+a();
+```
 
 ## ES6
 ES6 模块不是对象，而是通过export命令显式指定输出的代码，再通过import命令输入。
