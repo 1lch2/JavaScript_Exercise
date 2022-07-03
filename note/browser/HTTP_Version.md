@@ -25,7 +25,7 @@ Last-Modified: Wed, 5 August 1996 15:55:28 GMT
 ```
 
 关于 `Content-Type`: 客户端依照这个字段解析响应内容，数据类型总称为MIME type，每个值包括一级类型和二级类型，之间用斜杠分隔。举例如下：
-```http
+```
 text/plain
 text/html
 text/css
