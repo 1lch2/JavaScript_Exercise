@@ -54,6 +54,8 @@ module.exports.hi = function() {
 
 > **注意**：不能直接对 `exports` 变量赋值，这样会导致 `exports` 不再指向 `module.exports`
 
+> 若同时使用了 `module.exports` 和 `exports`，则靠后的会生效。如果直接对 `exports` 赋值，则 exports 语句会失效，输出为 module.exports 导出的内容
+
 > 如果一个模块的对外接口，就是一个单一的值，不能使用exports输出，只能使用module.exports输出。
 
 
