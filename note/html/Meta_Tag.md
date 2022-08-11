@@ -26,3 +26,13 @@ Meta标签提供关于HTML文档的元数据，这些内容不会展示在网页
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"/>
 ```
 
+|      属性     |                         含义                        |             取值             |
+|:-------------:|:---------------------------------------------------:|:----------------------------:|
+| width         | 定义视口的宽度，单位为像素                          | 正整数或设备宽度device-width |
+| height        | 定义视口的高度，单位为像素                          | 正整数或device-height        |
+| initial-scale | 定义初始缩放值                                      | 整数或小数                   |
+| minimum-scale | 定义缩小最小比例，它必须小于或等于maximum-scale设置 | 整数或小数                   |
+| maximum-scale | 定义放大最大比例，它必须大于或等于minimum-scale设置 | 整数或小数                   |
+| user-scalable | 定义是否允许用户手动缩放页面，默认值yes             | yes/no                       |
+
+

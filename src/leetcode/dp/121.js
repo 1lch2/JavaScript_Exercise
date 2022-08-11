@@ -41,7 +41,30 @@ var maxProfit = function(prices) {
   return maxVal > 0 ? maxVal : 0;
 };
 
+var _maxProfit = function(prices) {
+  let pureProfit = [0];
+  // 将价格转换为每天相比前一天的差值
+  // 再应用最大子序列和的方法
+  for(let i = 1; i < prices.length; i++) {
+    pureProfit.push(prices[i] - prices[i - 1]);
+  }
+
+  // 以 i 下标结束的子序列的最大和
+
+  // 优化：只需要保存dp[i]和dp[i-1]两个值，而不需要全部的dp数组
+  let dp_i_1 = pureProfit[0];
+  let dp_i = 0;
+  let maxVal = -Infinity;
+  for(let i = 1; i < pureProfit.length; i++) {
+    dp_i = Math.max(dp_i_1 + pureProfit[i], pureProfit[i]);
+    maxVal = dp_i > maxVal ? dp_i : maxVal;
+    // 注意更新两个状态的值
+    dp_i_1 = dp_i;
+  }
+  return maxVal > 0 ? maxVal : 0;
+};
+
 (function(){
-  console.log(maxProfit([7,1,5,3,6,4]));
-  console.log(maxProfit([7,6,4,3,1]));
+  console.log(_maxProfit([7,1,5,3,6,4]));
+  console.log(_maxProfit([7,6,4,3,1]));
 })();

@@ -24,23 +24,18 @@
 var search = function(nums, target) {
   let low = 0;
   let high = nums.length - 1;
-  let mid;
-  let res = -1;
 
   while(low <= high) {
-    mid = Math.floor((low + high) / 2);
+    let mid = (low + high) >> 1;
     if(nums[mid] === target) {
-      res = mid;
-      break;
+      return mid;
     } else if(nums[mid] < target) {
       low = mid + 1;
     } else {
       high = mid - 1;
     }
   }
-  return res;
+  return -1;
 };
 
-(function(){
-  console.log(search([-1,0,3,5,9,12], 10));
-})();
+console.log(search([5], 5));
