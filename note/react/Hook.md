@@ -71,4 +71,31 @@ function Example() {
 
 由于副作用函数是在组件内声明的，所以它们可以访问到组件的 props 和 state。默认情况下，React 会在每次渲染后调用副作用函数 —— 包括第一次渲染的时候。
 
+### useEffect 解绑副作用
+组件被注销之前清除掉添加的注册，否则会出现内存泄漏。这时可以在副作用函数中返回一个新函数，在组件下一次渲染后执行。示例如下：
+
+```js
+function Comp(props) {
+  useEffect(() => {
+    subscribe();
+
+    return function cleanup() {
+      unsubscribe();
+    }
+  });
+}
+```
+
+对比生命周期函数：componentWillUnmount 只会在组件被销毁前执行一次，而useEffect里的函数，每次组件渲染后都会执行一遍，包括副作用函数返回的清理函数也会重新执行一遍。
+
+### useEffect 的条件执行
+对useEffect传入第二个参数，仅当第二个参数发生变化时才执行第一个参数定义的副作用函数，示例如下：
+
+```js
+useEffect(() => {
+  // some action
+}, [count]);
+```
+
+
 TODO:

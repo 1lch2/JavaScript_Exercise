@@ -31,16 +31,37 @@ var fib = function(n) {
   dpState[0] = 0;
   dpState[1] = 1;
 
-  if(n < 2) {
+  if (n < 2) {
     return dpState[n];
   }
-  for(let i = 2; i <= n; i++) {
+  for (let i = 2; i <= n; i++) {
     dpState[i] = (dpState[i - 1] + dpState[i - 2]) % MOD;
   }
   return dpState[n];
 };
 
-(function(){
+const fib_ = function(n) {
+  let fi_2 = 0;
+  let fi_1 = 1;
+
+  if (n === 0) {
+    return fi_2;
+  }
+  if (n === 1) {
+    return fi_1;
+  }
+
+  // 只需要存储 f(i), f(i-1), f(i-2)这三个变量
+  let fi = fi_1 + fi_2;
+  for (let i = 1; i < n; i++) {
+    fi = fi_1 + fi_2;
+    fi_2 = fi_1;
+    fi_1 = fi;
+  }
+  return fi;
+};
+
+(function() {
   let n = 81;
   console.log(fib(n));
 })();

@@ -39,21 +39,19 @@ function TreeNode(val, left, right) {
  * @return {TreeNode}
  */
 var lowestCommonAncestor = function(root, p, q) {
-  if(root == null) {
-    return null;
-  }
-
-  const search = (root, p, q) => {
+  const search = (head) => {
     // 若当前根节点值大于两个节点，则目标节点在左子树中
-    if(root.val > p.val && root.val > q.val) {
-      return search(root.left, p, q);
-    } else if(root.val < p.val && root.val < q.val) {
-      return search(root.right, p, q);
+
+    if (head.val > p.val && head.val > q.val) {
+      return search(head.left);
+    } else if (head.val < p.val && head.val < q.val) {
+      return search(head.right);
     } else {
-      // 若当前节点值在p，q之间，则当前节点为分叉点，即所要求的最近公共祖先
-      return root;
+      // 若当前节点值在p，q之间，则当前节点为分叉点，即所要求的最近公共祖先
+
+      return head;
     }
   };
 
-  return search(root, p, q);
+  return search(root);
 };
