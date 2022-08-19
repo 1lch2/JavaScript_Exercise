@@ -40,6 +40,8 @@ function Example() {
 }
 ```
 
+useState() 方法里面唯一的参数就是初始 state。不同于 class 的是，我们可以按照需要使用数字或字符串对其进行赋值，而不一定是对象。
+
 ## useEffect
 给函数组件增加了操作副作用的能力。它跟 class 组件中的 componentDidMount、componentDidUpdate 和 componentWillUnmount 具有相同的用途，只不过被合并成了一个 API。
 
@@ -98,4 +100,69 @@ useEffect(() => {
 ```
 
 
+## useContext
+```js
+const value = useContext(MyContext);
+```
+
+接收一个 context 对象（React.createContext 的返回值）并返回该 context 的当前值。当前的 context 值由上层组件中距离当前组件最近的 `<MyContext.Provider>` 的 value prop 决定。
+
+当组件上层最近的 `<MyContext.Provider>` 更新时，该 Hook 会触发重渲染，并使用最新传递给 MyContext provider 的 context value 值。即使祖先使用 React.memo 或 shouldComponentUpdate，也会在组件本身使用 useContext 时重新渲染。
+
+### React.createContext
+当 React 渲染一个订阅了这个 Context 对象的组件，这个组件会从组件树中离自身最近的那个匹配的 Provider 中读取到当前的 context 值。
+
+只有当组件所处的树中没有匹配到 Provider 时，其 defaultValue 参数才会生效。
+
+### Context.Provider
+每个 Context 对象都会返回一个 Provider React 组件，它允许消费组件订阅 context 的变化。
+
+Provider 接收一个 value 属性，传递给消费组件。一个 Provider 可以和多个消费组件有对应关系。多个 Provider 也可以嵌套使用，里层的会覆盖外层的数据。
+
+用例参考：
+```jsx
+const themes = {
+  light: {
+    // ...
+  },
+  dark: {
+    // ...
+  }
+};
+
+// 初始化 context 并设置默认值
+const ThemeContext = React.createContext(themes.light);
+
+function App() {
+  return (
+    <ThemeContext.Provider value={themes.dark}>
+      <Toolbar />
+    </ThemeContext.Provider>
+  );
+}
+
+function Toolbar(props) {
+  return (
+    <div>
+      <ThemedButton />
+    </div>
+  );
+}
+
+function ThemedButton() {
+  const theme = useContext(ThemeContext);
+  return (
+    <button style={{ background: theme.background, color: theme.foreground }}>
+      I am styled by theme context!
+    </button>
+  );
+}
+```
+
+
+
 TODO:
+
+## Hook 使用规则
+- 只能在函数最外层调用 Hook。不要在循环、条件判断或者子函数中调用。
+- 只能在 React 的函数组件中调用 Hook。不要在其他 JavaScript 函数中调用。

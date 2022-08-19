@@ -93,5 +93,24 @@ ReactDOM.render(
 **组件无论是使用函数声明还是通过 class 声明，都决不能修改自身的 props。**
 
 
+> props 没有赋值时默认为 true，以下两者等价
+> ```html
+> <MyTextBox autocomplete />
+> <MyTextBox autocomplete={true} />
+> ```
+
+## 条件渲染
+仅当 showHeader 为 true 时，才会渲染 `<Header />` 组件：
+```jsx
+return (
+  <div>
+    {showHeader && <Header />}
+    <Content />
+  </div>
+)
+```
+
+
+
 
 TODO:
