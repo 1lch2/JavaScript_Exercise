@@ -49,6 +49,43 @@ Object.defineProperty(obj, "newProp", {
 console.log(obj); // {a: "a", newProp: 42}
 ```
 
+### Object.assign(target, ...sources)
+将一个或多个源对象的可枚举属性，以及自有属性复制到目标对象，返回修改后的对象。
+
+注意：**会修改传入的目标对象**
+
+示例如下：
+```js
+const target = { a: 1, b: 2 };
+const source = { b: 4, c: 5 };
+
+const returnedTarget = Object.assign(target, source);
+
+console.log(target);
+// expected output: Object { a: 1, b: 4, c: 5 }
+
+console.log(returnedTarget);
+// expected output: Object { a: 1, b: 4, c: 5 }
+```
+
+Object.assign 只会复制属性，若源对象是一个对象的引用，它仅仅会复制其引用。示例如下：
+```js
+let original = {
+  a: 1,
+  b: {
+    c: 0
+  }
+}
+
+let target = Object.assign({}, original);
+target.a = 0; // original 的 a 属性不变
+target.b.c = 1; // original 的 b 属性会被改变
+console.log(orignal); // {a: 1, b: {c: 1}}
+console.log(target); // {a: 0, b: {c: 1}}
+```
+
+如果源对象上有从原型链上继承的属性，则 Object.assign 不会将他们一并复制过去。
+
 ## 实例属性
 - `Object.prototype.constructor`：指向对象的构造函数
 - `Object.prototype.__proto__`：指向原型
