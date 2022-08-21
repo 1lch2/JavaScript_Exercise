@@ -1,6 +1,8 @@
 <head>
     <style>
         /*记忆口诀：盒子宽高均为零，三面边框皆透明。 */
+
+        /* 本质上是将四条边框加粗，其中的三条设为透明后，剩下的部分就是四分之一个矩形 */
         div:after {
             position: absolute;
             width: 0px;

@@ -39,11 +39,27 @@
 
         .w150 {
             width: 150px;
-            height: 100px;
+            height: 50px;
         }
 
         main {
             height: 100px;
+        }
+
+        .left {
+            float: left;
+        }
+
+        .right {
+            float: right;
+        }
+
+        .hidden {
+            overflow: hidden;
+        }
+
+        .margin {
+            margin: 0 150px 0 150px;
         }
 
         .orange {
@@ -64,7 +80,6 @@
         }
 
         .grail .left {
-            float: left;
             position: relative;
             left: -150px;
             margin-left: -100%;
@@ -76,6 +91,42 @@
             right: -150px;
             margin-left: -150px;
         }
+
+        .wings main {
+            float: left;
+            width: 100%;
+        }
+
+        .wings .inner {
+            margin: 0 150px;
+            height: 100px;
+        }
+
+        .wings .left {
+            margin-left: -100%;
+        }
+
+        .wings .right {
+            float: left;
+            margin-left: -150px;
+        }
+
+        .flex {
+            display: flex;
+        }
+
+        .flex main {
+            flex: 1;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 150px auto 150px;
+        }
+
+        .grid aside {
+            height: 50px;
+        }
     </style>
 </head>
 
@@ -86,6 +137,36 @@
             <main class="green">main</main>
             <aside class="w150 left orange">aside</aside>
             <aside class="w150 right orange">aside</aside>
+        </section>
+
+        <h4>方法二：双飞翼布局</h4>
+        <section class="wings clearfix">
+            <main>
+                <div class="green inner">main</div>
+            </main>
+            <aside class="w150 left orange">aside</aside>
+            <aside class="w150 right orange">aside</aside>
+        </section>
+
+        <h4>方法三：float + overflow (BFC原理)</h4>
+        <section>
+            <aside class="w150 left orange">aside</aside>
+            <aside class="w150 right orange">aside</aside>
+            <main class="green hidden">main</main>
+        </section>
+
+        <h4>方法四：flex</h4>
+        <section class="flex">
+            <aside class="w150  orange">aside</aside>
+            <main class="green">main</main>
+            <aside class="w150  orange">aside</aside>
+        </section>
+
+        <h4>方法五：grid</h4>
+        <section class="grid">
+            <aside class=" orange">aside</aside>
+            <main class="green">main</main>
+            <aside class=" orange">aside</aside>
         </section>
     </div>
 </body>

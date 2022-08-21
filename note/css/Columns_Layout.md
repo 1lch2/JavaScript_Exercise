@@ -83,6 +83,7 @@ main {
 
 ### 1. 圣杯布局
 样式如图
+
 ![img](../static/Columns_Layout.png)
 
 flex 实现方法如下所示
@@ -127,9 +128,67 @@ main.content {
 ```
 
 ### 2. 双飞翼布局
-TODO: 
+```html
+<div class="wings">
+    <main>
+        <div class="inner">main</div>
+    </main>
+    <aside class="left">aside</aside>
+    <aside class="right">aside</aside>
+</div>
+```
+
+```css
+/* 包含中间栏的浮动容器 */
+main {
+  float: left;
+  width: 100%;
+}
+
+/* 中间栏的左右边距与左右栏的宽度保持一致 */
+.inner {
+  margin: 0 150px;
+}
+
+/* 左栏的-100%左边距会将其拉到上一个浮动元素左对齐的位置 */
+.left {
+  margin-left: -100%;
+  width: 150px;
+}
+/* 右栏的负左边距将其拉到上一行，设置为元素宽度则刚好右对齐 */
+.right {
+  float: left;
+  margin-left: -150px;
+  width: 150px;
+}
+```
+
 
 ### 3. float + overflow（BFC 原理）
+```html
+<div>
+    <aside class="left">aside</aside>
+    <aside class="right">aside</aside>
+    <main class="hidden">main</main>
+</div>
+```
+
+```css
+.left {
+  float: left;
+  width: 150px;
+}
+
+.right {
+  float: right;
+  width: 150px;
+}
+/* BFC 不会与 float 元素重叠 */
+.hidden {
+  overflow: hidden;
+}
+```
+
 
 ### 4. flex
 效果如图

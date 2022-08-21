@@ -20,10 +20,10 @@
  * @param {TreeNode} left left sub-tree
  * @param {TreeNode} right right sub-tree
  */
- function TreeNode(val, left, right) {
-  this.val = (val === undefined ? 0 : val)
-  this.left = (left === undefined ? null : left)
-  this.right = (right === undefined ? null : right)
+function TreeNode(val, left, right) {
+  this.val = (val === undefined ? 0 : val);
+  this.left = (left === undefined ? null : left);
+  this.right = (right === undefined ? null : right);
 }
 
 /**
@@ -32,29 +32,29 @@
  * @param {TreeNode} root
  * @return {boolean}
  */
-var isSymmetric = function(root) {
-  if(root === null) {
+var isSymmetric_recur = function(root) {
+  if (root === null) {
     return true;
   }
 
   // 只检查是否不对称，只要出现一个不对称则整个树不对称
   const dfs = (leftNode, rightNode) => {
     // 空节点必定相同
-    if(leftNode === null && rightNode === null) {
+    if (leftNode === null && rightNode === null) {
       return true;
     }
 
-    if(leftNode === null || rightNode === null) {
+    if (leftNode === null || rightNode === null) {
       return false;
     }
 
-    if(leftNode.val !== rightNode.val) {
+    if (leftNode.val !== rightNode.val) {
       return false;
     }
 
     // 对称进入递归
     return dfs(leftNode.left, rightNode.right) && dfs(leftNode.right, rightNode.left);
-  }
+  };
 
   return dfs(root.left, root.right);
 };
@@ -62,8 +62,8 @@ var isSymmetric = function(root) {
 /**
  * 迭代方法
  */
-var isSymmetric = function(root) {
-  if(root === null) {
+var isSymmetric_loop = function(root) {
+  if (root === null) {
     return true;
   }
 
@@ -72,20 +72,20 @@ var isSymmetric = function(root) {
   let leftStack = [root.left];
   let rightStack = [root.right];
 
-  while(leftStack.length !==0 && rightStack.length !== 0) {
+  while (leftStack.length !== 0 && rightStack.length !== 0) {
     let currentLeft = leftStack.pop();
     let currentRight = rightStack.pop();
 
-    if(currentLeft === null && currentRight === null) {
+    if (currentLeft === null && currentRight === null) {
       continue;
     }
 
-    if(currentLeft === null || currentRight === null) {
+    if (currentLeft === null || currentRight === null) {
       flag = false;
       break;
     }
 
-    if(currentLeft.val !== currentRight.val) {
+    if (currentLeft.val !== currentRight.val) {
       flag = false;
       break;
     }
@@ -95,4 +95,4 @@ var isSymmetric = function(root) {
   }
 
   return flag;
-}
+};
