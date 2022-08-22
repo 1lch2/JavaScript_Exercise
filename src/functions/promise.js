@@ -142,3 +142,35 @@ Promise.myAllSettled = function(promises) {
     }
   });
 };
+
+/**
+ * 返回第一个有结果的 promise，无论状态
+ * @param {Promise[]} promises 
+ * @returns {Promise}
+ */
+MyPromise.race = function(promises) {
+  return new Promise((resolve, reject) => {
+    for(let i = 0; i < promises.length; i++) {
+      // 使用 Promise.resolve 包装防止返回的不是 promise
+      Promise.resolve(promises[i]).then(res => {
+        resolve(res);
+      }).catch(err => {
+        reject(err);
+      });
+    }
+  });
+};
+
+
+/**
+ * Promise 实例 上的 finally
+ * @param {function} callback 
+ * @returns {Promise}
+ */
+Promise.prototype.finally = function (callback) {
+  let P = this.constructor;
+  return this.then(
+    value => P.resolve(callback()).then(() => value),
+    reason => P.resolve(callback()).then(() => { throw reason;})
+  );
+};

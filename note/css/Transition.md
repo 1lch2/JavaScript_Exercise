@@ -47,3 +47,8 @@ transition: all 0.5s ease-out;
 ```js
 el.addEventListener("transitionend", updateTransition, true);
 ```
+
+## 与 animation 区别
+transition 强调过渡，触发需要事件。
+
+animation 是动画，不需要事件触发，可以设置时间自动执行，且可以循环，并且可以设置多个关键帧（`@keyframe`）

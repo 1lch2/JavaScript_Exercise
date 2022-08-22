@@ -228,6 +228,26 @@ Promise.prototype.finally = function (callback) {
 };
 ```
 
+finally 的回调不接受任何参数，传入了也没用，变量会显示 undefined。由于 finally 只是 then 的特例，因此 finally 后还可以接 then，并且可以接收到 finally 之前的返回值，如下例所示：
+```js
+let p = new Promise((resolve, reject) => {
+  resolve("aaa");
+})
+
+p.then(res => {
+  console.log("first then: " + res);
+  return res + "bbb"
+}).finally((res) => {
+  console.log("finally: " + res);
+}).then(res => {
+  console.log("second then: " + res);
+})
+
+// first then: aaa
+// finally: undefined
+// second then: aaabbb
+```
+
 ## Promise.all()
 Promise.all()方法用于将多个 Promise 实例，包装成一个新的 Promise 实例。
 
