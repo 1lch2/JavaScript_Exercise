@@ -90,6 +90,29 @@ setTimeout(function(){
 2. 第二处，相当于将一个函数对象传给了一个变量，最后执行了变量引用的方法
 3. 第三处，单纯的隐式绑定
 
+坑示例：
+```js
+// 绑定在全局变量上
+var length = 10;
+
+// nodejs 下为 undefined，浏览器下为 10
+function fn() {
+  console.log(this.length);
+}
+
+let obj = {
+  length: 5,
+  fff: function() {
+    // 这里的this是 obj，但是fn本身运行时并没有绑定这里的this
+    fn();
+
+    // 若想显示预期的 5 ，则应该显式绑定this
+  }
+}
+
+obj.fff();
+```
+
 ### 显式绑定
 显式绑定就是通过call, apply, bind的方式，显式地指定this指定的对象。这三个方法的第一个参数对应函数的this指向的对象。
 

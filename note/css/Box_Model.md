@@ -5,8 +5,11 @@
 盒模型有 2 种：标准盒模型和 IE 盒模型，本别是由 W3C 和 IExplore 制定的标准。
 
 标准盒模型认为：
+盒子的实际尺寸 = 内容（设置的宽/高） + 内边距 + 边框
 
-盒子的实际尺寸 = 内容（设置的宽或高） + 内边距 + 边框
+IE 盒模型认为：
+盒子的实际尺寸 = 设置的宽/高 = 内容 + 内边距 + 边框
+
 ```css
 .box {
     width: 200px;
@@ -16,9 +19,18 @@
     margin: 10px;
 }
 ```
-所以 .box 元素内容的宽度就为 200px，而实际的宽度则是 
+
+标准盒模型下， .box 元素内容的宽度就为 200px，而实际的宽度则是 
 
 width + padding-left + padding-right + border-left-width + border-right-width = 200 + 10 + 10 + 1 + 1 = 222。
+
+**标准盒模型下，内容宽度一定，增加边距和边框会 增加 整个元素的尺寸**
+
+而 IE 盒模型下，内容的真实宽度则是 
+
+width - padding-left - padding-right - border-left-width - border-right-width = 200 - 10 - 10 - 1 - 1 = 178。
+
+**IE盒模型下，整个元素的宽度一定，增加边距和边框会 缩小 内容的尺寸**
 
 在 CSS3 中新增了一个属性 `box-sizing`，允许开发者来指定盒子使用什么标准，它有 2 个值：
 - `content-box`：标准盒模型；
