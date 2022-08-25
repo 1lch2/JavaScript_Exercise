@@ -42,6 +42,16 @@ function Example() {
 
 useState() 方法里面唯一的参数就是初始 state。不同于 class 的是，我们可以按照需要使用数字或字符串对其进行赋值，而不一定是对象。
 
+#### useState 拿到最新 state
+useState hook 本身不能做到同步，想同步拿到最新的 state 需要套用 useEffect，示例如下：
+
+```jsx
+const [count, setCount] = useState(0);
+useEffect(() => {
+  // 此处为对 count 做的操作
+}, [count])
+```
+
 ## useEffect
 给函数组件增加了操作副作用的能力。它跟 class 组件中的 componentDidMount、componentDidUpdate 和 componentWillUnmount 具有相同的用途，只不过被合并成了一个 API。
 
