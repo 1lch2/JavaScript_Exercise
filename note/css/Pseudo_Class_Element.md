@@ -22,8 +22,35 @@ CSS3 中规定伪元素使用双冒号`::`，伪类使用单冒号`:`。
 - `:lang()`：基于元素语言来匹配页面元素；
 - `:dir()`：匹配特定文字书写方向的元素；
 - `:has()`：匹配包含指定元素的元素；
+
+    示例：匹配直接包含`<img>`元素的`<a>`元素：
+    ```css
+    a:has(> img) {
+      /* style */
+    }
+    ```
 - `:is()`：匹配指定选择器列表里的元素；
-- `:not()`：用来匹配不符合一组选择器的元素；
+
+    示例：选择 header, main, footer 里的任意一个hover状态的 p 标签
+    ```css
+    :is(header, main, footer) p:hover {
+      color: red;
+      cursor: pointer;
+    }
+
+    /* 以上内容相当于以下内容 */
+    header p:hover,
+    main p:hover,
+    footer p:hover {
+      color: red;
+      cursor: pointer;
+    }
+    ```
+- `:not()`：用来匹配不符合一组选择器的元素，防止特定的元素被选中；
+
+    > 伪元素不能作为 `:not()` 的参数，比如`:not(p::before)` 无法生效
+    
+    示例：
 
 ### 行为伪类
 
@@ -60,7 +87,32 @@ CSS3 中规定伪元素使用双冒号`::`，伪类使用单冒号`:`。
 - `:first-letter`：元素的首字母；
 - `:first-line`：元素的首行；
 - `:nth-child(n)`：元素中指定顺序索引的元素；
-- `:nth-last-child(n)`：元素中指定逆序索引的元素；；
+    
+    首先找到所有当前元素的兄弟元素，然后按照位置先后顺序从 1 开始排序，选择的结果为 CSS 伪类:nth-child 括号中表达式（an+b）匹配到的元素集合（n=0，1，2，3...）（就是等差数列）
+
+    示例：匹配表格中的奇数行，以下两个选择器等价
+    ```css
+    tr:nth-child(2n+1) {
+    }
+    tr:nth-child(odd) {
+    }
+    ```
+
+    示例：匹配表格偶数行，以下两个选择器等价
+    ```css
+    tr:nth-child(2n) {
+    }
+    tr:nth-child(even){
+    }
+    ```
+
+    示例：匹配前3个子元素中的 `<span>`
+    ```css
+    span:nth-child(-n+3) {
+    }
+    ```
+
+- `:nth-last-child(n)`：元素中指定逆序索引的元素；
 - `:first-child`：元素中为首的元素；
 - `:last-child`：元素中为尾的元素；
 - `:only-child`：父元素仅有该元素的元素；
@@ -95,3 +147,6 @@ p::after {
 ```
 
 默认情况下，生成的元素是一个内联级别的元素，因此当我们要指定高度和宽度时，必须首先使用 `display:block` 声明将其定义为一个块元素。
+
+### 伪元素实现悬浮 tips
+鼠标移动到元素上方时展示悬浮的 tips 小窗，示例参见 [popup-tips](../../src/css/pop-tips/tips.html)

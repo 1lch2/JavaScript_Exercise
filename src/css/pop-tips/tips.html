@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <style>
+        span[data-descr] {
+            position: relative;
+            text-decoration: underline;
+            color: #00F;
+            cursor: help;
+        }
+
+        span[data-descr]:hover::after {
+            content: attr(data-descr);
+            position: absolute;
+            left: 0;
+            top: 24px;
+            min-width: 200px;
+            border: 1px #aaaaaa solid;
+            border-radius: 10px;
+            background-color: #ffffcc;
+            padding: 12px;
+            color: #000000;
+            font-size: 14px;
+            z-index: 1;
+        }
+    </style>
+</head>
+
+<body style="padding-top: 20vh">
+    <div style="margin: 0 auto; width: 60vw;">
+        <h4>Text pop up tips showcase</h4>
+        Try move your mouse on top of the words.
+        <br>
+        <span data-descr="there we are!">
+            et voilà!
+        </span>
+        <br>
+        <span data-descr="to exhibit especially in an attractive or favorable aspect">
+            showcase
+        </span>
+        <br />
+    </div>
+
+</body>
+
+</html>

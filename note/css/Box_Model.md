@@ -39,6 +39,21 @@ width - padding-left - padding-right - border-left-width - border-right-width = 
 ## margin
 外边距是盒子周围一圈看不到的空间。它会把其他元素从盒子旁边推开。 外边距属性值可以为正也可以为负。设置负值会导致和其他内容重叠。无论使用标准模型还是替代模型，外边距总是在计算可见部分后额外添加。
 
+给 margin 传入的参数数量不同，代表的效果也不同：
+- 1 个参数：代表上下左右的 mragin
+- 2 个参数：第一个代表上下，第二个代表左右
+- 3 个参数：第一个代表上，第二个代表左右，第三个代表下
+- 4 个参数：按序分别代表上，右，下，左
+
+**padding 同理**
+
+### 属性值
+可以取固定值（px）或者相对值（vh，vw，em，rem）以及百分比。
+
+margin 的百分比值取的是**父容器的宽度**的百分比。
+
+**padding 的百分比取值同理**
+
 ### 行内元素 
 margin-top/margin-bottom对于上下元素无效，margin-left/margin-right有效
 

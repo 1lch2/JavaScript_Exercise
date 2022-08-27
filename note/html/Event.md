@@ -109,6 +109,8 @@ element.addEventListener(event, function, useCapture);
     ```
 
 ### 事件对象
+event 对象是传给事件回调的唯一参数，不管用是 DOM0 还是 DOM2 方式绑定的。
+
 #### DOM事件对象
 event 对象是传给事件处理程序的唯一参数。示例如下
 ```js
@@ -134,6 +136,33 @@ var btn = document.getElementById("myBtn");
     let event = window.event;
     console.log(event.type);  // "click"
 };
+```
+
+#### target 和 currentTarget
+在事件回调内部， this 对象始终等于 currentTarget，而 target 只包含事件的实际目标。
+
+当事件冒泡到外部时，currentTarget 会随之变化，而 target 不会，示例如下：
+```html
+<div id="middle">
+    <div id="inner">
+    </div>
+</div>
+```
+
+```js
+let callback = function(event) {
+    console.log("currentTarget: " + event.currentTarget.id);
+    console.log("target: " + event.target.id);
+}
+document.getElementById("middle").addEventListener("click", callback);
+document.getElementById("inner").addEventListener("click", callback);
+
+// 点击内部的 `div#inner` 后，输出如下：
+// currentTarget: inner
+// target: inner
+
+// currentTarget: middle
+// target: inner
 ```
 
 ## 常见事件
