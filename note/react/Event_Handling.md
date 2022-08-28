@@ -100,3 +100,13 @@ render() {
 <button onClick={this.deleteRow.bind(this, id)}>Delete Row</button>
 ```
 
+## 底层机制
+React并不是将事件绑定到了真实DOM上，而是在 document 处监听了所有的事件，当事件发生并且冒泡到 document 处的时候，React 将事件内容封装并交由真正的处理函数运行。这样的方式不仅仅减少了内存的消耗，还能在组件挂在销毁时统一订阅和移除事件。
+
+冒泡到document上的事件也不是原生的浏览器事件，而是由react自己实现的合成事件（SyntheticEvent）。因此如果要阻止事件冒泡的话应该调用 `event.preventDefault()` 方法，而不是 `event.stopProppagation()` 方法。
+
+> React 17 之后，事件绑定的对象从 document 变为了容器上，即当前应用的根元素
+
+
+## 参考
+- [「2021」高频前端面试题汇总之React篇（上）](https://juejin.cn/post/6941546135827775525)
