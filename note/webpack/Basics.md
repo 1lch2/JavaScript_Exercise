@@ -54,8 +54,36 @@ module.exports = {
 ```
 上述规则的效果如下：在`require()`或`import`语句中解析到`.txt`文件时，先使用`raw-loader`进行转换。
 
+处理一个文件可以使用多个loader，loader的执行顺序和配置中的顺序是**相反**的，最后一个loader最先执行，第一个loader最后执行。
+
+第一个执行的loader接受源文件作为参数内容，其他的loader接受前一个loader的返回值作为自己的参数，最后一个执行的loader会返回此模块的JavaScript源码。
+
+#### 常见 loader
+- file-loader: 文件加载
+- url-loader： 文件加载，可以设置阈值，小于时把文件base64编码
+- image-loader: 加载并压缩图片
+- json-loader: webpack默认已经包含了
+- babel-loader： ES6+转成ES5
+- ts-loader: 将ts转成js
+- awesome-typescript-loader: 比ts-loader性能好一些
+- css-loader：处理@import和url这样的外部资源
+- style-loader： 在head创建style标签把样式插入
+- postcss-loader: 扩展css语法，使用postcss各种插件autoprefixer，cssnext，cssnano
+- eslint-loader， tslint-loader:通过这两种检查代码，tslint不再维护
+- vue-loader: 加载vue单文件组件
+- i18n-loader： 国际化
+- cache-loader：性能开销大的loader前添加，将结果缓存到磁盘
+- svg-inline-loader:压缩后的svg注入代码
+- source-map-loader: 加载source map文件，方便调试
+- expose-loader: 暴露对象为全局变量
+- imports-loader、exports-loader等可以想模块注入变量或者提供导出模块功能
+- raw-loader： 可以将文件以字符串的形式返回
+
+
 ### Plugin
 plugin 用来执行范围更广的任务，包括：打包优化，资源管理，注入环境变量。
+
+> 对比 loader：loader 运行在打包文件之前，而 plugins 在整个编译周期都起作用
 
 使用插件需要用`require()`语法，并添加到`plugin`数组中。一般使用 option 选项自定义，也可以使用`new`操作符来创建插件实例，这种方式可以在同一个配置文件中多次使用同一个插件。
 
@@ -71,6 +99,13 @@ module.exports = {
 };
 ```
 在上面的示例中，html-webpack-plugin 为应用程序生成一个 HTML 文件，并自动将生成的所有 bundle 注入到此文件中。
+
+
+#### 常见 plugin
+- HtmlWebpackPlugin：在打包结束后，⾃动生成⼀个 html ⽂文件，并把打包生成的js 模块引⼊到该 html 中
+- clean-webpack-plugin：删除（清理）构建目录
+- mini-css-extract-plugin：提取 CSS 到一个单独的文件中
+
 
 ### Mode
 指示 webpack 使用相应模式的配置。有三个选项：none, production, development
