@@ -27,14 +27,14 @@ var longestCommonPrefix = function(strs) {
   strs.sort((a, b) => a.length - b.length);
 
   const MIN_LEN = strs[0].length;
-  if(MIN_LEN === 0) {
+  if (MIN_LEN === 0) {
     return res;
   }
 
-  for(let i = 0; i < MIN_LEN; i++) {
+  for (let i = 0; i < MIN_LEN; i++) {
     let current = strs[0][i];
-    for(let word of strs) {
-      if(word[i] !== current) {
+    for (let word of strs) {
+      if (word[i] !== current) {
         return res;
       }
     }
@@ -43,3 +43,52 @@ var longestCommonPrefix = function(strs) {
 
   return res;
 };
+
+/**
+ * @param {string[]} strs
+ * @return {string}
+ */
+var _longestCommonPrefix = function(strs) {
+  strs.sort((a, b) => a.length - b.length);
+  const MIN = strs[0].length;
+
+  const isCommonPrefix = (length) => {
+    // 以最短的字符串为基准
+    let base = strs[0].slice(0, length);
+    for (let i = 1; i < strs.length; i++) {
+      let currentWord = strs[i];
+      for(let j = 0; j < base.length; j++) {
+        if(currentWord[j] !== base[j]) {
+          return false;
+        }
+      }
+    }
+    return true;
+  };
+
+  // 在 [0, MIN] 区间内二分查找公共点
+  let low = 0;
+  let high = MIN;
+  while (low < high) {
+    // 这里让偶数长度区间取中点时，取到靠右的那个
+    let mid = (low + high + 1) >> 1;
+    if (isCommonPrefix(mid)) {
+      low = mid;
+    } else {
+      high = mid - 1;
+    }
+  }
+
+  return strs[0].slice(0, low);
+};
+
+let input = [
+  ["dog", "racecar", "car"],
+  ["flower","flow","flight"],
+  ["abcdef", "abcde", "abc"],
+  ["abcc", "abdddd", "abeeee"]
+];
+
+for(let test of input) {
+  console.log(_longestCommonPrefix(test));
+}
