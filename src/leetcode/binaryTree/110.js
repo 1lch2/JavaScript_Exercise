@@ -40,7 +40,7 @@ function TreeNode(val, left, right) {
  */
 var isBalanced = function(root) {
   const getHeight = (root) => {
-    if(root == null) {
+    if (root == null) {
       return 0;
     }
 
@@ -50,7 +50,7 @@ var isBalanced = function(root) {
   };
 
   const judge = (root) => {
-    if(root == null) {
+    if (root == null) {
       return true;
     }
 
@@ -74,16 +74,16 @@ var isBalanced = function(root) {
  */
 var isBalanced_ = function(root) {
   const judge = (root) => {
-    if(root == null) {
+    if (root == null) {
       return 0;
     }
     let left = judge(root.left);
-    if(left === -1) {
+    if (left === -1) {
       return -1;
     }
 
     let right = judge(root.right);
-    if(right === -1) {
+    if (right === -1) {
       return -1;
     }
 
@@ -92,4 +92,29 @@ var isBalanced_ = function(root) {
   };
 
   return judge(root) !== -1;
+};
+
+/**
+ * 使用计算深度的思路，每层比较左右子树深度
+ * 
+ * @param {TreeNode} root
+ * @return {boolean}
+ */
+var _isBalanced = function(root) {
+  let flag = true;
+  const dfs = (root) => {
+    if (root == null) {
+      return 0;
+    }
+
+    let left = dfs(root.left);
+    let right = dfs(root.right);
+
+    if (Math.abs(left - right) > 1) {
+      flag = false;
+    }
+    return Math.max(left, right) + 1;
+  };
+  dfs(root);
+  return flag;
 };
