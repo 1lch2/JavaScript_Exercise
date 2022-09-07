@@ -34,8 +34,8 @@
  */
 var search = function(nums, target) {
   let divide = -1;
-  for(let i = 0; i < nums.length - 1; i++) {
-    if(nums[i+1] < nums[i]) {
+  for (let i = 0; i < nums.length - 1; i++) {
+    if (nums[i + 1] < nums[i]) {
       divide = i + 1;
     }
   }
@@ -49,12 +49,12 @@ var search = function(nums, target) {
     let low = start;
     let high = end;
     let res = -1;
-    while(low <= high) {
+    while (low <= high) {
       let mid = Math.floor((low + high) / 2);
-      if(nums[mid] === target) {
+      if (nums[mid] === target) {
         res = mid;
         break;
-      } else if(nums[mid] < target) {
+      } else if (nums[mid] < target) {
         low = mid + 1;
       } else {
         high = mid - 1;
@@ -63,7 +63,7 @@ var search = function(nums, target) {
     return res;
   };
 
-  if(divide !== -1) {
+  if (divide !== -1) {
     let leftRes = binarySearch(0, divide, target);
     let rightRes = binarySearch(divide, nums.length - 1, target);
     return leftRes !== -1 ? leftRes : rightRes;
@@ -72,7 +72,87 @@ var search = function(nums, target) {
   }
 };
 
-(function(){
-  // console.log(search([4,5,6,7,0,1,2], 0));
-  console.log(search([1], 1));
-})();
+/**
+ * @param {number[]} nums
+ * @param {number} target
+ * @return {number}
+ */
+var _search = function(nums, target) {
+  const LEFT = nums[0];
+  const RIGHT = nums[nums.length - 1];
+
+  const binarySearch = (start, end) => {
+    let low = start;
+    let high = end;
+    
+    while(low <= high) {
+      let mid = (low + high) >> 1;
+      if(nums[mid] > target) {
+        high = mid - 1;
+      } else if(nums[mid] < target) {
+        low = mid + 1;
+      } else {
+        return mid;
+      }
+    }
+    return -1;
+  };
+
+  // 数组没有被切分后旋转
+  if(LEFT < RIGHT) {
+    return binarySearch(0, nums.length - 1);
+  }
+
+  // 二分查找定位旋转点
+  let low = 0;
+  let high = nums.length - 1;
+  let rotateIndex = 0;
+  while (low <= high) {
+    let mid = (low + high) >> 1;
+    if (nums[mid] > nums[mid + 1]) {
+      rotateIndex = mid;
+      break;
+    }
+
+    // mid 在左半边
+    if (nums[mid] >= LEFT) {
+      low = mid + 1;
+    } 
+    // mid 在右半边
+    else if(nums[mid] <= RIGHT) {
+      high = mid - 1;
+    }
+  }
+
+  let midNum = nums[rotateIndex];
+  if(midNum === target) {
+    return rotateIndex;
+  }
+
+  if(target >= LEFT) {
+    return binarySearch(0, rotateIndex);
+  } else if(target <= RIGHT) {
+    return binarySearch(rotateIndex + 1, nums.length - 1);
+  } else {
+    return -1;
+  }
+};
+
+
+let inputs = [
+  [[4,5,6,7,0,1,2], 0],
+  [[4,5,6,7,0,1,2], 3],
+  [[1], 0],
+  [[1,3], 3],
+  [[3,4,5,6,1,2] ,2]
+];
+
+for(let input of inputs) {
+  console.log(_search(...input));
+}
+
+// 4
+// -1
+// -1
+// 1
+// 5

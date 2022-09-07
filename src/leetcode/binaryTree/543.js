@@ -30,11 +30,7 @@ function TreeNode(val, left, right) {
  * @return {number}
  */
 var diameterOfBinaryTree = function(root) {
-  if(root == null) {
-    return 0;
-  }
-
-  let max = 1;
+  let max = 0;
 
   /**
    * @param {TreeNode} root 
