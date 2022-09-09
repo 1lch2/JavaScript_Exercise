@@ -41,14 +41,19 @@ var decodeString = function(s) {
   let numStack = [];
 
   let mult = 0;
-  for (let char of s) {
-    if (Number.isInteger(char)) {
+  for (let i = 0; i < s.length; i++) {
+    let char = s[i];
+    if (Number.isInteger(+char)) {
       // 数字可能有多位，每次进一位
       mult = mult * 10 + Number(char);
     }
 
     else if (char === "[") {
+      // 遇到左括号开始入栈操作
+      numStack.push(mult);
       charStack.push(result);
+
+      // 入完栈后重置字符和数字
       result = "";
       mult = 0;
     }
@@ -56,15 +61,16 @@ var decodeString = function(s) {
     else if (char === "]") {
       let num = numStack.pop();
       let str = charStack.pop();
-      result += str.repeat(num);
+
+      // 数字作用于当前累积的字符而不是弹栈的字符
+      // 把当前数字乘字符累加完毕后和栈顶字符拼接起来
+      result = str + result.repeat(num);
     }
 
     else {
       result += char;
     }
   }
- 
-  // TODO:
 
   return result;
 };

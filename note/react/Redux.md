@@ -42,7 +42,7 @@ reducer(state, action) {
 ```
 
 ## 用法示例
-npm install redux -S // 安装
+
 ```js
 import { createStore } from 'redux'
 

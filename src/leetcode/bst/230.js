@@ -22,12 +22,14 @@
  * @param {TreeNode} right right sub-tree
  */
 function TreeNode(val, left, right) {
-  this.val = (val === undefined ? 0 : val)
-  this.left = (left === undefined ? null : left)
-  this.right = (right === undefined ? null : right)
+  this.val = (val === undefined ? 0 : val);
+  this.left = (left === undefined ? null : left);
+  this.right = (right === undefined ? null : right);
 }
 
 /**
+ * 中序遍历思路
+ * 
  * @param {TreeNode} root
  * @param {number} k
  * @return {number}
@@ -35,18 +37,71 @@ function TreeNode(val, left, right) {
 var kthSmallest = function(root, k) {
   let stack = [root];
   let res = [];
-  while(stack.length !== 0 && k > 0) {
+  while (stack.length !== 0 && k > 0) {
     let current = stack.pop();
-    if(current == null) {
+    if (current == null) {
       continue;
     }
-    if(current.constructor.name === 'TreeNode') {
+    if (current.constructor.name === "TreeNode") {
       stack.push(current.right);
       stack.push(current.val);
       stack.push(current.left);
     } else {
-      res.push(current)
+      res.push(current);
     }
   }
-  return res[k-1];
+  return res[k - 1];
 };
+
+/**
+ * @param {TreeNode} root
+ * @param {number} k
+ * @return {number}
+ */
+var _kthSmallest = function(root, k) {
+  let nodeNumMap = new Map();
+
+  /**
+   * 
+   * @param {TreeNode} root 
+   * @returns 以当前节点为根的子树的节点总数量
+   */
+  const countNode = (root) => {
+    if (root == null) {
+      return 0;
+    }
+
+    let count = countNode(root.left) + countNode(root.right) + 1;
+    nodeNumMap.set(root, count);
+    return count;
+  };
+
+  countNode(root);
+
+  let temp = root;
+  while (temp !== null) {
+    // 根据左节点数量，按二分查找思路找到左节点数量等于 k - 1 的节点
+
+    // 注意处理空节点情况，需要返回 0
+    let left = nodeNumMap.get(temp.left) || 0;
+    if (left < k - 1) {
+      temp = temp.right;
+      // 进入右侧节点后，左节点要比较的数字需要减去左子树节点总数和 1 个根节点
+      k -= left + 1;
+    }
+    else if (left > k - 1) {
+      temp = temp.left;
+    }
+    else {
+      // 左子树节点总数量刚好为 k - 1 时，当前根节点即为想要的节点
+      break;
+    }
+  }
+
+  return temp.val;
+};
+
+let node = new TreeNode(1);
+node.right = new TreeNode(2);
+
+console.log(_kthSmallest(node));

@@ -34,28 +34,24 @@ function TreeNode(val, left, right) {
  * @return {TreeNode}
  */
 var sortedArrayToBST = function(nums) {
-  if(nums.length <= 1) {
-    return new TreeNode(nums[0]);
-  }
-
   const buildTree = (left, right) => {
-    if(left > right) {
+    if (left > right) {
       return null;
     }
-  
+
     // 二分确认根节点
     let mid = Math.floor((left + right) / 2);
     let root = new TreeNode(nums[mid]);
-  
+
     root.left = buildTree(left, mid - 1);
     root.right = buildTree(mid + 1, right);
-  
+
     return root;
   };
 
   return buildTree(0, nums.length - 1);
 };
 
-(function(){
-  console.log(sortedArrayToBST([-10,-3,0,5,9]));
+(function() {
+  console.log(sortedArrayToBST([-10, -3, 0, 5, 9]));
 })();
