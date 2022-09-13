@@ -1,9 +1,12 @@
 {
   "name": "javascript_exercise",
+  "type": "module",
   "version": "1.0.0",
   "description": "This is a personal repository for JavaScript exercices plus some frontend developing notes.",
   "main": "",
   "scripts": {
+    "random-local": "node src/random_challenge.js",
+    "random-100": "node src/random_top100.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -18,5 +21,8 @@
   "homepage": "https://github.com/1lch2/JavaScript_Exercise#readme",
   "devDependencies": {
     "eslint": "^8.7.0"
+  },
+  "dependencies": {
+    "axios": "^0.27.2"
   }
 }
