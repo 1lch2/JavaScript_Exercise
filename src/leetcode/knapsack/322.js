@@ -21,8 +21,8 @@
 
 // 提示：
 // 1 <= coins.length <= 12
-// 1 <= coins[i] <= 231 - 1
-// 0 <= amount <= 104
+// 1 <= coins[i] <= 2^31 - 1
+// 0 <= amount <= 10^4
 
 /**
  * @param {number[]} coins
@@ -30,11 +30,11 @@
  * @return {number}
  */
 var coinChange = function(coins, amount) {
-  if(amount === 0) {
+  if (amount === 0) {
     return 0;
   }
 
-  if(Math.min(...coins) > amount) {
+  if (Math.min(...coins) > amount) {
     return -1;
   }
 
@@ -45,9 +45,9 @@ var coinChange = function(coins, amount) {
   // 初始情况：0 块钱需要 0 枚硬币，
   dp[0] = 0;
 
-  for(let i = 0; i < dp.length; i++) {
-    for(let value of coins) {
-      if(i - value < 0) {
+  for (let i = 0; i < dp.length; i++) {
+    for (let value of coins) {
+      if (i - value < 0) {
         // 无解情况
         continue;
       }
@@ -58,9 +58,72 @@ var coinChange = function(coins, amount) {
     }
   }
 
-  if(dp[amount] === amount + 1) {
+  if (dp[amount] === amount + 1) {
     return -1;
   } else {
     return dp[amount];
   }
 };
+
+/**
+ * BFS 思路
+ * 
+ * @param {number[]} coins
+ * @param {number} amount
+ * @return {number}
+ */
+var _coinChange = function(coins, amount) {
+  // 注意先判断 amount 为 0 情况 ，不然会返回 -1
+  if (amount === 0) {
+    return 0;
+  }
+
+  if (amount < Math.min(...coins)) {
+    return -1;
+  }
+
+  // 当前余额队列
+  let balance = [amount];
+
+  // 降序排列，更早找到结果
+  coins.sort((a, b) => b - a);
+
+  let step = 0;
+
+  // 记录已经访问过的数字，避免重复计算
+  // 下标对应值
+  let visited = new Array(amount + 1).fill(false);
+  visited[amount] = true;
+  while (balance.length !== 0) {
+    // 二叉树层序遍历分层输出思路
+    let len = balance.length;
+    for (let i = 0; i < len; i++) {
+      let current = balance.shift();
+
+      // 每个余额和每个硬币选项都要遍历
+      for (let coin of coins) {
+        let tempVal = current - coin;
+        // 跳过无法继续减硬币面额的选项
+        if (tempVal < 0) {
+          continue;
+        }
+        // 找到第一个结果返回
+        if (tempVal === 0) {
+          return step + 1;
+        }
+
+        // 先前出现过的数字不访问直接跳过
+        // 因为之前已经出现过，且每次硬币都可重用，因此必定是前一次的步数更小
+        if(!visited[tempVal]) {
+          balance.push(tempVal);
+          visited[tempVal] = true;
+        }
+      }
+    }
+    step++;
+  }
+  return -1;
+};
+
+let input = [[1, 2, 5], 100];
+console.log(_coinChange(...input));

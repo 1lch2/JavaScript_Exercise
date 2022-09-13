@@ -25,32 +25,33 @@
  * @return {number}
  */
 var lengthOfLongestSubstring = function(s) {
-  if(s.length < 2) {
+  if (s.length <= 1) {
     return s.length;
   }
 
-  let i = 0;
-  let j = 0;
-  let maxLen = 1;
-  let set = new Set([s[i]]);
-  
-  for(let i = 0; i < s.length; i++) {
-    if(i !== 0) {
-      // 左边界右移一位
-      set.delete(s[i - 1]);
+  // 记录已使用字符
+  let set = new Set();
+  set.add(s[0]);
+
+  let end = 0;
+  let max = 1;
+  // 每轮迭代确定一个最长的不重复子串
+  for (let start = 0; start < s.length; start++) {
+    // 除了第一次循环，之后每轮都把左边界右移一位
+    if (start !== 0) {
+      set.delete(s[start - 1]);
     }
 
-    // 右边界向右移动直到遇到重复字符
-    while(j + 1 < s.length && !set.has(s[j + 1])) {
-      set.add(s[j + 1]);
-      j++;
+    // 不断右移右边界直到遇到重复字符
+    while (end + 1 < s.length && !set.has(s[end + 1])) {
+      set.add(s[end + 1]);
+      end++;
     }
-
-    maxLen = j - i + 1 > maxLen ? j - i + 1 : maxLen;
+    max = Math.max(max, end - start + 1);
   }
-  return maxLen;
+  return max;
 };
 
-(function(){
+(function() {
   console.log(lengthOfLongestSubstring("pwwkew"));
 })();

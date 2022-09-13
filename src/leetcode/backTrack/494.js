@@ -27,13 +27,49 @@
 // -1000 <= target <= 1000
 
 /**
+ * 
+ * 回溯法，每次选择添加当前元素的正数或负数
+ * 
+ * @param {number[]} nums
+ * @param {number} target
+ * @return {number}
+ */
+var findTargetSumWays = function(nums, target) {
+  let result = 0;
+
+  /**
+   * 
+   * @param {number} currentSum 
+   * @param {number[]} available 
+   * @returns 
+   */
+  const backtrack = (currentSum, index) => {
+    if (index === nums.length) {
+      if (currentSum === target) {
+        result++;
+      }
+      return;
+    }
+
+    // 使用起始下标和当前累积，而不存储所有选择的数字，减少内存消耗
+    // + - 分支代替手写循环
+    backtrack(currentSum + nums[index], index + 1);
+    backtrack(currentSum - nums[index], index + 1);
+  };
+
+  backtrack(0, 0);
+  return result;
+};
+
+
+/**
  * @copyright https://github.com/CyC2018/CS-Notes/blob/master/notes/
  * Leetcode%20%E9%A2%98%E8%A7%A3%20-%20%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92.md#0-1-%E8%83%8C%E5%8C%85
  * @param {number[]} nums
  * @param {number} target
  * @return {number}
  */
-var findTargetSumWays = function(nums, target) {
+var _findTargetSumWays = function(nums, target) {
   // 可以将这组数看成两部分，P 和 N，其中 P 使用正号，N 使用负号，有以下推导：
   //                   sum(P) - sum(N) = target
   // sum(P) + sum(N) + sum(P) - sum(N) = target + sum(P) + sum(N)
@@ -46,7 +82,7 @@ var findTargetSumWays = function(nums, target) {
 
   const SUM = nums.sum();
   // 数字之和小于目标绝对值，或 sum(P) 目标数不是偶数时无解
-  if(SUM < Math.abs(target) || (SUM + target) % 2 === 1) {
+  if (SUM < Math.abs(target) || (SUM + target) % 2 === 1) {
     return 0;
   }
 
@@ -60,11 +96,11 @@ var findTargetSumWays = function(nums, target) {
   dp[0][0] = 1;
 
   // 先遍历物品，再遍历背包重量
-  for(let i = 1; i <= nums.length; i++) {
-    for(let j = 0; j <= W; j++) {
+  for (let i = 1; i <= nums.length; i++) {
+    for (let j = 0; j <= W; j++) {
       // nums[i-1] 代表第 i 个物品
       // 若当前物品不可选，则选项数和同重量时的前一物品相同
-      if(nums[i - 1] > j) {
+      if (nums[i - 1] > j) {
         dp[i][j] = dp[i - 1][j];
       } else {
         // 若可选，则将选择第 i 个物品和不选的选择数相加
@@ -78,4 +114,4 @@ var findTargetSumWays = function(nums, target) {
   return dp[nums.length][W];
 };
 
-console.log(findTargetSumWays([0,0,0,0,0,0,0,0,1], 1));
+console.log(findTargetSumWays([1, 1, 1, 1, 1], 3));
