@@ -1,6 +1,6 @@
 import axios from "axios";
 
-import fs from "fs/promises";
+import { readdir, readFile, writeFile } from "fs/promises";
 import path from "path";
 import process from "child_process";
 import { fileURLToPath } from "url";
@@ -8,7 +8,9 @@ import { dirname } from "path";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
-const ROOT_PATH = __dirname + path.sep + "leetcode";
+const LEETCODE_PATH = path.resolve(__dirname, "..", "leetcode");
+const CACHE_PATH = __dirname + path.sep + "cache.json";
+const UPDATE_INTERVAL = 7 * 24 * 60 * 60 * 1000;
 
 /**
  * Get local LeetCode tests.
@@ -18,21 +20,26 @@ async function getCodeList() {
   let fileMap = new Map();
 
   // Map test num to file path
-  let genres = await fs.readdir(ROOT_PATH);
+  let genres;
+  try {
+    genres = await readdir(LEETCODE_PATH);
+  } catch (err) {
+    console.log(err);
+  }
   for (let genre of genres) {
-    let tests = await fs.readdir(ROOT_PATH + path.sep + genre);
+    let tests = await readdir(LEETCODE_PATH + path.sep + genre);
 
     for (let test of tests) {
       let testNum = test.split(".")[0];
       if (isNaN(+testNum)) {
         continue;
       }
-      let filePath = ROOT_PATH + path.sep + genre + path.sep + test;
+      let filePath = LEETCODE_PATH + path.sep + genre + path.sep + test;
       fileMap.set(+testNum, filePath);
     }
   }
 
-  return Promise.resolve(fileMap);
+  return fileMap;
 }
 
 /**
@@ -52,9 +59,33 @@ async function getLocalRandom(testNum) {
   process.exec("code " + localPath);
 }
 
-async function getRandomTop100() {
-  let testList = [];
+/**
+ * Read from local cache
+ * @returns {Promise<number[]>} Return cached data if it is still valid. Otherwise, return `[]` instead.
+ */
+async function getLocalCache() {
+  let cache = await readFile(CACHE_PATH, { encoding: "utf-8" });
+  let cacheObj = JSON.parse(cache);
 
+  let timestamp = cacheObj.timestamp;
+  let data = cacheObj.data;
+  let now = Date.now();
+
+  // Compare timestamp
+  if (timestamp - now < UPDATE_INTERVAL) {
+    return data;
+  }
+
+  // Return an empty array if local cache is exipred
+  return [];
+}
+
+/**
+ * Fetch top 100 LeetCode questions from CodeTop
+ * @returns {Promise<number[]>} Top 100 LeetCode question id in an array.
+ */
+async function fetchDataFromCodeTop() {
+  let testList = [];
   // Get top 100 code challanges
   for (let pageNum = 1; pageNum <= 5; pageNum++) {
     let URL = `https://codetop.cc/api/questions/?page=${pageNum}&search=&ordering=-frequency`;
@@ -75,6 +106,28 @@ async function getRandomTop100() {
       }
       testList.push(+num);
     }
+  }
+
+  // Write to local cache.
+  let newCache = {
+    timestamp: Date.now(),
+    data: testList
+  };
+  try {
+    await writeFile(CACHE_PATH, JSON.stringify(newCache), { encoding: "utf-8" });
+  } catch (err) {
+    console.log(err);
+  }
+  return testList;
+}
+
+/**
+ * Get a random top 100 LeetCode question and open it in local VSCode editor.
+ */
+async function getRandomTop100() {
+  let testList = await getLocalCache();
+  if (testList.length === 0) {
+    testList = await fetchDataFromCodeTop();
   }
 
   // Get random one

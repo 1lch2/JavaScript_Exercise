@@ -5,8 +5,8 @@
   "description": "This is a personal repository for JavaScript exercices plus some frontend developing notes.",
   "main": "",
   "scripts": {
-    "random-local": "node src/random_challenge.js",
-    "random-100": "node src/random_top100.js",
+    "rand": "node src/script/random_challenge.js",
+    "rand100": "node src/script/random_top100.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
