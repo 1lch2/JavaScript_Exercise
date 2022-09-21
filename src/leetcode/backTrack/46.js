@@ -22,33 +22,34 @@
  * @return {number[][]}
  */
 var permute = function(nums) {
-  let res = [];
+  let result = [];
 
-  /**
-   * @param {Number[]} path path
-   * @param {Number[]} candidates candidates
-   */
-  const backtrack = (path, candidates) => {
-    if(candidates.length === 0) {
-      res.push(path.slice(0));
+  // 用数组标记可选的元素，不用每次操作候选数组
+  let available = new Array(nums.length).fill(true);
+
+  const backtrack = (path) => {
+    if (path.length === nums.length) {
+      result.push(path.slice(0));
       return;
     }
 
-    for(let i = 0; i < candidates.length; i++) {
-      let selected = candidates.splice(i, 1)[0];
-
-      path.push(selected);
-      backtrack(path, candidates);
+    for (let i = 0; i < nums.length; i++) {
+      if (!available[i]) {
+        continue;
+      }
+      available[i] = false;
+      path.push(nums[i]);
+      backtrack(path);
       path.pop();
-      candidates.splice(i, -1, selected);
+      available[i] = true;
     }
   };
 
-  backtrack([], nums);
-  return res;
+  backtrack([]);
+  return result;
 };
 
-(function(){
+(function() {
   let input = [1, 1, 2];
   console.log(permute(input));
 })();

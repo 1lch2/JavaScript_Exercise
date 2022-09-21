@@ -12,6 +12,8 @@ const LEETCODE_PATH = path.resolve(__dirname, "..", "leetcode");
 const CACHE_PATH = __dirname + path.sep + "cache.json";
 const UPDATE_INTERVAL = 7 * 24 * 60 * 60 * 1000;
 
+const BASE_URL = "https://codetop.cc/api/questions/";
+
 /**
  * Get local LeetCode tests.
  * @returns {Promise<Map<number, string>} Map containing test number to local file path
@@ -88,7 +90,7 @@ async function fetchDataFromCodeTop() {
   let testList = [];
   // Get top 100 code challanges
   for (let pageNum = 1; pageNum <= 5; pageNum++) {
-    let URL = `https://codetop.cc/api/questions/?page=${pageNum}&search=&ordering=-frequency`;
+    let URL = BASE_URL + `?page=${pageNum}&search=&ordering=-frequency`;
 
     let response = await axios.get(URL, {
       headers: {

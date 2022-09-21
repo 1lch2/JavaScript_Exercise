@@ -34,57 +34,49 @@
  * @param {number} target
  * @return {number[][]}
  */
-var combinationSum = function (candidates, target) {
-  let res = [];
-  if(target < Math.min(candidates)) {
-    return res;
+var combinationSum = function(candidates, target) {
+  if (target < Math.min(...candidates)) {
+    return [];
   }
 
-  /**
-   * 数组求和
-   * @param {Number[]} nums 数组
-   * @returns {Number} 求和结果
-   */
-  const sum = (nums) => {
-    return nums.reduce((prev, current) => {
-      return prev + current;
-    }, 0);
+  Array.prototype.sum = function() {
+    return this.reduce((prev, curr) => prev + curr, 0);
   };
+
+  // 保证候选数组有序
+  candidates.sort((a, b) => a - b);
+  let result =[];
 
   /**
    * 回溯
-   * @param {Number[]} path 已选择的数组
-   * @param {Number[]} candidates 候选数组
+   * @param {number[]} path 已选择的数组
+   * @param {number} index 待选部分的起始下标
    */
-  const backtrack = (path, candidates) => {
+  const backtrack = (path, index) => {
     // 找到符合要求的数组
-    if(sum(path) === target) {
-      res.push(path.slice(0));
+    if (path.sum() === target) {
+      result.push(path.slice(0));
       return;
     }
 
     // 备选为空
-    if(candidates.length === 0) {
-      return;
-    }
-
-    // 备选不符合要求
-    if(sum(path) + Math.min(candidates) > target) {
+    if (index >= candidates.length) {
       return;
     }
 
     // 递归进入下一层
-    for(let i = 0; i < candidates.length; i++) {
+    for (let i = index; i < candidates.length; i++) {
+      let item = candidates[i];
       // 跳过不符合要求的候选
-      if(candidates[i] + sum(path) > target) {
+      if (item + path.sum() > target) {
         continue;
       }
-      path.push(candidates[i]);
-      backtrack(path, candidates.slice(i));
+      path.push(item);
+      backtrack(path, i); // 因为可以重复选，所以还是从当前下标开始
       path.pop();
     }
   };
 
-  backtrack([], candidates);
-  return res;
+  backtrack([], 0);
+  return result;
 };
