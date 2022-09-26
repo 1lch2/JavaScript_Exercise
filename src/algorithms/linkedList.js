@@ -8,8 +8,12 @@ function ListNode(val, next) {
   this.next = (next === undefined ? null : next);
 }
 
-// Print out the linked list.
-var printLinkedList = function (linkedlist) {
+/**
+ * Print out the linked list.
+ * @param {ListNode} linkedlist Head node of the linked list
+ * @returns {string[]} Serialized linked list
+ */
+export const printLinkedList = function (linkedlist) {
   let current = linkedlist;
   let out = "";
   while (current != null) {
@@ -24,8 +28,12 @@ var printLinkedList = function (linkedlist) {
 };
 
 
-// De-serialize from a list
-var deserialize = function (list) {
+/**
+ * De-serialize from a list
+ * @param {any[]} list Array of linked list values
+ * @returns {ListNode} Head node of linked list.
+ */
+export const deserialize = function (list) {
   let dummyRoot = new ListNode();
   if (list.length == 0) {
     return null;
@@ -39,21 +47,3 @@ var deserialize = function (list) {
   }
   return dummyRoot.next;
 };
-
-(function () {
-  let root = new ListNode(0);
-  let first = new ListNode(1);
-  let second = new ListNode(2);
-
-  root.next = first;
-  first.next = second;
-
-  printLinkedList(root);
-
-  let list = [0, 1, 2, 3, 4];
-  let res = deserialize(list);
-
-  // Ref: https://stackoverflow.com/questions/7390426/better-way-to-get-type-of-a-javascript-variable
-  console.log("res type: " + res.constructor.name); 
-  console.log("res: " + printLinkedList(res));
-})();

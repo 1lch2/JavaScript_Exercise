@@ -11,7 +11,7 @@ See directory `/note`. Notes are categorized by language and framework. Note tha
 - `/src/algorithms` for data structure implementations. Nothing fancy here.
 - `/src/functions` for popular JS function implementations. You can find solutions for most tech interview questions here. Totally useful.
 - `/src/designPattern` for common JS design pattern implementations. Not many, but critical.
-- `/src/css` for common CSS layout implementations. For detailed notes, check these notes: 
+- `/src/css` for common CSS layout implementations. For detailed notes, check these links: 
     - [Columns Layout](note/css/Columns_Layout.md)
     - [Flex](note/css/Flex.md)
     - [Float](note/css/Float.md)

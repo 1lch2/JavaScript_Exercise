@@ -311,7 +311,9 @@ class TreeNode {
 
 }
 
-(function() {
+export default TreeNode;
+
+const test = () => {
   //       0
   //      / \
   //     1   2
@@ -337,4 +339,6 @@ class TreeNode {
 
   let serialized = root.serialize();
   console.log(serialized.join(" "));
-})();
+};
+
+test();
