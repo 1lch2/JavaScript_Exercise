@@ -94,6 +94,28 @@ render() {
 }
 ```
 
+> 注意：不能在事件表达式中直接调用函数，因为 `{}` 中的表达式会立即求值，导致第一次渲染时就直接调用了方法，配合React-Router就会出现无限重渲染的情况。bug示例如下：
+> ```jsx
+>  const navigate = useNavigate();
+>  const [panelState, setPanelState] = useState(MAIN_ROUTE);
+>  useEffect(() => {
+>    if(panelState === MAIN_ROUTE) {
+>      navigate(MAIN_ROUTE);
+>      return;
+>    }
+>
+>    if(panelState === SETTING_ROUTE) {
+>      navigate(SETTING_ROUTE);
+>      return;
+>    }
+>  }, [panelState]);
+>
+> return (
+>   <button onClick={setPanelState(MAIN_ROUTE)}>
+> );
+> ```
+> 正确方法是，给表达式传入方法的引用，如上文所示，或者使用箭头函数的形式，避免直接求值。
+
 若要为回调传递参数，也需要使用绑定 this 或箭头函数的形式，如下所示：
 ```jsx
 <button onClick={(e) => this.deleteRow(id, e)}>Delete Row</button>
