@@ -41,6 +41,31 @@ reducer(state, action) {
 }
 ```
 
+在 reducer 中，如果创建时给 `createStore` 提供了初始的 state，那么 reducer **必须**默认返回未修改的 state。如下所示：
+```js
+const reducers = (state, action) => {
+  switch(action.type) {
+    case ACTION_SET_PROJECT_TYPE: 
+      return Object.assign({}, state, { count: action.count + 1 });
+    default:
+      return state;
+  }
+};
+```
+
+这是因为当 `createStore` 方法创建 store 时，会调用一个默认的 action 来获取初始的 state 值，这个 action 的值是 `"@@redux/init"`，如果没有提供 default 选项中返回 state 的操作，则对应的 state 会被修改为 `"@@redux/initY.l.a"` 这样的形式。
+
+> 问题参考：[Init state issue with "@@redux/init" in Redux](https://stackoverflow.com/questions/43618737/init-state-issue-with-redux-init-in-redux)
+
+> Redux 源码中的对应部分：[reduxjs/redux src/createStore.ts](https://github.com/reduxjs/redux/blob/8ad084251a5b3e4617157fc52795b6284e68bc1e/src/createStore.ts#L359)
+> ```ts
+> // When a store is created,
+> // an "INIT" action is dispatched so that
+> // every reducer returns their initial state.
+> // This effectively populates the initial state tree.
+> dispatch({ type: ActionTypes.INIT } as A)
+> ```
+
 ## 用法示例
 
 ```js
@@ -69,6 +94,14 @@ store.dispatch(actions.increase()) // {count: 1}
 store.dispatch(actions.increase()) // {count: 2}
 store.dispatch(actions.increase()) // {count: 3}
 ```
+
+### createStore
+`createStore()`用法如下：
+```js
+const store = createStore(reducer, [preloadedState], enhancer);
+```
+
+第二个参数是 store 的初始状态，如果没有传递，则 reducer 会使用定义时的默认值，即上方例子中的 `{ count: 0 }`。
 
 ## react-redux
 区别于 redux，redux 直接在组件中创建即可，而 react-redux 则是用 Provider 组件和 store 来对接，使用 connect 将组件和 react 连接起来
