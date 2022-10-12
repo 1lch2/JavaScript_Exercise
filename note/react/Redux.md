@@ -103,6 +103,15 @@ const store = createStore(reducer, [preloadedState], enhancer);
 
 第二个参数是 store 的初始状态，如果没有传递，则 reducer 会使用定义时的默认值，即上方例子中的 `{ count: 0 }`。
 
+### store.subscribe
+直接使用`store.subscribe(listener)`会导致每次触发重新渲染时都执行一次，因此正确用法是，配合 useEffect 在首次渲染时订阅 store，通过返回 `unsubscribe` 方法来在组件卸载时取消订阅。示例如下：
+```js
+useEffect(() => {
+  const unsubscribe = store.subscribe(listener);
+  return unsubscribe;
+}, []);
+```
+
 ## react-redux
 区别于 redux，redux 直接在组件中创建即可，而 react-redux 则是用 Provider 组件和 store 来对接，使用 connect 将组件和 react 连接起来
 
