@@ -27,7 +27,7 @@ new Child("son").hi(); // son
 ```
 
 ### 问题
-在使用原型实现继承时，原型实际上变成了另一个类型的实例。这意味着原先的实例属性摇身一变成为了原型属性。
+在使用原型实现继承时，原型实际上变成了另一个类型的实例。这意味着原先的对象实例上的属性成为了原型属性（对应Java就是把对象的成员变成了类上的静态成员）。
 
 如下例所示：
 ```js
@@ -40,6 +40,7 @@ function Son() {
 
 Son.prototype = new Father();
 
+// 看似只修改了一个对象的属性值，实际上影响了所有构造函数生成的对象
 let son1 = new Son();
 son1.color.push("yellow");
 
@@ -141,7 +142,8 @@ object()对传入其中的对象执行了一次浅复制，将构造函数F的�
 在原型式继承的基础上，增强对象，返回构造函数。主要作用就是为构造函数新增属性和方法，以增强函数。
 
 ```js
-function object(obj) {
+// 等同于 Object.create(protoObj)
+function createObject(obj) {
     // 子类的构造函数
     function Son() {
     }
@@ -151,7 +153,7 @@ function object(obj) {
 }
 
 function createAnother(original) {
-    let clone = object(original);
+    let clone = createObject(original);
     // 增强对象
     clone.sayHi = function () {
         console.log("hi, i'm " + this.name);

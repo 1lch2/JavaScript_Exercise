@@ -1,5 +1,5 @@
 /**
- * instanceof
+ * obj instanceof cls
  * 
  * @param {Object} obj 待对比的对象
  * @param {Function} cls 待对比的构造函数
@@ -17,6 +17,8 @@ const isInstanceOf = function(obj, cls) {
     if(objProto === clsProto) {
       return true;
     }
+
+    // 沿原型链向上
     objProto = objProto.__proto__;
     return trace(objProto);
   };

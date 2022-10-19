@@ -23,6 +23,10 @@ function deepCopy(obj) {
  * @returns 浅拷贝对象
  */
 function shallowCopy(target) {
+  if(target instanceof Array) {
+    return target.slice(0);
+  }
+
   let clone = {};
   for (const key in target) {
     clone[key] = target[key];

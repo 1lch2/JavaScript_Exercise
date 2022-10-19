@@ -86,6 +86,15 @@ console.log(target); // {a: 0, b: {c: 1}}
 
 如果源对象上有从原型链上继承的属性，则 Object.assign 不会将他们一并复制过去。
 
+> ES6 语法：
+> ```js
+> let original = { a: 1 };
+> let target = {
+>   ...original,
+>   { b: 2 }
+> }
+> // target: { a: 1, b: 2}
+
 ## 实例属性
 - `Object.prototype.constructor`：指向对象的构造函数
 - `Object.prototype.__proto__`：指向原型

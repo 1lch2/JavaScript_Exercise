@@ -7,12 +7,12 @@ function flatten(arr) {
   let res = [];
 
   for(let i of arr) {
-    if(Array.isArray(i)) {
+    if(i instanceof Array) {
       // 若成员为数组，则递归处理嵌套数组
       res = res.concat(flatten(i));
-    } else {
-      res.push(i);
+      continue;
     }
+    res.push(i);
   }
   return res;
 }

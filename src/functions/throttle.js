@@ -7,7 +7,7 @@
  * @param {Number} delay 
  * @returns {Function}
  */
-function throttleDate(fn, delay = 500) {
+export function throttleDate(fn, delay = 500) {
   let oldtime = Date.now();
   return function(...args) {
     let newtime = Date.now();
@@ -24,7 +24,7 @@ function throttleDate(fn, delay = 500) {
  * @param {Number} delay 
  * @returns {Function}
  */
-function throttledTimeout(fn, delay = 500) {
+export function throttledTimeout(fn, delay = 500) {
   let timer = null;
   return function(...args) {
     if (!timer) {
@@ -35,5 +35,3 @@ function throttledTimeout(fn, delay = 500) {
     }
   };
 }
-
-export default {throttleDate, throttledTimeout};

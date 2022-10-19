@@ -276,3 +276,5 @@ Promise.all(promises).then(function (posts) {
   // ...
 });
 ```
+
+代码实现：[Promise.all](../../src/functions/promise.js)

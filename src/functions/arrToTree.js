@@ -18,7 +18,7 @@
 function arrToTree(arr) {
   // 结果数组
   let result = [];
-  // 存储数组元素到 id 的映射，便于后续访问
+  // 存储数组 id 到元素的映射，便于后续访问
   let map = {};
 
   // 建立映射

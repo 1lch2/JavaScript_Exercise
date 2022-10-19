@@ -7,9 +7,9 @@ const uniqueArray1 = (array) => {
 const uniqueArray2 = (array) => {
   let result = [];
 
-  array.forEach((it, i) => {
-    if (result.indexOf(it) === -1) {
-      result.push(it);
+  array.forEach(val => {
+    if (result.indexOf(val) === -1) {
+      result.push(val);
     }
   });
 

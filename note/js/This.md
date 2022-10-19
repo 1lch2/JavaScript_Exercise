@@ -142,6 +142,8 @@ obj.fff();
 3. 执行构造函数方法，属性和方法被添加到this引用的对象中
 4. 如果构造函数中没有返回其它对象，那么返回this，即创建的这个的新对象，否则，返回构造函数中返回的对象。
 
+实现 new 关键字参考：[newObj](../../src/functions/newObj.js)
+
 ### 绑定例外
 给bing，apply，call的`thisArg`传入null或undefined时，会忽略这个参数，调用时使用默认绑定规则。
 

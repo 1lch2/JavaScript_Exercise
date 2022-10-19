@@ -122,8 +122,8 @@ Map 结构原生提供三个遍历器生成函数和一个遍历方法。
     使用扩展运算符（...）
     ```js
     const myMap = new Map()
-    .set(true, 7)
-    .set({foo: 3}, ['abc']);
+        .set(true, 7)
+        .set({foo: 3}, ['abc']);
     [...myMap]
     // [ [ true, 7 ], [ { foo: 3 }, [ 'abc' ] ] ]
     ```
@@ -137,16 +137,16 @@ Map 结构原生提供三个遍历器生成函数和一个遍历方法。
     若Map所有键都是字符串，则可以直接转为对象，否则键名会被转为字符串再作为对象的键名
     ```js
     function strMapToObj(strMap) {
-    let obj = Object.create(null);
-    for (let [k,v] of strMap) {
-        obj[k] = v;
-    }
-    return obj;
+        let obj = Object.create(null);
+        for (let [k, v] of strMap) {
+            obj[k] = v;
+        }
+        return obj;
     }
 
     const myMap = new Map()
-    .set('yes', true)
-    .set('no', false);
+        .set('yes', true)
+        .set('no', false);
     strMapToObj(myMap)
     // { yes: true, no: false }
     ```
@@ -162,11 +162,11 @@ Map 结构原生提供三个遍历器生成函数和一个遍历方法。
     或者自己手动实现
     ```js
     function objToStrMap(obj) {
-    let strMap = new Map();
-    for (let k of Object.keys(obj)) {
-        strMap.set(k, obj[k]);
-    }
-    return strMap;
+        let strMap = new Map();
+        for (let k of Object.keys(obj)) {
+            strMap.set(k, obj[k]);
+        }
+        return strMap;
     }
 
     objToStrMap({yes: true, no: false})

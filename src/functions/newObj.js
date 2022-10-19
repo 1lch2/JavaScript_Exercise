@@ -1,9 +1,9 @@
 /**
  * 实现 new 关键字
  * @param {Function} func 构造函数
- * @param  {...any} args 参数
+ * @param {...any} args 参数
  */
-function newObj(func, ...args) {
+export default function newObj(func, ...args) {
   if(typeof func !== "function") {
     throw new Error("First argument must be a function.");
   }
