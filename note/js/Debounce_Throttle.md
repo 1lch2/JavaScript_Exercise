@@ -46,16 +46,20 @@ function debounce(func, timeout) {
  * @param {Number} delay 
  * @returns {Function}
  */
-function throttledTimeout(fn, delay = 500) {
-  let timer = null;
+function throttle(func, delay) {
+  let flag = true;
+
   return function(...args) {
-    if (!timer) {
-      timer = setTimeout(() => {
-        fn.apply(this, args);
-        timer = null;
-      }, delay);
+    if (!flag) {
+      return;
     }
-  };
+
+    flag = false;
+    setTimeout(() => {
+      func.apply(this, args);
+      flag = true;
+    }, delay);
+  }
 }
 ```
 

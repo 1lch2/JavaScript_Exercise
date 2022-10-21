@@ -8,17 +8,12 @@
  * @returns {Function} 经过防抖处理的函数
  */
 function debounce(func, timeout) {
-  let timer;
+  let timer = null;
 
-  return function() {
-    // 保存this的指向
-    let context = this;
-    // 获取event对象
-    let args = arguments;
-
+  return function(...args) {
     clearTimeout(timer);
-    timer = setTimeout(function() {
-      func.apply(context, args);
+    timer = setTimeout(() => {
+      func.apply(this, args);
     }, timeout);
   };
 }
