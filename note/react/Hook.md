@@ -169,10 +169,80 @@ function ThemedButton() {
 }
 ```
 
+### useRef
+useRef 类似 useState ，但它的返回的对象在整个生命周期中都不会变化，修改 ref 也不会导致重新渲染。也常用来获得对具体DOM元素的引用。
 
+很多例子中会用 useState 来控制 input 元素的内容，如下所示：
+```jsx
+const [inputVal, setInputVal] = useState("default value");
+return (
+  <input value={inputVal} onChange={(e) => setInputVal(e.target.value)}/>
+);
+```
+看起来很合理，实际上每敲一个字，就会触发一次 onChange ，而 onChange 会调用 setState ，也就会触发一次渲染。实际上大部分时候并不关心输入过程中的值，因此只需要关心完成输入要提交时的值，这里就不应该让 input 元素的值由 useState 来控制了。
 
-TODO:
+> 那我不用 onChange 不就行了？实际上不行，试过就知道，要么提供 onChange，要么设置 defaultValue，否则输入框的内容就是只读。
+
+正确思路是，使用 useRef 来获得 input 元素的值，然后在提交时再调用 setState。示例如下：
+```jsx
+let ref = useRef();
+let [inputValue, setInputValue] = useState("default");
+
+const submitForm = (e) => {
+  e.preventDefault();
+  setInputValue(e.target.value);
+}
+
+return (
+  <input type="text" ref={ref} defaultValue={inputValue}/>
+  <input type="submit" onClick={submitForm}>
+);
+```
+
+TODO: 
+
 
 ## Hook 使用规则
 - 只能在函数最外层调用 Hook。不要在循环、条件判断或者子函数中调用。
 - 只能在 React 的函数组件中调用 Hook。不要在其他 JavaScript 函数中调用。
+
+
+## Hook 模拟 class 组件的生命周期
+生命周期参考：[Lifecycle](LifeCycle.md)
+
+### constructor
+直接用 useState
+```jsx
+const [count, setCount] = useState(0);
+```
+
+### componentDidMount
+用 useEffect 加空依赖
+```jsx
+useEffect(() => {
+  // code
+}, []);
+```
+
+### componentDidUpdate
+直接用 useEffect 会触发 componentDidMount 和 update 两个周期。如果只想模拟 update 周期，应该配合 useRef 使用。
+```jsx
+const mounted = useRef();
+useEffect(() => {
+  if (!mounted.current) {
+    mounted.current = true;
+  } else {
+   console.log('I am didUpdate')
+  }
+});
+```
+
+### componentWillUnmount
+useEffect 中 返回函数
+```jsx
+useEffect(() => {
+  return () => {
+    console.log('will unmount');
+  }
+}, []);
+```

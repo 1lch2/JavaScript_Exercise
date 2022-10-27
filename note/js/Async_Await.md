@@ -190,3 +190,89 @@ console.log(5);
 18. 打印 8
 19. 打印 9
 20. foo() 返回
+
+
+#### async/await 和 promise 一块使用
+```js
+// 1. 同步任务先运行
+console.log(1);
+
+async function fn1() {
+  // 3. 同步执行
+  console.log(2);
+  // 4. 先同步执行异步函数，返回结果挂起
+  await fn2();
+  // 8. 从微任务队列取出第一个任务，恢复await挂起的部分，执行后续
+  console.log(6);
+}
+
+setTimeout(() => {
+  // 10. 微任务清空，执行宏任务队列
+  console.log(8);
+}, 0);
+
+async function fn2() {
+  // 4. 同步执行后挂起，此处没有返回值，向微任务队列推入一个恢复的任务
+  console.log(3);
+}
+
+// 2. 同步任务，进入函数内运行
+fn1();
+
+new Promise((resolve) => {
+  // 5. Promise 构造函数本身是同步任务，因此执行
+  console.log(4);
+  // 6. 向微任务队列推入一个新任务
+  resolve();
+}).then(() => {
+  // 9. 继续从微任务队列取出任务，执行 then
+  console.log(7);
+});
+
+// 7. 最后一个同步任务
+console.log(5);
+```
+
+
+若异步函数返回了一个 promise 而不是立即可用的值，则中断恢复时会解析 promise 后再向任务队列推入新任务，然后才能轮到中断部分后续运行。示例如下：
+
+1 到 5 的过程同上
+```js
+console.log(1);
+
+async function fn1() {
+  console.log(2);
+
+  // 1. 这里依然是先进入执行同步任务
+  // 7. 取出恢复执行的微任务和结果
+  console.log(await fn2());
+  // 8. 执行后续任务
+  console.log(8);
+}
+
+setTimeout(() => {
+  // 9. 宏任务
+  console.log(9);
+}, 0);
+
+async function fn2() {
+  // 2. 执行同步任务
+  console.log(3);
+  // 3. 这里先向微任务队列推入解析promise的任务
+  return Promise.resolve(7)
+}
+
+fn1();
+
+new Promise((resolve) => {
+  console.log(4);
+  resolve();
+}).then(() => {
+  // 4. 同步任务执行完，取出第一个任务是解析前面的 promise
+  // 解析后将结果和恢复 await 执行的任务推入队列后方，
+  // 然后取出靠前的 then 并执行
+  console.log(6);
+});
+
+console.log(5);
+```
