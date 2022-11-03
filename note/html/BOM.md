@@ -30,6 +30,21 @@ window.open()方法可以用于导航到指定 URL，也可以用于打开新浏
 
 **`setInterval()`**：用于指定**每隔一段时间**执行某些代码。
 
+### name 属性
+这个属性用来获取/设置窗口的名称。可以在跳转页面时，跨域传递信息，新的页面可以获取到跳转前页面通过 target 属性传递给 name 属性的值，用法如下：
+
+页面一：
+```html
+<a href="./nextpage.html" target="hello world">
+```
+
+跳转后的页面二：
+```js
+console.log(window.name); // hello world
+```
+
+除此之外也可以使用 `window.open(url, windowName)` 方法起到一样的效果，第二个参数对应 `<a>` 元素的 target 属性。
+
 ## location
 location 是最有用的 BOM 对象之一，提供了当前窗口中加载文档的信息，以及通常的导航功能。 这个对象独特的地方在于，它既是 window 的属性，也是 document 的属性。
 

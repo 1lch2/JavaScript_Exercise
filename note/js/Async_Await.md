@@ -276,3 +276,69 @@ new Promise((resolve) => {
 
 console.log(5);
 ```
+
+## 循环中的 await
+循环中使用 async/await 和直接使用 Promise.then 效果截然不同。
+
+如下代码预期每隔一秒输出一个数字，最后输出前面几个数字之和。
+```js
+function delay(num) {
+  return new Promise(resolve => {
+    setTimeout(() => {
+      console.log(num);
+      resolve(num);
+    }, 1000);
+  });
+}
+
+function total(n) {
+  // implementation
+}
+
+total(3).then(res => console.log(res));
+```
+
+Promise 实现如下
+```js
+function total(n) {
+  let sum = 0;
+  for(let i = 0; i < n; i++) {
+    delay(i).then(res => sum += res);
+  }
+
+  return new Promise(resolve => resolve(sum));
+}
+
+total(3).then(res => console.log(res));
+
+// total: 0
+// 0
+// 1
+// 2
+```
+
+结果先输出了和为0的结果，等待一秒后输出了0，1，2。
+
+原因是循环中使用 Promise.then 会一次性添加三个任务，他们的定时器同步执行，等待的一秒被压缩到了一起。
+
+改用 async/await 实现如下：
+```js
+async function total(n) {
+  let sum = 0;
+  for(let i = 0; i < n; i++) {
+    sum += await delay(i);
+  }
+  return sum;
+}
+
+total(3).then(res => console.log("total: " + res));
+
+// 0
+// 1
+// 2
+// total: 3
+```
+
+这时每隔一秒输出了一个数字，最后输出了结果。因为 await 会挂起后面的代码，直到执行完成返回后再继续，这样保证了顺序。
+
+**但是**，这种阻塞效果仅限于传统 for 循环，如果是在数组的 forEach 或者 map 方法中使用，则不会有阻塞效果。
