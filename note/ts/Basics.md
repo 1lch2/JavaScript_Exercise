@@ -120,6 +120,22 @@ function printCoord(pt: Point) {
 printCoord({ x: 100, y: 100 });
 ```
 
+### 拓展类型别名
+使用 `&` 拓展类型别名
+```ts
+type Animal = {
+  name: string
+}
+
+type Bear = Animal & { 
+  honey: boolean 
+}
+
+const bear = getBear();
+bear.name;
+bear.honey;
+```
+
 ## 断言
 ### 类型断言
 使用关键词 `as` 可以为 TS 无法自动推断类型的变量设定类型。
@@ -156,4 +172,3 @@ function liveDangerously(x?: number | null) {
   console.log(x!.toFixed());
 }
 ```
-

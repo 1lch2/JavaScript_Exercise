@@ -65,9 +65,3 @@ interface Cloner {
   clone(animal: Animal): Animal;
 }
 ```
-
-
-## 对比联合类型
-在TS中接口和联合类型通常可以互相替换
-
-TODO
