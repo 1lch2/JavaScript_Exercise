@@ -20,7 +20,7 @@
   },
   "homepage": "https://github.com/1lch2/JavaScript_Exercise#readme",
   "devDependencies": {
-    "eslint": "^8.7.0"
+    "eslint": "^8.27.0"
   },
   "dependencies": {
     "axios": "^0.27.2"
