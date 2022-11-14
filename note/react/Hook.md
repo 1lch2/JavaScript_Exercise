@@ -199,12 +199,144 @@ return (
 );
 ```
 
-### useMemo & useCallback
+### useMemo
+useMemo 用来在几次渲染之间缓存计算的结果。这个Hook接受两个参数，第一个为想记忆结果的计算函数，一般不应该带参数（形如`()=>{}`）；第二个类似 useEffect，代表重新计算的判断依赖，如果依赖发生变化则重新计算并存储计算结果供之后重用。函数返回的值即为被记忆的计算结果。
 
+每次渲染之间，react会比较所有的依赖变量，如果每个都没有变化，则直接返回之前暂存的结果
+
+使用场合如下：
+1. 跳过耗时较长的计算过程
+    ```jsx
+    function TodoList({ todos, tab, theme }) {
+      const visibleTodos = useMemo(() => filterTodos(todos, tab), [todos, tab]);
+      // ...
+    }
+    ```
+
+2. 跳过组件重渲染
+    ```jsx
+    function TodoList({ todos, tab, theme }) {
+      // Tell React to cache your calculation between re-renders...
+      const visibleTodos = useMemo(
+        () => filterTodos(todos, tab),
+        [todos, tab] // ...so as long as these dependencies don't change...
+      );
+      return (
+        <div className={theme}>
+          {/* ...List will receive the same props and can skip re-rendering */}
+          <List items={visibleTodos} />
+        </div>
+      );
+    }
+    ```
+    react 会在每次重渲染时候递归渲染每个嵌套的子组件，使用 useMemo 记忆导致组件变化的参数可以避免耗时的重渲染
+
+3. 记忆另一个Hook的依赖
+    ```jsx
+    function Dropdown({ allItems, text }) {
+      const searchOptions = { matchMode: 'whole-word', text };
+      const visibleItems = useMemo(() => {
+        return searchItems(allItems, searchOptions);
+      }, [allItems, searchOptions]); // 🚩 Caution: Dependency on an object created in the component body
+
+      // ...
+    }
+    ```
+    若 useMemo 的依赖是组件内声明的一个对象时，每次渲染都会重新运行一遍组件内的代码，导致对象重新创建，useMemo 也就此失效。
+
+    这时候可以用 useMemo 记忆这个依赖对象，再将记忆结果传入另一个 hook 作为依赖：
+    ```jsx
+    const searchOptions = useMemo(() => {
+      return { matchMode: 'whole-word', text };
+    }, [text]); // ✅ Only changes when text changes
+
+    const visibleItems = useMemo(() => {
+      return searchItems(allItems, searchOptions);
+    }, [allItems, searchOptions]); // ✅ Only changes when allItems or searchOptions changes
+    ```
+
+4. 记忆函数
+    ```jsx
+    function ProductPage({ productId, referrer }) {
+      function handleSubmit(orderDetails) {
+        post('/product/' + productId + '/buy', {
+          referrer,
+          orderDetails
+        });
+      }
+      return <Form onSubmit={handleSubmit} />;
+    }
+    ```
+    对于将函数作为属性的组件，每次渲染时都会重新声明函数，导致内部引用的组件每次都接受了一个不同的参数，如上所示。这时应该使用 useMemo 记忆这个作为参数的函数，避免无用的重新渲染。
+    ```jsx
+    function Page({ productId, referrer }) {
+      const handleSubmit = useMemo(() => {
+        return (orderDetails) => {
+          post('/product/' + product.id + '/buy', {
+            referrer,
+            orderDetails
+          });
+        };
+      }, [productId, referrer]);
+      return <Form onSubmit={handleSubmit} />;
+    }
+    ```
+    实际上记忆函数更好的方式是用 useCallback 这个 hook，可以省去嵌套一层函数，如下所示：
+    ```jsx
+    function Page({ productId, referrer }) {
+      const handleSubmit = useCallback((orderDetails) => {
+        post('/product/' + product.id + '/buy', {
+          referrer,
+          orderDetails
+        });
+      }, [productId, referrer]);
+      return <Form onSubmit={handleSubmit} />;
+    }
+    ```
+
+### useCallback
+与 useMemo 类似，useCallback 可以在两次渲染之间缓存函数。
+
+> useMemo 缓存的是**函数的结果**，而 useCallback 缓存的是**函数本身**
+
+用法如下：
+1. 跳过重渲染
+
+    如 useMemo 的用法4所示
+
+2. 从缓存的回调中更新 state
+    ```jsx
+    const [todos, setTodos] = useState([]);
+    const handleAddTodo = useCallback((text) => {
+      const newTodo = { id: nextId++, text };
+      setTodos([...todos, newTodo]);
+    }, [todos]);
+    ```
+    当更新的state只取决于它自身之前的状态时，可以直接把依赖移除（改成空数组）
+
+3. 防止副作用触发过于频繁
+4. 优化自定义hook
+    ```jsx
+    function useRouter() {
+      const { dispatch } = useContext(RouterStateContext);
+
+      const navigate = useCallback((url) => {
+        dispatch({ type: 'navigate', url });
+      }, [dispatch]);
+
+      const goBack = useCallback(() => {
+        dispatch({ type: 'back' });
+      }, [dispatch]);
+
+      return {
+        navigate,
+        goBack,
+      };
+    }
+    ```
 
 ### useLayoutEffect
-
-TODO: 
+效果和用法与 useEffect 完全一致，区别在于，它的回调会在所有DOM操作完成之后再执行。一般用于读取布局后同步执行重渲染。
 
 
 ## Hook 使用规则
