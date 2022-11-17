@@ -1,6 +1,6 @@
 /**
- * @param {Function[]} middlewares 
- * @return {Function} Composed middlewares
+ * @param {Array<(next: () => void) => void>} middlewares 
+ * @return {() => void} Composed middlewares
  */
 function compose(middlewares) {
   return () => {
