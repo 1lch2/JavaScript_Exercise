@@ -93,3 +93,66 @@ nodeList 中的条目由通过下标有两种方式进行访问：
 `
 
 // TODO: note marker
+
+## 常用API
+### 增删DOM元素
+1. createElement：创建元素
+    ```js
+    let div = document.createElement('div')
+    ```
+2. createTextNode：创建文本节点
+    ```js
+    let text = document.createTextNode('hello')
+    ```
+3. appendChild：在调用该方法的节点的子元素末尾添加指定节点。
+    ```js
+    parent.appendChild(child)
+    ```
+4. insertBefore：在指定节点前添加节点
+    ```js
+    parent.insertBefore(newNode, referenceNode)
+    ```
+5. removeChild：删除子节点
+    ```js
+    let childNode = parent.removeChild(childNode)
+    ```
+    注意：如果被删除的不是其子节点，会报错。
+
+    通过下面的方式，来确保删除的是子节点：
+    ```js
+    if (node.parentNode) {
+      node.parentNode.removeChild(node)  // 获取节点的父节点，然后删除自身
+    }
+    ```
+6. replaceChild：用于使用新节点替换旧节点。
+    ```js
+    parent.replaceChild(newNode, oldNode)
+    ```
+    新节点是替换节点，可以是新的节点，也可以是页面中的某个节点，如果是页面中的节点，则该节点会被移动到新的位置。旧节点是被替换的节点。
+
+### 查询DOM元素
+参见：[Query selector API](./Query_Selector.md)
+
+### 修改属性
+1. setAttribute：根据名称和值修改元素的特性。
+    ```js
+    element.setAttribute(name, value)
+    ```
+    name是属性名，value是属性值。
+
+    也可以使用下面这个方法来替代上面的方法：
+    ```js
+    element.name = value
+    ```
+2. getAttribute：用来获取属性名对应的属性值。
+    ```js
+    let value = element.getAttribute(name)
+    ```
+    如果属性值不存在，则返回 null 或空字符串。
+
+    也可以使用下面的方法代替：
+    ```js
+    let value = element.name
+    ```
+
+TODO:

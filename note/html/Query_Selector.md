@@ -1,6 +1,6 @@
 # HTML & JS - DOM 操作
 ## `querySelector()`
-`querySelector()` 方法接收 CSS 选择符参数，返回匹配该模式的第一个后代元素，如果没有匹配 项则返回 `null`。
+`querySelector()` 方法接收 CSS 选择符参数，返回匹配该模式的**第一个**后代元素，如果没有匹配 项则返回 `null`。
 
 示例如下：
 ```js
