@@ -383,3 +383,55 @@ useEffect(() => {
   }
 }, []);
 ```
+
+## 自定义Hook
+设计原则：自定义的hook是用来复用带有状态的逻辑而不是状态本身，每次对hook的调用都是互相独立的。
+
+> Custom Hooks let you share stateful logic but not state itself. Each call to a Hook is completely independent from every other call to the same Hook. 
+
+以自定义表格监听hook为例：
+
+```jsx
+function useFormInput(initialValue) {
+  // 注意实际开发时不应使用 useState，会导致按一次键盘就触发一次渲染
+  const [value, setValue] = useState(initialValue);
+
+  function handleChange(e) {
+    setValue(e.target.value);
+  }
+
+  const inputProps = {
+    value: value,
+    onChange: handleChange
+  };
+
+  return inputProps;
+}
+
+export default function Form() {
+  const firstNameProps = useFormInput('Mary');
+  const lastNameProps = useFormInput('Poppins');
+
+  return (
+    <>
+      <label>
+        First name:
+        <input {...firstNameProps} />
+      </label>
+      <label>
+        Last name:
+        <input {...lastNameProps} />
+      </label>
+      <p><b>Good morning, {firstNameProps.value} {lastNameProps.value}.</b></p>
+    </>
+  );
+}
+```
+
+场景分析如下：
+1. 有需要维护的状态（这里是 firstName 和 lastName）
+2. 有负责监听状态变化的handler（两个onchange）
+3. 有为 `<input>` 确定 value 和 onChange 属性的JSX部分
+
+这时候可以把这部分共同的逻辑抽取出来变成一个自定义的hook，实现如上所示。
+

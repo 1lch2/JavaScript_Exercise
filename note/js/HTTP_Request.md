@@ -1,4 +1,62 @@
 # HTTP 请求
+## XHR
+用法示例：
+```js
+var xhr = new XMLHttpRequest();
+xhr.ontimeout = () => {
+  // timeout handler
+};
+
+xhr.onerror = (err) => {
+  // error handler
+};
+
+// Handling response
+xhr.onreadystatechange = () => {
+  if(xhr.readyState !== 4) {
+    return;
+  }
+
+  if(xhr.status === 200 || xhr.status === 304) {
+    resolve(xhr.responseText);
+  } else {
+    reject("status code: " + xhr.status);
+  }
+};
+
+// Encode request params
+let paramList = [];
+if(!(data instanceof Object)) {
+  reject("param is not an object");
+}
+for(let key in data) {
+  paramList.push(encodeURIComponent(key) + "=" + encodeURIComponent(data[key]));
+}
+
+// Concat query strings
+let questionIndex = url.indexOf("?");
+if(questionIndex === -1) {
+  url += "?";
+}
+url += paramList.join("&");
+
+// Sending request
+xhr.open("get", url);
+xhr.send();
+```
+
+### 取消请求
+对 XHR 示例调用 abort 方法，示例如下：
+```js
+var xhr = new XMLHttpRequest();
+var method = "GET";
+var url = "https://developer.mozilla.org/";
+
+xhr.open(method, url, true);
+xhr.send();
+xhr.abort();
+```
+
 ## fetch
 基于 Promise 实现的 HTTP 请求方法，并不是基于 XHR
 
@@ -56,6 +114,36 @@ postData('https://example.com/answer', { answer: 42 })
   });
 ```
 
+### 中止请求
+fetch 方法的第二个参数支持配置一个 signal  选项，其值就是 AbortSignal 对象。
+```js
+const controller = new AbortController();
+const signal = controller.signal;
+
+// API 3s 后返回响应
+// 注意，这里第二个参数用了一个 'signal' 选项
+fetch('https://slowmo.glitch.me/3000', { signal })
+  .then(r => r.json())
+  .then(response => console.log(response))
+  .catch(err => {
+    if (err.name === 'AbortError') {
+      console.log('Fetch was aborted');
+    } else {
+      console.error('Oops!', err);
+    }
+  });
+
+
+// 2s 后执行终止操作
+// 这会导致 fetch 请求被终止，同时产生一个 'AbortError' 错误。
+setTimeout(() => {
+  controller.abort();
+}, 2000);
+```
+
+这种终止方式，包括终止 fetch 的请求和相应。请求失败时，出现错误 `new DOMException('Aborted', 'AbortError')`。
+
+> 同一个 AbortSignal（即上面使用的 signal）对象可以用于多个 fetch 请求。
 
 ## Axios
 > Axios 基于 XHR，而 fetch 是单独的底层 API
@@ -179,4 +267,43 @@ instance.interceptors.request.use(config => {});
 ```js
 const myInterceptor = axios.interceptors.request.use(config => {});
 axios.interceptors.request.eject(myInterceptor);
+```
+
+#### 拦截器示例 - 取消重复请求
+实现参见: [axios 拦截器：取消重复请求](../../src/functions/axios_cancel_repeat.js)
+
+> 实现中的 CancelToken 方式已经在 axios v0.22 之后被弃用
+> v0.22 之后 axios 支持以 fetch API 方式的 AbortController 取消请求
+
+```js
+const controller = new AbortController();
+
+axios.get('/foo/bar', {
+   signal: controller.signal
+}).then(function(response) {
+   //...
+});
+// 取消请求
+controller.abort()
+```
+
+#### 拦截器示例 - 请求重试
+TODO: fix
+
+```js
+axios.interceptors.response.use(null, error => {
+  const config = error.config;
+  // ....
+  const currentState = getCurrentState(config);
+  const shouldRetry = retryCondition(error) && currentState.retryCount < retries;
+
+  if (shouldRetry) {
+    currentState.retryCount += 1;
+      //.....
+
+    return new Promise(resolve => setTimeout(() => resolve(axios(config)), delay));
+  }
+
+  return Promise.reject(error);
+});
 ```

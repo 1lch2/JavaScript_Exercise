@@ -16,7 +16,7 @@ const BASE_URL = "https://codetop.cc/api/questions/";
 
 /**
  * Get local LeetCode tests.
- * @returns {Promise<Map<number, string>} Map containing test number to local file path
+ * @returns {Promise<Map<number, string>>} Map containing test number to local file path
  */
 async function getCodeList() {
   let fileMap = new Map();
