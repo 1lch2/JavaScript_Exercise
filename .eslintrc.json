@@ -25,5 +25,6 @@
         "no-unused-vars": "warn",
         "no-unused-expressions": "warn",
         "no-irregular-whitespace": "warn"
-    }
+    },
+    "plugins": ["react"]
 }

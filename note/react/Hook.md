@@ -13,6 +13,10 @@ React 没有提供将可复用性行为“附加”到组件的途径（例如�
 你必须去理解 JavaScript 中 this 的工作方式，这与其他语言存在巨大差异。还不能忘记绑定事件处理器。没有稳定的语法提案，这些代码非常冗余。
 大家可以很好地理解 props，state 和自顶向下的数据流，但对 class 却一筹莫展。即便在有经验的 React 开发者之间，对于函数组件与 class 组件的差异也存在分歧，甚至还要区分两种组件的使用场景。
 
+## Hook 使用规则
+- 只能在函数最外层调用 Hook。不要在循环、条件判断或者子函数中调用。
+- 只能在 React 的函数组件中调用 Hook。不要在其他 JavaScript 函数中调用。
+
 ## 常见 hook
 ### useState
 通过在函数组件里调用它来给组件添加一些内部 state。
@@ -339,9 +343,35 @@ useMemo 用来在几次渲染之间缓存计算的结果。这个Hook接受两�
 效果和用法与 useEffect 完全一致，区别在于，它的回调会在所有DOM操作完成之后再执行。一般用于读取布局后同步执行重渲染。
 
 
-## Hook 使用规则
-- 只能在函数最外层调用 Hook。不要在循环、条件判断或者子函数中调用。
-- 只能在 React 的函数组件中调用 Hook。不要在其他 JavaScript 函数中调用。
+### useReducer
+react 内置的 redux 平替方案，一般在组件最顶层声明，和 redux 一样，通过自定义的 reducer 来管理状态。用法如下：
+```jsx
+import { useReducer } from 'react';
+
+function reducer(state, action) {
+  // ... state 操作
+  return state
+}
+
+function MyComponent() {
+  const [state, dispatch] = useReducer(reducer, initialArg);
+  // ...
+}
+```
+
+useReducer 接受两个参数：
+- reducer: reducer 函数定义状态如何更新，和 redux 的 reducer 基本一致
+- initialArg: state 的初始值
+- init(可选): 可选的初始化函数，如果提供了初始化函数，则初始状态会变为`init(initialArg)`的计算结果
+
+useReducer 返回一个数组，包含两个值，当前状态和dispatch函数。和 redux 里一样，dispatch 函数用来分发 action 触发 reducer 的更新 state 操作，从而触发 react 的重渲染。
+
+> 如果更新state时提供的新的状态和先前状态完全一致（判断标准是`Obejct.is`方法），那么 react 就会跳过对这个组件和它的子组件的重渲染。
+
+#### 如何使用 useReducer 替代 redux ？
+答案是配合 useContext 来传递全局的上下文，子组件接受dispatch函数，通过dispatch 各种 action 完成对全局 state 的更新。
+
+示例：[useReducer & useContext](../../src/functions/redux_mimic.jsx)
 
 
 ## Hook 模拟 class 组件的生命周期
