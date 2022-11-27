@@ -101,7 +101,6 @@ const person = await Person.findAll({
   });
 ```
 
-TODO
 
 ## 插入
 ```sql

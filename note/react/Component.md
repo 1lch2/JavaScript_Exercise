@@ -101,4 +101,16 @@ class NameForm extends React.Component {
 ## 高阶组件
 高阶组件是将组件作为参数并生成另一个组件的组件
 
-TODO:
+具体参见 [高阶组件](./Higher_Order_Component.md)
+
+## 函数组件与类组件的优劣
+### 类组件的问题
+- 忘记 this 绑定带来的问题
+- 代码量相比函数组件较多
+- 过于臃肿不便于拆分
+
+### 函数组件的问题
+- 缺少部分生命周期：
+  - getDerviedStateFromProps：函数组件无法做到根据 props 更新 state，目前一定会触发一次重渲染。
+  - componentDidCatch，static getDerivedStateFromError：函数组件目前没有对应的错误处理 hook
+
