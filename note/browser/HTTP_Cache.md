@@ -87,7 +87,7 @@ Etag 相当于给资源生成了一个独一无二的标识，当资源被修改
 
 
 ## 流程总结
-![img](../static/HTTP_Cache.webp)
+![img](../static/HTTP_Cache.png)
 
 ## 参考
 - [5分钟看懂系列：HTTP缓存机制详解](https://segmentfault.com/a/1190000021716418)

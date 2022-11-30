@@ -131,7 +131,7 @@ HTML5新增了`async`属性， async 只适用于外部脚本文件，并告诉�
 在以上代码中，可能由于 01.js 下载时间比较长，由于两个 `<script>` 标签都是异步执行，互不干扰，因此 02.js 可能就会先于 01.js 执行。因此，确保两者之间互不依赖非常重要。
 
 ### 对比
-![img](../static/Script_Element.webp)
+![img](../static/Script_Element.png)
 
 关于`<script>` 不同属性对加载顺序的影响，参考HTML5规范中的插图
 ![img](../static/Script_Tag.png)

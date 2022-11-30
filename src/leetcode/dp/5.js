@@ -28,7 +28,7 @@ var longestPalindrome = function(s) {
   // 当前最大子串长度起始下标
   let maxStart = 0;
 
-  // 状态转移矩阵，对应下标端是否为回文子串
+  // 状态转移矩阵，对应下标段是否为回文子串
   let dpState = [];
   for(let i = 0; i < LENGTH; i++) {
     dpState.push(new Array(LENGTH).fill(false));

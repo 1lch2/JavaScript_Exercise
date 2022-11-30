@@ -76,8 +76,6 @@ td {
     padding: 6px;
 }
 
-/* Write your CSS solution here (do not edit the surrounding HTML) */
-
 tr[data-tax-free="true"] > td:first-child:after {
     content: "(free tax)";
     color: blue;
