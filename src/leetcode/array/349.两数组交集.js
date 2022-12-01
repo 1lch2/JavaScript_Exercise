@@ -23,10 +23,33 @@ var intersection = function(nums1, nums2) {
   let set2 = new Set(nums2);
 
   let res = [];
-  for(let i of set1) {
-    if(set2.has(i)) {
+  for (let i of set1) {
+    if (set2.has(i)) {
       res.push(i);
     }
   }
   return res;
+};
+
+// 另解
+/**
+ * @param {number[]} nums1
+ * @param {number[]} nums2
+ * @return {number[]}
+ */
+var intersection = function(nums1, nums2) {
+  if (nums1.length === 0 || nums2.length === 0) {
+    return [];
+  }
+
+  // 保证 nums1 长度比 nums2 小
+  if (nums1.length > nums2.length) {
+    [nums1, nums2] = [nums2, nums1];
+  }
+
+  let arr2 = [...new Set(nums2)];
+  let set1 = new Set(nums1);
+  return arr2.filter(val => {
+    return set1.has(val);
+  });
 };

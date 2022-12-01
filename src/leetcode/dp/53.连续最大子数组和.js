@@ -33,7 +33,7 @@ var maxSubArray = function(nums) {
   let dpState = [nums[0]];
   let maxVal = nums[0];
   for(let i = 1; i < LENGTH; i++) {
-    // dp[i] = max{dp[i-1] + num[i], num[i]}
+    // 必须包含结尾的元素
     dpState[i] = Math.max(dpState[i - 1] + nums[i], nums[i]);
     maxVal = dpState[i] > maxVal ? dpState[i] : maxVal;
   }
