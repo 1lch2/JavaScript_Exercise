@@ -1,3 +1,5 @@
+// JZ53-1
+
 // 给定一个按照升序排列的整数数组 nums，和一个目标值 target。
 // 找出给定目标值在数组中的开始位置和结束位置。
 
@@ -27,35 +29,33 @@
 /**
  * @param {number[]} nums
  * @param {number} target
- * @return {number[]}
+ * @return {number}
  */
 var searchRange = function(nums, target) {
+  let start = 0;
+  let end = nums.length - 1;
   let res = [-1, -1];
-  if(nums.length === 0) {
-    return res;
-  }
-
-  let i = 0;
-  let j = nums.length - 1;
-  while(i <= j) {
-    let mid = Math.floor((i + j) / 2);
-    if(nums[mid] === target) {
-      i = mid;
-      j = mid;
-      while(i - 1 >= 0 && nums[i - 1] === target) {
-        i--;
-      }
-      while(j + 1 <= nums.length - 1 && nums[j + 1] === target) {
-        j++;
-      }
-
-      return [i, j];
-    } else if(nums[mid] < target) {
-      i = mid + 1;
-    } else {
-      j = mid - 1;
+  while (start <= end) {
+    let mid = (start + end) >> 1;
+    if (nums[mid] < target) {
+      start = mid + 1;
+      continue;
     }
-  }
+    if (nums[mid] > target) {
+      end = mid - 1;
+      continue;
+    }
 
+    let i = mid;
+    let j = mid;
+    while (i >= 0 && nums[i] === target) {
+      i--;
+    }
+    while (j <= nums.length - 1 && nums[j] === target) {
+      j++;
+    }
+    res = [i + 1, j - 1]
+    break;
+  }
   return res;
 };

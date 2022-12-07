@@ -44,6 +44,8 @@ var minPathSum = function(grid) {
     dp[0][i] = dp[0][i - 1] + grid[0][i];
   }
 
+  // 注意不能用JZ47的解法，因为JZ47是求最大值，路径走得少必然值小
+  // 而这里必须初始化第一行和第一列，否则会出现不从左上角出发的情况
   for(let i = 1; i < M; i++) {
     for(let j = 1; j < N; j++) {
       dp[i][j] = Math.min(dp[i - 1][j], dp[i][j - 1]) + grid[i][j];
