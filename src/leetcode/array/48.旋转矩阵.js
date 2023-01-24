@@ -41,6 +41,7 @@ var rotate = function(matrix) {
   const M = matrix.length;
 
   for(let i = 0; i < M; i++) {
+    // 注意下标不能遍历到M，否则会转置两次等于没转
     for(let j = 0; j <= i; j++) {
       [matrix[i][j], matrix[j][i]] = [matrix[j][i], matrix[i][j]];
     }

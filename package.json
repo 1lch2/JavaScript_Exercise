@@ -6,8 +6,7 @@
   "main": "",
   "scripts": {
     "rand": "node src/script/random_challenge.js",
-    "rand100": "node src/script/random_top100.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "rand100": "node src/script/random_top100.js"
   },
   "repository": {
     "type": "git",

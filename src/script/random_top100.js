@@ -74,12 +74,12 @@ async function getLocalCache() {
   let now = Date.now();
 
   // Compare timestamp
-  if (timestamp - now < UPDATE_INTERVAL) {
-    return data;
+  // Return an empty array if local cache is exipred
+  if(now - timestamp > UPDATE_INTERVAL) {
+    return [];
   }
 
-  // Return an empty array if local cache is exipred
-  return [];
+  return data;
 }
 
 /**
