@@ -1,4 +1,4 @@
-// 给定一个二叉树的根节点 root ，返回它的 中序 遍历。
+// 给定一个二叉树的根节点 root ，返回它的 中序 遍历。
 
 // 示例 1：
 // 输入：root = [1,null,2,3]
@@ -19,7 +19,7 @@
 // 示例 5：
 // 输入：root = [1,null,2]
 // 输出：[1,2]
-//  
+
 // 提示：
 // 树中节点数目在范围 [0, 100] 内
 // -100 <= Node.val <= 100
@@ -30,10 +30,10 @@
  * @param {TreeNode} left left sub-tree
  * @param {TreeNode} right right sub-tree
  */
- function TreeNode(val, left, right) {
-  this.val = (val === undefined ? 0 : val)
-  this.left = (left === undefined ? null : left)
-  this.right = (right === undefined ? null : right)
+function TreeNode(val, left, right) {
+  this.val = (val === undefined ? 0 : val);
+  this.left = (left === undefined ? null : left);
+  this.right = (right === undefined ? null : right);
 }
 
 /**
@@ -42,18 +42,18 @@
  */
 var inorderTraversal = function(root) {
   let res = [];
-  if(root == null) {
+  if (root == null) {
     return res;
   }
 
   const inorder = (root) => {
-    if(root == null) {
+    if (root == null) {
       return;
     }
     inorder(root.left);
     res.push(root.val);
     inorder(root.right);
-  }
+  };
 
   inorder(root);
   return res;
