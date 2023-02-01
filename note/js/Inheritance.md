@@ -48,6 +48,12 @@ let son2 = new Son();
 console.log(son2.color); // "red", "orange", "yellow"
 ```
 
+> 这里由于直接将 `Father` 的实例变成了 `Son` 的构造函数的原型，因此会将 `Son` 的构造函数指向 `Father`，如下所示：
+> ```js
+> console.log(son.constructor); // [Function: Father]
+> ```
+> 解决方法在组合继承部分
+
 
 ## 经典继承（借用构造函数来继承）
 使用父类的构造函数来增强子类实例，等同于复制父类的实例给子类（不使用原型）。
@@ -72,7 +78,7 @@ console.log(new Child("son").name); // son
 ### 问题
 必须在构造函数中定义方法，因此函数不能重用。
 
-这种只能继承**父类实例**的属性和方法，不能继承**原型**的属性和方法。
+这种只能继承**父类实例**的属性和方法，不能继承**原型**的属性和方法。类比Java就是不能继承类上的静态属性和静态方法。
 
 ## 组合继承
 组合上述两种方法就是组合继承。用原型链实现对原型属性和方法的继承，用借用构造函数技术来实现实例属性的继承。
@@ -130,13 +136,39 @@ console.log(father.name); // father
 console.log(son.name); // father
 ```
 
-object()对传入其中的对象执行了一次浅复制，将构造函数F的原型直接指向传入的对象。
+> Son 的 constructor 指向会变成 Father
+
+object()对传入其中的对象执行了一次浅复制，将构造函数 Son 的原型直接指向传入的对象。
 
 这种方法适合直接继承已有的实例，再在这个新对象的基础上进行修改。
 
 该方法无法传递参数，且不能多次继承
 
 在ES5中新增了`Object.create()`方法，可以替代上述的`object()`。
+
+修改后如下
+```js
+function Father(name) {
+  this.name = name;
+}
+Father.prototype.hi = function() {
+  console.log(this.name);
+}
+
+function Son(name, age) {
+  this.name = name;
+  this.age = age;
+}
+
+Son.prototype = Object.create(new Father());
+
+let son = new Son("son", 10);
+son.hi(); // son
+
+console.log(Son.prototype); // Father {}
+console.log(son.constructor); // [Function: Father]
+console.log(son.__proto__); // Father {}
+```
 
 ## 寄生式继承
 在原型式继承的基础上，增强对象，返回构造函数。主要作用就是为构造函数新增属性和方法，以增强函数。
