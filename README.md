@@ -1,5 +1,7 @@
 # JavaScript_Exercise
-This is a personal repository for frontend learning. This repo will keep updating until I got a Web-dev engineer job. Hope that day is not too far away.
+This is a personal repository for frontend learning. ~~This repo will keep updating until I got a Web-dev engineer job. Hope that day is not too far away.~~
+
+Finally got a job at March 2023, took me too long to get here. Anyway, this repo will keep updating as I learning become a true developer.
 
 Code practices and leetcode solutions are written in vanilla JavaScript. No worry for node_modules, though you may need ESLint for syntax checking and some other stuff.
 
