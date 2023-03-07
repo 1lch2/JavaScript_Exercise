@@ -340,7 +340,7 @@ useMemo 用来在几次渲染之间缓存计算的结果。这个Hook接受两�
     ```
 
 ### useLayoutEffect
-效果和用法与 useEffect 完全一致，区别在于，它的回调会在所有DOM操作完成之后再执行。一般用于读取布局后同步执行重渲染。
+效果和用法与 useEffect 完全一致，区别在于，useLayoutEffect 会在浏览器重绘前执行操作。
 
 
 ### useReducer
