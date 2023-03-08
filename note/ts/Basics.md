@@ -20,6 +20,30 @@ age = 42;
 age = "42";
 ```
 
+### 使用方式
+使用联合类型时，**不能**直接使用仅在其中一种类型上可用的方法，TS只会展示所有类型上都可用的方法，示例如下：
+
+```ts
+function printId(id: number | string) {
+  console.log(id.toUpperCase());
+  // Property 'toUpperCase' does not exist on type 'string | number'.
+  // Property 'toUpperCase' does not exist on type 'number'.
+}
+```
+
+修正方式：使用类型守卫来限制类型，
+```ts
+function printId(id: number | string) {
+  if (typeof id === "string") {
+    // In this branch, id is of type 'string'
+    console.log(id.toUpperCase());
+  } else {
+    // Here, id is of type 'number'
+    console.log(id);
+  }
+}
+```
+
 ## 数组类型
 有两种声明方式：
 1. 在变量类型后加 `[]` 
@@ -67,6 +91,29 @@ let x: never;
 x = (()=>{ throw new Error('exception')})();
 ```
 
+## null & undefined
+根据 strictNullChecks 这个选项的开启与否，TS对于 null 和 undefined 的行为也不同。
+
+## void
+
+TODO：
+
+### 关闭
+可能为 null 或 undefined 的值能正常访问，这两个值也可以被赋给 any 类型的变量。
+
+### 开启
+对于可能为 null 或 undefined 的值，必须先判断是否为空才能再调用方法或者属性，示例如下：
+```ts
+function doSomething(x: string | null) {
+  if (x === null) {
+    // do nothing
+  } else {
+    console.log("Hello, " + x.toUpperCase());
+  }
+}
+```
+
+
 ## 对象类型
 TS 中将对象作为类型必须指定属性的类型
 ```ts
@@ -83,6 +130,8 @@ function printName(obj: { first: string; last?: string }) {
   // ...
 }
 ```
+
+> 当某个对象的属性为可选，且传参时不存在时，它的值为`undefined`，因此有可选属性或参数的地方需要对可选部分判断是否为 undefined。
 
 当定义一个对象的签名时，通常会使用 接口（interface）。具体参考[Interface](./Interface.md)
 
@@ -120,6 +169,20 @@ function printCoord(pt: Point) {
 printCoord({ x: 100, y: 100 });
 ```
 
+类型别名也可以用来给联合类型命名：
+```ts
+type ID = number | string;
+```
+
+类型别名也能用来给同一个类型起不同的名，TS会自动推断是否为同一类型：
+```ts
+type NewString = string;
+
+let s: NewStrng;
+s = "abc";
+```
+
+
 ### 拓展类型别名
 使用 `&` 拓展类型别名
 ```ts
@@ -150,6 +213,7 @@ const myCanvas = document.getElementById("main_canvas") as HTMLCanvasElement;
 ```ts
 const myCanvas = <HTMLCanvasElement>document.getElementById("main_canvas");
 ```
+> 注意：不要在 tsc，即react文件中用这个语法，尖括号会被误判。
 
 断言不能乱来：
 ```ts
@@ -172,3 +236,65 @@ function liveDangerously(x?: number | null) {
   console.log(x!.toFixed());
 }
 ```
+
+## 字面量类型
+字符串常量本身可以作为字面量类型来用，单独用基本没什么价值，因此经常利用联合来将字面量组合起来。
+
+示例如下，将参数限定为几个固定的值：
+```ts
+function printText(s: string, alignment: "left" | "right" | "center") {
+  // ...
+}
+printText("Hello, world", "left");
+printText("G'day, mate", "centre"); // Argument of type '"centre"' is not assignable to parameter of type '"left" | "right" | "center"'.
+```
+
+
+也可以将字面量和非字面量类型组合起来：
+```ts
+interface Options {
+  width: number;
+}
+function configure(x: Options | "auto") {
+  // ...
+}
+configure({ width: 100 });
+configure("auto");
+
+configure("automatic");
+// Argument of type '"automatic"' is not assignable to parameter of type 'Options | "auto"'.
+```
+
+### 字面量推断
+使用对象来初始化变量时，TS不会把变量属性值当成字面量类型，而是认为属性之后会变化。
+```ts
+const obj = { counter: 0 };
+if (someCondition) {
+  obj.counter = 1;
+}
+```
+
+这里并不会把 counter 这个属性的类型当成字面量 `0` 类型，而是一般的 number。
+
+那就有了接下来的问题，当函数接受的参数必须是字面量类型时，传入一个对象会出现类型错误：
+```ts
+// 这里的参数被推导为了 string
+const req = { url: "https://example.com", method: "GET" };
+handleRequest(req.url, req.method);
+// Argument of type 'string' is not assignable to parameter of type '"GET" | "POST"'.
+```
+
+解决办法有两种，一种是给属性加上类型断言，或者是给参数加上类型断言：
+```ts
+// 二选一
+const req = { url: "https://example.com", method: "GET" as "GET" };
+
+handleRequest(req.url, req.method as "GET");
+```
+
+另一种是用`as const`将整个变量都转换为类型字面量：
+```ts
+const req = { url: "https://example.com", method: "GET" } as const;
+handleRequest(req.url, req.method);
+```
+

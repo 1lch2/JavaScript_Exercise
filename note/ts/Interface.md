@@ -13,7 +13,7 @@ function printCoord(pt: Point) {
 ```
 
 ### 接口继承
-和 Java 的语法不能说非常相似，只能说一模一样。
+和 Java 的语法一模一样。
 ```ts
 interface Animal {
   name: string
@@ -27,6 +27,18 @@ const bear = getBear()
 bear.name
 bear.honey
 ```
+
+> 类型别名也有类似的拓展操作：
+> ```ts
+> type Animal = {
+>   name: string
+> }
+> 
+> type Bear = Animal & { 
+>   honey: boolean 
+> }
+> ```
+
 
 ### 接口合并
 可以用一种看起来像重复声明的操作来拓展接口
@@ -65,3 +77,7 @@ interface Cloner {
   clone(animal: Animal): Animal;
 }
 ```
+
+> 类型别名不能用这种重复声明的方式来拓展
+
+

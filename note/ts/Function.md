@@ -6,7 +6,10 @@ TS 为函数增加了参数和返回值的类型声明，类型可以是基本�
 
 ```ts
 function greetings(name: string | string[]): string {
-  return typeof name === "string" ? name : name.join(",");
+  if (Array.isArray(name)) {
+    console.log("Hello, " + name.join(" and "));
+  } else {
+    console.log("Welcome lone traveler " + name);
 }
 ```
 
