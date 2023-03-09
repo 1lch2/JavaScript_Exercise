@@ -162,6 +162,55 @@ function logger<T extends { name: string }>(arg: T) {
 }
 ```
 
+参数类型拓展如果也应用到了返回值类型上，就不能简单地用被拓展的类型来当返回值了：
+```ts
+function minimumLength<Type extends { length: number }>(
+  obj: Type,
+  minimum: number
+): Type {
+  if (obj.length >= minimum) {
+    return obj;
+  } else {
+    return { length: minimum }; // ❌
+    // Type '{ length: number; }' is not assignable to type 'Type'.
+    // '{ length: number; }' is assignable to the constraint of type 'Type', but 'Type' could be instantiated with a different subtype of constraint '{ length: number; }'.
+  }
+}
+```
+
+正如报错注释里说的，如果 `Type` 初始化的变量不止有 length 这么一个属性，那返回`{ length: minium }` 显然就不是对应的 Type 类型了
+
+
+拓展类型有时候可能不一定会起到理想效果，
+```ts
+function firstElement1<Type>(arr: Type[]) {
+  return arr[0];
+}
+ 
+function firstElement2<Type extends any[]>(arr: Type) {
+  return arr[0];
+}
+ 
+// a: number (good)
+const a = firstElement1([1, 2, 3]);
+// b: any (bad)
+const b = firstElement2([1, 2, 3]);
+```
+上例中，TS直接通过拓展类型将返回值解析成 any 类型，并没有等到实际运行时候再解析具体类型。
+
+
+> 一般使用到泛型函数时候，类型参数会出现两次，因为类型参数用来关联多个参数，如果这个类型参数只用到了一次，那就没必要用泛型了
+> ```ts
+> function greet<Str extends string>(s: Str) {
+>   console.log("Hello, " + s);
+> }
+> // 完全没必要的写法，直接改成下面这种
+> function greet(s: string) {
+>   console.log("Hello, " + s);
+> }
+> ```
+
+
 ### 处理多个参数
 
 定义一个 swap 函数：

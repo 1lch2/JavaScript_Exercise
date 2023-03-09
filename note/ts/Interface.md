@@ -40,6 +40,21 @@ bear.honey
 > ```
 
 
+类似Java的接口，TS接口也可以多重继承：
+```ts
+interface Colorful {
+  color: string;
+}
+ 
+interface Circle {
+  radius: number;
+}
+ 
+interface ColorfulCircle extends Colorful, Circle {
+  ...
+}
+```
+
 ### 接口合并
 可以用一种看起来像重复声明的操作来拓展接口
 

@@ -95,8 +95,7 @@ x = (()=>{ throw new Error('exception')})();
 根据 strictNullChecks 这个选项的开启与否，TS对于 null 和 undefined 的行为也不同。
 
 ## void
-
-TODO：
+一般用来标记函数没有返回值。与 undefined 不同，函数如果返回值为 undefined 则应该显式地写出返回值类型为 undefined。
 
 ### 关闭
 可能为 null 或 undefined 的值能正常访问，这两个值也可以被赋给 any 类型的变量。
