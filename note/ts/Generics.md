@@ -102,6 +102,9 @@ const roArray: ReadonlyArray<string> = ["red", "green", "blue"];
 let values: readonly string[] = ["red", "green", "blue"];
 ```
 
+## 泛型类
+参见[TS 类](Class.md#泛型类)
+
 ## 泛型函数
 
 ### 限制参数类型
