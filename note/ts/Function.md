@@ -110,6 +110,7 @@ sum({ a: 10, b: 3, c: 9 });
 
 但是，不能直接在解构的参数里做类型注释，也就是以下写法是错误的。
 ```ts
+// ❌
 function sum({ a: number, b: number, c: number }) {
   console.log(a + b + c);
 }

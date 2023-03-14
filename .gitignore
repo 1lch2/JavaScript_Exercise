@@ -93,3 +93,6 @@ Thumbs.db
 
 # VSCode
 /.vscode
+
+# JetBrains Fleet
+/.fleet
