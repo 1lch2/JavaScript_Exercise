@@ -9,6 +9,35 @@ let obj = new Object(value);
 - 如果给定值是一个已经存在的对象，则会返回这个已经存在的值（相同地址）。
 
 ## 静态方法
+### Object.is(val1, val2)
+判断两个值是否为同一个值。
+
+满足以下任意条件则两个值相等：
+
+- 都是 undefined
+- 都是 null
+- 都是 true 或都是 false
+- 都是相同长度、相同字符、按相同顺序排列的 string
+- 都是相同对象（意味着都是同一个对象的值引用）
+  - > 对象属性和值都一样，引用不一样，就不算是相同的对象
+- 都是 number 且
+  - 都是 +0
+  - 都是 -0
+  - 都是 NaN
+  - 都是同一个值，非零且都不是 NaN
+
+示例：
+```js
+let a = { x: 1};
+let b = { x: 1};
+let c = a;
+
+Object.is(a, b); // false
+Object.is(a, c); // true
+```
+
+Object.is 和 `===` 的主要区别在于对 NaN 和正负零的判断上。Object.is 会把 NaN 判断为相等，正负零不相等，`===` 则相反。
+
 ### Object.create(obj)
 创建一个新对象，使用现有的对象来提供新创建的对象的`__proto__`。
 参见：[create object](../../src/functions/createObject.js)

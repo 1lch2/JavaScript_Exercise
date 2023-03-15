@@ -186,3 +186,29 @@ const ref = React.createRef();
 
 这样，使用 FancyButton 的组件可以获取底层 DOM 节点 button 的 ref ，并在必要时访问，就像其直接使用 DOM button 一样。
 
+### TypeScript 中使用 forwardRef
+在 TypeScript 中使用 React.forwardRef 时，需要指定 ref 的类型和 props 的类型，通过为 forwardRef 函数添加泛型参数来实现。示例如下：
+
+```ts
+import React, { forwardRef } from 'react';
+
+// 描述 FancyButton 组件的属性类型
+interface FancyButtonProps {
+  children: React.ReactNode;
+}
+
+const FancyButton = forwardRef<HTMLButtonElement, FancyButtonProps>(
+  (props, ref) => (
+    <button ref={ref} className="FancyButton">
+      {props.children}
+    </button>
+  )
+);
+
+// 在父组件中使用 FancyButton
+const Parent = () => {
+  const ref = React.createRef<HTMLButtonElement>();
+  return <FancyButton ref={ref}>Click me!</FancyButton>;
+};
+```
+

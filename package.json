@@ -19,9 +19,11 @@
   },
   "homepage": "https://github.com/1lch2/JavaScript_Exercise#readme",
   "devDependencies": {
+    "@types/react": "^18.0.28",
     "eslint": "^8.27.0"
   },
   "dependencies": {
-    "axios": "^0.27.2"
+    "axios": "^0.27.2",
+    "react": "^18.2.0"
   }
 }
