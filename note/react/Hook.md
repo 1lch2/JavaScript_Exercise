@@ -342,6 +342,33 @@ useMemo 用来在几次渲染之间缓存计算的结果。这个Hook接受两�
 ### useLayoutEffect
 效果和用法与 useEffect 完全一致，区别在于，useLayoutEffect 会在浏览器重绘前执行操作。
 
+大部分时候都应该使用 useEffect 而不是 useLayoutEffect ，不过当需要在浏览器重绘前测量布局时，就需要用到这个hook了，示例如下：
+```jsx
+function Tooltip() {
+  const ref = useRef(null);
+  const [tooltipHeight, setTooltipHeight] = useState(0); // 此时并不知道具体高度
+
+  useLayoutEffect(() => {
+    const { height } = ref.current.getBoundingClientRect();
+    setTooltipHeight(height); // 第一次重渲染后得到了高度
+  }, []);
+  // 之后就能使用高度值进行操作了
+}
+```
+
+
+另一种使用 useLayoutEffect 而不用 useEffect 的场合，是当需要更新某个值同时保证在其他代码运行前这个值完成更新的时候，例如更新 ref。
+```jsx
+const ref = React.useRef()
+React.useEffect(() => {
+  ref.current = 'some value'
+})
+
+React.useLayoutEffect(() => {
+  console.log(ref.current) // 这里 ref.value 的值是 useEffect 操作前的值
+})
+```
+
 
 ### useReducer
 react 内置的 redux 平替方案，一般在组件最顶层声明，和 redux 一样，通过自定义的 reducer 来管理状态。用法如下：

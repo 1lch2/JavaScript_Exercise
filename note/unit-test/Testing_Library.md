@@ -21,6 +21,19 @@ Testing Library 通过尽可能模仿用户与网页互动的方式进行组件�
 |   queryAllBy...   |  Return []  |  Return array  | Return array | No                  |
 |   findAllBy...    | Throw error |  Return array  | Return array | Yes                 |
 
+> 注意 queryBy 系列的查询器在查找不到对应元素时只会返回 null 而不是抛出错误，因此应该在确认某元素不在 document 中时配合 getBy 等使用，示例如下：
+>
+> ```js
+> // ❌
+> expect(screen.queryByRole("alert")).toBeInTheDocument();
+>
+> // ✅
+> expect(screen.getByRole("alert")).toBeInTheDocument();
+> expect(screen.queryByRole("alert")).not.toBeInTheDocument();
+> ```
+
+> findBy 系列查询器一般用来查询某些不是立刻可获取到的元素
+
 ### query 选择优先级
 
 测试应该尽可能接近用户互动的方式，按这个原则有了下面的优先级。
@@ -56,32 +69,34 @@ Testing Library 通过尽可能模仿用户与网页互动的方式进行组件�
 `getByTestId`：用户基本没法和这个属性交互，只推荐用来处理没法用语义或者作用选择，或者传统方法干脆无法处理的场景（比如动态的文本）
 
 ## render
+
 render 方法将传入的组件渲染到 document.body 上（append）。用法如下：
+
 ```tsx
 function render(
   ui: React.ReactElement<any>,
   options?: {
     // 不常用，参考具体选项
-  },
-): RenderResult
+  }
+): RenderResult;
 ```
 
 ```jsx
-import {render} from '@testing-library/react'
-import '@testing-library/jest-dom'
+import { render } from "@testing-library/react";
+import "@testing-library/jest-dom";
 
-test('renders a message', () => {
-  const {getByText} = render(<Greeting />)
-  expect(getByText('Hello, world!')).toBeInTheDocument()
-})
+test("renders a message", () => {
+  const { getByText } = render(<Greeting />);
+  expect(getByText("Hello, world!")).toBeInTheDocument();
+});
 ```
 
 render 的第二个参数的选项参考文档：[`render` Options](https://testing-library.com/docs/react-testing-library/api#render)
 
-
 render 返回的类型是 `RenderResult` ，这个对象最需要关注的属性是`...queries`，示例如下：
+
 ```jsx
-const {getByLabelText, queryAllByTestId} = render(<Component />)
+const { getByLabelText, queryAllByTestId } = render(<Component />);
 ```
 
 ## 模拟事件
