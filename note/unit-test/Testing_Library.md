@@ -38,7 +38,7 @@ Testing Library 通过尽可能模仿用户与网页互动的方式进行组件�
 
 测试应该尽可能接近用户互动的方式，按这个原则有了下面的优先级。
 
-#### 所有人都可用的查询
+#### 1 所有人都可用的查询
 
 反映真实视觉/鼠标的体验
 
@@ -57,16 +57,24 @@ Testing Library 通过尽可能模仿用户与网页互动的方式进行组件�
 4. `getByText`：一般用来查询不可交互的元素，比如 div，span，p
 5. `getByDisplayValue`：表单当前元素的值，一般用来查询已经填好的表单元素
 
-#### 语义查询
+#### 2 语义查询
 
 兼容 H5 和 ARIA 的选择器。
 
 1. `getByAltText`：如果元素支持 `alt` 文本（自定义元素或 img，area，input），就能用这个方法选择
 2. `getByTitle`
 
-#### Test ID
+#### 3 Test ID
 
-`getByTestId`：用户基本没法和这个属性交互，只推荐用来处理没法用语义或者作用选择，或者传统方法干脆无法处理的场景（比如动态的文本）
+`getByTestId`：用户基本没法和这个属性交互，只推荐用来处理没法用语义或者作用选择，或者传统方法干脆无法处理的场景（比如动态的文本）。
+
+```tsx
+const UsernameDisplay = ({ user }) => {
+  return <strong data-testid="username">{user.username}</strong>;
+};
+
+const usernameEl = getByTestId("username");
+```
 
 ## render
 
@@ -98,6 +106,99 @@ render 返回的类型是 `RenderResult` ，这个对象最需要关注的属性
 ```jsx
 const { getByLabelText, queryAllByTestId } = render(<Component />);
 ```
+
+## waitFor
+
+当需要等待一段时间才能触发所期望的断言时，可以用 waitFor 函数来包裹要等待的断言。一般用来处理某些异步的事件，比如包裹在 setTimeout 中的语句。用法如下：
+
+```ts
+function waitFor<T>(
+  callback: () => T | Promise<T>,
+  options?: {
+    container?: HTMLElement; // 默认 document
+    timeout?: number; // 默认 1000ms
+    interval?: number; // 默认 50ms
+    onTimeout?: (error: Error) => Error;
+    mutationObserverOptions?: MutationObserverInit;
+  }
+): Promise<T>;
+```
+
+示例如下，这里 Comp 组件在 focus 事件发生时会添加一个调用 onClick 回调的计时器，因此直接使用 expect 断言传递给 onClick 的 mock 函数会失败，需要使用 waitFor 等待计时器。
+
+```jsx
+const Comp = () => {
+  const handleClick = () => console.log("click");
+  const handleFocus = () => {
+    setTimeout(() => {
+      handleClick();
+    });
+  };
+
+  return (
+    <button onFocus={handleFocus} onClick={handleClick}>
+      {testButton}
+    </button>
+  );
+};
+
+const testButton = "testButton";
+const handleFocus = jest.fn();
+const handleClick = jest.fn();
+const { getByDisplayValue } = await render(
+  <Comp onFocus={handleFocus} onClick={handleClick} />
+);
+
+act(() => getByDisplayValue(testButton).focus());
+await waitFor(() => expect(handleClick).toHaveBeenCalled());
+```
+
+这里 waitFor 会多次运行回调直到满足 expect 的断言条件或者超时。waitFor 方法的回调函数的运行次数受超时和间隔选项的限制。默认情况下，超时时间为 1000 毫秒，间隔为 50 毫秒 。
+
+waitFor 的第二个参数定义了间隔和超时时间，超时以后 waitFor 会抛出错误。自定义超时和重复间隔示例如下：
+
+```js
+await waitFor(() => expect(mockAPI).toHaveBeenCalledTimes(1), {
+  timeout: 3000,
+  interval: 100,
+});
+```
+
+## 元素出现和消失
+有时候需要等待某个元素出现，findBy 系列异步方法可以等到断言条件满足后在继续。示例如下：
+```js
+test('movie title appears', async () => {
+  const movie = await findByText('the lion king')
+})
+```
+
+或者可以用 waitFor：
+```js
+test('movie title appears', async () => {
+  await waitFor(() => {
+    expect(getByText('the lion king')).toBeInTheDocument()
+  })
+})
+```
+
+当需要等待某个元素消失时，需要用到 waitForElementToBeRemoved ，这个异步函数会在对应元素移除后 resolve 为 true。
+```js
+test('movie title no longer present in DOM', async () => {
+  await waitForElementToBeRemoved(() => queryByText('the mummy'))
+})
+```
+
+或者也可以使用 waitFor 配合 `not.toBeInTheDocument()` 断言：
+```js
+test('movie title goes away', async () => {
+  await waitFor(() => {
+    // 注意用 getBy 会抛出错误
+    expect(queryByText('i, robot')).not.toBeInTheDocument()
+  })
+})
+```
+
+用 `not.toBeInTheDocument()` 断言也可以判断某个元素当前是否不存在
 
 ## 模拟事件
 
@@ -171,3 +272,21 @@ test("input updates when the user types", () => {
 ```
 
 userEvent 的实现中用到了 fireEvent，因此可以将它看作高阶 API 而 fireEvent 作为偏底层一些的 API
+
+## debug
+
+通过 `screen.debug()` 方法来输出选中的 DOM，示例如下：
+
+```jsx
+import { screen } from "@testing-library/dom";
+
+document.body.innerHTML = `
+  <button>test</button>
+  <span>multi-test</span>
+  <div>multi-test</div>
+`;
+
+screen.debug(); // debug document
+screen.debug(screen.getByText("test")); // debug single element
+screen.debug(screen.getAllByText("multi-test")); // debug multiple elements
+```

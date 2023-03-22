@@ -160,5 +160,44 @@ test('handles server error', async () => {
 })
 ```
 
+## 伪计时器
+在测试环境中，可以使用 `jest.useFakeTimers()` 来替代原本的计时器（timout interval 两套函数），在测试中可以控制时间流逝。
 
-TODO：
+比如使用 jest.runAllTimers() 来快进时间，使所有定时器立即执行。
+
+调用 jest.useFakeTimers() 后，所有测试都将使用虚拟定时器，直到使用 jest.useRealTimers() 恢复原始定时器为止。
+
+```js
+// timerGame.js
+export default function timerGame(callback) {
+  console.log('Ready....go!');
+  setTimeout(() => {
+    console.log("Time's up -- stop!");
+    callback && callback();
+  }, 1000);
+}
+
+// __tests__/timerGame-test.js
+import timerGame from "../timerGame";
+
+jest.useFakeTimers();
+test('calls the callback after 1 second', () => {
+  const callback = jest.fn();
+
+  timerGame(callback);
+
+  // 此时回调还不应该被调用
+  expect(callback).not.toBeCalled();
+
+  // 快进到所有计时器都执行完毕
+  jest.runAllTimers();
+
+  // 此时回调都应该执行过了
+  expect(callback).toBeCalled();
+  expect(callback).toHaveBeenCalledTimes(1);
+});
+```
+
+上面的例子中，在测试中调用了 `jest.useFakeTimers()` 来启用虚拟定时器。然后，在测试中调用了 `jest.runAllTimers()` 来快进时间，使所有定时器立即执行。最后，检查回调函数是否被正确地调用了一次。
+
+TODO
