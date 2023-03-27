@@ -117,6 +117,7 @@ function sum({ a: number, b: number, c: number }) {
   console.log(a + b + c);
 }
 ```
+> 这么写等于是传递了一个对象，冒号后面的变成了变量名
 
 正确写法有两种，一种是将参数对象定义为类型别名，另一种是整个注释对象：
 ```ts
@@ -134,4 +135,8 @@ function sum({ a, b, c }: { a: number, b: number, c: number }) {
 
 ## 调用签名
 参见[调用签名](./Interface.md#调用签名)
+
+## 构造签名
+参见[构造签名](./Interface.md#构造签名)
+
 
