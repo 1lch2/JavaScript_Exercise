@@ -349,3 +349,25 @@ DOM3 Events 规范增加了一个名为 textInput 的事件，其在字符被输
 ### 合成事件
 
 合成事件是 DOM3 Events 中新增的，用于处理通常使用 IME 输入时的复杂输入序列
+
+## 事件阶段
+
+```js
+var phase = event.eventPhase;
+```
+
+0. `Event.NONE` (0)
+
+   事件此时还没有被处理
+
+1. `Event.CAPTURING_PHASE` (1)
+
+   事件正在通过目标的祖先对象传播。这个过程从 window 开始，然后是 document ，然后是 HTMLHtmlElement，一直到目标的父元素为止。当调用`EventTarget.addEventListener()`时，为捕获模式注册的事件监听器在此阶段被触发。
+
+2. `Event.AT_TARGET` (2)
+
+   事件已到达事件的目标。在此时调用为此阶段注册的事件监听器。如果`Event.bubbles`为 false，则在此阶段完成后处理事件结束。
+
+3. `Event.BUBBLING_PHASE` (3)
+
+   事件正在通过目标的祖先反向传播，从父亲开始，最终到达包含的 window 。这称为冒泡，仅当`Event.bubbles`为 true 时发生。在此过程中触发为此阶段注册的事件监听器。

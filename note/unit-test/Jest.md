@@ -199,5 +199,3 @@ test('calls the callback after 1 second', () => {
 ```
 
 上面的例子中，在测试中调用了 `jest.useFakeTimers()` 来启用虚拟定时器。然后，在测试中调用了 `jest.runAllTimers()` 来快进时间，使所有定时器立即执行。最后，检查回调函数是否被正确地调用了一次。
-
-TODO
