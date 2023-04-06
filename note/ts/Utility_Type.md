@@ -112,6 +112,31 @@ interface XYZ {
 type XY = Omit<XYZ, "z">; // { x: number; y: number }
 ```
 
+当对接口使用多重继承时，可以借助这个泛型保留自己想要的边的属性，同时避免同名属性类型不同引发冲突：
+
+```ts
+interface AA {
+  x: number;
+  y: number;
+}
+
+interface BB {
+  y: string;
+  z: string;
+}
+
+interface CC extends AA, Omit<BB, keyof AA> {
+  cc: boolean;
+}
+
+let cc: CC = {
+  cc: false,
+  x: 0,
+  y: 0,
+  z: "",
+};
+```
+
 ## `Exclude<Type, RemoveUnion>`
 
 从类型 Type 中剔除所有可以赋值给 RemoveUnion 的属性，然后构造一个新类型。
@@ -205,7 +230,8 @@ interface MyType {
 const myObject: { myFunction: () => void } & ThisType<MyType> = {
   myFunction() {
     this.logError("Error: Something went wrong!");
-  }
+  },
 };
 ```
+
 > 上面的例子只是为了类型检查，接口并没有实现
