@@ -62,9 +62,7 @@ const Todos = () => {
 render(<App />, document.getElementById("root"));
 ```
 
-## 基础
-
-### query
+## query
 
 借助 useQuery hook 来发起请求。
 
@@ -125,7 +123,7 @@ const result = useQuery({
 - `isSuccess` or `status === 'success'` - The query was successful and data is available
 - `isIdle` or `status === 'idle'` - The query is currently disabled (you'll learn more about this in a bit)
 
-#### queryKeys
+### queryKeys
 
 queryKeys 可以是 string 或者是数组。传入 string 时候会转化为只有一个元素的数组。
 
@@ -135,7 +133,7 @@ queryKeys 可以是 string 或者是数组。传入 string 时候会转化为只
 const result = useQuery(['todos', todoId], () => fetchTodoById(todoId))；
 ```
 
-#### queryFn
+### queryFn
 
 queryFn 可以是任何函数，只要返回的是一个 promise 就行。
 
@@ -174,3 +172,62 @@ useQuery({
   ...config,
 });
 ```
+
+### query 依赖
+
+query 之间可以并行执行，只需要并列地写多个 useQuery 即可，或者可以使用 useQueries hook，传进去一个 query 对象数组。
+
+有的 query 必须等待前一个完成后才能执行，这时应该使用 `enabled` 选项来通知 query 运行的正确时机。
+
+```js
+const { data: user } = useQuery(["user", email], getUserByEmail);
+const userId = user?.id;
+
+// isIdle 在 enable 为 true 之前会一直保持 true
+const { isIdle, data: projects } = useQuery(
+  ["projects", userId],
+  getProjectsByUser,
+  {
+    // query 仅会在 useId 不为空时才执行
+    enabled: !!userId,
+  }
+);
+```
+
+## mutation
+
+对于需要增删改的带有副作用的请求，需要使用 `useMutation` hook。
+
+```jsx
+function App() {
+  const mutation = useMutation((newTodo) => {
+    return axios.post("/todos", newTodo);
+  });
+
+  return (
+    <div>
+      {mutation.isLoading ? (
+        "Adding todo..."
+      ) : (
+        <>
+          {mutation.isError ? (
+            <div>An error occurred: {mutation.error.message}</div>
+          ) : null}
+
+          {mutation.isSuccess ? <div>Todo added!</div> : null}
+
+          <button
+            onClick={() => {
+              mutation.mutate({ id: new Date(), title: "Do Laundry" });
+            }}
+          >
+            Create Todo
+          </button>
+        </>
+      )}
+    </div>
+  );
+}
+```
+
+通过 useMutation 返回的 mutation 变量，在需要增删改的地方调用 `mutation.mutate()` 并传入参数来调用请求。
