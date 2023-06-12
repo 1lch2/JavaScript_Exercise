@@ -341,4 +341,27 @@ total(3).then(res => console.log("total: " + res));
 
 这时每隔一秒输出了一个数字，最后输出了结果。因为 await 会挂起后面的代码，直到执行完成返回后再继续，这样保证了顺序。
 
-**但是**，这种阻塞效果仅限于传统 for 循环，如果是在数组的 forEach 或者 map 方法中使用，则不会有阻塞效果。
+**但是**，这种阻塞效果仅限于传统 for 循环，如果是在数组的 forEach 或者 map 方法中使用，则不会有阻塞效果。示例如下：
+
+```js
+const awaited = () => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve("waited 1s");
+    }, 1000);
+  });
+};
+const arr = [0, 1, 2];
+
+(async function () {
+  // 1 秒后同时输出
+  arr.forEach(async (val) => {
+    console.log(await awaited(), val);
+  });
+
+  // 隔 1 秒输出一次
+  for (let i = 0; i < arr.length; i++) {
+    console.log(await awaited(), i);
+  }
+})();
+```
