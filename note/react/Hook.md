@@ -54,6 +54,14 @@ function Example() {
 
 useState() 方法里面唯一的参数就是初始 state。不同于 class 的是，我们可以按照需要使用数字或字符串对其进行赋值，而不一定是对象。
 
+除了直接传入值以外，也可以给`useState()`传入一个函数**引用**来作为初始化的值。这个初始化函数必须为**纯函数**，不接受任何参数，返回任意类型的值。注意要传递引用而不是函数调用，虽然useState只会使用一次初始值，但是后者会导致每次渲染时都运行一次函数，示例如下：
+```jsx
+// 传入函数调用：每次触发重渲染时都运行
+const [todos, setTodos] = useState(createInitialTodos());
+// 传入函数引用：作为useState的初始化函数传递初始值
+const [todos, setTodos] = useState(createInitialTodos);
+```
+
 #### useState 拿到最新 state
 
 useState hook 本身不能做到同步，想同步拿到最新的 state 需要套用 useEffect，示例如下：
