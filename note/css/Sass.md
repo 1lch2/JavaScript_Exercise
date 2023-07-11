@@ -339,4 +339,37 @@ aside[role="complementary"] {
 }
 ```
 
+## 条件控制
+
+Sass 提供了一套类似一般编程语言的条件控制和循环关键字，也是使用`@`语法
+
+### if & else
+
+语法：`@if <expression> { ... }`。示例如下：
+
+```scss
+$light-background: #f2ece4;
+$light-text: #036;
+$dark-background: #6b717f;
+$dark-text: #d2e1dd;
+
+@mixin theme-colors($light-theme: true) {
+  @if $light-theme {
+    background-color: $light-background;
+    color: $light-text;
+  } @else {
+    background-color: $dark-background;
+    color: $dark-text;
+  }
+}
+
+.banner {
+  @include theme-colors($light-theme: true);
+  body.dark & {
+    @include theme-colors($light-theme: false);
+  }
+}
+```
+
+
 TODO:
