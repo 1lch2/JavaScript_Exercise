@@ -62,6 +62,15 @@ const Todos = () => {
 render(<App />, document.getElementById("root"));
 ```
 
+> `useQuery` 的实现使用了 `useQueryClient`。它会查询context中距离最近的一个 client。
+
+## QueryClient
+QueryClient 维护着 QueryCache，如果创建了新的 QueryClient 对象，那么也会得到一份新的缓存。
+
+而如果 QueryClient 的创建工作在最底层组件，比如 `<App>` 中，那么当组件出于某种原因刷新时候，对应的缓存就会全部丢失。
+> [2: The QueryClient is not stable - React Query FAQs
+](https://tkdodo.eu/blog/react-query-fa-qs#2-the-queryclient-is-not-stable)
+
 ## query
 
 借助 useQuery hook 来发起请求。
@@ -90,7 +99,7 @@ interface Props {
 }
 
 interface Options {
-  enable: boolean; // Set this to false to disable this query from automatically running.
+  enable: boolean; // 默认为 true，即当 query 加载或者 querykey 有变化时会自动 refetch
   onSuccess?: (data: TData) => void;
   onError?: (error: TError) => void;
   select?: (data: TData) => unknown; // This option can be used to transform or select a part of the data returned by the query function.
@@ -132,6 +141,12 @@ queryKeys 可以是 string 或者是数组。传入 string 时候会转化为只
 ```js
 const result = useQuery(['todos', todoId], () => fetchTodoById(todoId))；
 ```
+
+querykey 应该使用数组，数组中的元素会使用 `JSON.stringify` 方法进行hash。
+> [Effective React Query Keys](https://tkdodo.eu/blog/effective-react-query-keys)
+
+当 querykey 发生变化时，query 会自动更新。
+
 
 ### queryFn
 

@@ -103,6 +103,7 @@ let values: readonly string[] = ["red", "green", "blue"];
 ```
 
 ## 泛型类
+
 参见[TS 类](Class.md#泛型类)
 
 ## 泛型函数
@@ -121,6 +122,19 @@ function print<T>(arg: T): T {
 ```ts
 print<string>("hello"); // 定义 T 为 string
 print("hello"); // TS 类型推断，自动推导类型为 string
+```
+
+泛型中可以再引用别的类型来进一步限制参数类型。例如，下面的函数会从对象中按属性名取出对应的属性值，使用泛型来确保不会传入对象上不存在的属性名：
+
+```ts
+function getProperty<Type, Key extends keyof Type>(obj: Type, key: Key) {
+  return obj[key];
+}
+
+let x = { a: 1, b: 2, c: 3, d: 4 };
+
+getProperty(x, "a");
+getProperty(x, "m"); // Argument of type '"m"' is not assignable to parameter of type '"a" | "b" | "c" | "d"'.
 ```
 
 ### 避免重载
@@ -166,6 +180,7 @@ function logger<T extends { name: string }>(arg: T) {
 ```
 
 参数类型拓展如果也应用到了返回值类型上，就不能简单地用被拓展的类型来当返回值了：
+
 ```ts
 function minimumLength<Type extends { length: number }>(
   obj: Type,
@@ -183,26 +198,27 @@ function minimumLength<Type extends { length: number }>(
 
 正如报错注释里说的，如果 `Type` 初始化的变量不止有 length 这么一个属性，那返回`{ length: minium }` 显然就不是对应的 Type 类型了
 
-
 拓展类型有时候可能不一定会起到理想效果，
+
 ```ts
 function firstElement1<Type>(arr: Type[]) {
   return arr[0];
 }
- 
+
 function firstElement2<Type extends any[]>(arr: Type) {
   return arr[0];
 }
- 
+
 // a: number (good)
 const a = firstElement1([1, 2, 3]);
 // b: any (bad)
 const b = firstElement2([1, 2, 3]);
 ```
-上例中，TS直接通过拓展类型将返回值解析成 any 类型，并没有等到实际运行时候再解析具体类型。
 
+上例中，TS 直接通过拓展类型将返回值解析成 any 类型，并没有等到实际运行时候再解析具体类型。
 
 > 一般使用到泛型函数时候，类型参数会出现两次，因为类型参数用来关联多个参数，如果这个类型参数只用到了一次，那就没必要用泛型了
+>
 > ```ts
 > function greet<Str extends string>(s: Str) {
 >   console.log("Hello, " + s);
@@ -212,7 +228,6 @@ const b = firstElement2([1, 2, 3]);
 >   console.log("Hello, " + s);
 > }
 > ```
-
 
 ### 处理多个参数
 
@@ -286,5 +301,40 @@ function print<T>(arg: T) {
 
 const myPrint: Iprint<number> = print;
 ```
+
+## 泛型参数的默认类型
+
+考虑如下情况：一个函数会创建一个`HTMLElement`，如果不传参就调用函数会返回一个`Div`，带参数调用则会按照传入参数的类型创建元素。这个函数也可以选择传入一个 list 代表元素的 children。
+
+之前需要这么写：(不要在意这里的 Container 类型)
+
+```ts
+declare function create(): Container<HTMLDivElement, HTMLDivElement[]>;
+
+declare function create<T extends HTMLElement>(element: T): Container<T, T[]>;
+
+declare function create<T extends HTMLElement, U extends HTMLElement>(
+  element: T,
+  children: U[]
+): Container<T, U[]>;
+```
+
+而使用了泛型默认类型以后可以简化成如下写法：
+
+```ts
+declare function create<T extends HTMLElement = HTMLDivElement, U = T[]>(
+  element?: T,
+  children?: U
+): Container<T, U>;
+```
+
+这里 `=` 后面的类似函数的默认参数，只不过这里提供的并非参数值而是参数类型。
+
+泛型参数默认类型需要遵循以下规则：
+1. 类型参数如果有默认类型，就则代表这个类型是可选的
+2. 必选的类型参数**不能**在可选的类型参数之后
+3. 类型参数的默认类型必须满足这个类型参数的约束条件
+4. 如果给带默认类型的参数指定了类型，但是TS无法推导出可选的类型，那就会回落到默认类型
+5. 通过合并类或者接口声明创建新的类或接口，可能会给已经存在的类型引入默认类型，或者引入新的类型
 
 TODO:
