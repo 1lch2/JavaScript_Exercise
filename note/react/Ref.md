@@ -10,6 +10,12 @@
 - 触发强制动画。
 - 集成第三方 DOM 库。
 
+***
+
+时代已经变了，该用函数组件了：**[函数组件中的ref](./Ref.md#函数组件中使用-ref)**
+
+***
+
 ## 创建 Refs
 
 Refs 是使用 `React.createRef()` 创建的，并通过 ref 属性附加到 React 元素。在构造组件时，通常将 Refs 分配给实例属性，以便在整个组件中引用它们。
@@ -39,7 +45,9 @@ ref 的值根据节点的类型而有所不同：
 - 当 ref 属性用于 HTML 元素时，构造函数中使用 React.createRef() 创建的 ref 接收底层 DOM 元素作为其 current 属性。
 - 当 ref 属性用于自定义 class 组件时，ref 对象接收组件的挂载实例作为其 current 属性。
 
-**不能在函数组件上使用 ref 属性，因为他们没有实例**。
+~~不能在函数组件上使用 ref 属性，因为他们没有实例~~。
+
+从 React 16.3 之后，可以通过 useRef 创建 ref，forwardRef 函数来转发ref，使得函数组件也可以使用和接收 ref。网上目前的文章编写时间不同，已经不适用于函数组件为主流的时代了。
 
 ### 使用 ref 获取普通 HTML 元素的 DOM
 
@@ -182,7 +190,53 @@ class CustomTextInput extends React.Component {
 
 **注意**：ref 回调不要返回任何东西
 
-## Ref 转发
+## 函数组件中使用 ref
+
+### useRef
+
+[用法参考](./Hook.md#useref)
+
+
+#### 在 useEffect 中使用 ref 来 focus
+示例如下：
+```jsx
+const ref = React.useRef(null)
+React.useEffect(() => {
+  ref.current?.focus()
+}, [])
+
+return <input ref={ref} defaultValue="Hello world" />
+```
+
+一般没有什么问题，但如果ref的元素是条件渲染，那么 `ref.current` 就会永远是 null 导致无法focus。
+
+```jsx
+function App() {
+  const ref = React.useRef(null)
+  React.useEffect(() => {
+    // 🚨 ref.current is always null when this runs
+    ref.current?.focus()
+  }, [])
+
+  return <Form ref={ref} />
+}
+
+const Form = React.forwardRef((props, ref) => {
+  const [show, setShow] = React.useState(false)
+  return (
+    <form>
+      <button type="button" onClick={() => setShow(true)}>
+        show
+      </button>
+      // 🧐 ref is attached to the input, but it's conditionally rendered
+      // so it won't be filled when the above effect runs
+      {show && <input ref={ref} />}
+    </form>
+  )
+})
+```
+
+### Ref 转发
 
 Ref 转发是一个可选特性，其允许某些组件接收 ref，并将其向下传递（换句话说，“转发”它）给子组件。
 
