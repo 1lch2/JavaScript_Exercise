@@ -38,6 +38,30 @@ absolute 定位会使元素脱离文档流，因此不占据空间。相反，�
 - 翻转面板；
 - 可以在页面上的任何地方拖放的UI功能
 
+### 注意
+`position: absolute` 并不会让元素完全脱离父元素的定位。在一个flex容器中的 absolute 定位的元素，还是会受到 flex 容器`align-items` 和 `justify-content` 定位效果的影响。例如
+
+```html
+<div class="flex-container">
+  <div class="absolute-div">I'm absolute</div>
+</div>
+```
+
+```css
+.flex-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.absolute-div {
+  position: absolute;
+  right: 10px;
+}
+```
+
+上例中的内部 div 还是会被垂直居中，但会相对容器右侧往左偏移10px。
+
 ## 固定定位 fixed
 absolute 定位元素是相对于 `<html>` 元素或其最近的定位祖先，而 fixed 定位固定元素则是相对于浏览器窗口本身。
 
