@@ -89,6 +89,36 @@ test();
 ## await
 await 操作符用于等待一个Promise 对象。它只能在异步函数 `async function` 中使用。
 
+> `await` 等待的实际上是一个 Thenable 对象，也就是有 `.then()` 方法的对象。由此实际上可以不使用 Promise 创建一个可以被await的函数。如下所示
+> ```js
+> /**
+>  * 一个不使用 new Promise() 实现的 sleep 函数。
+>  * @param {number} ms 等待的毫秒数
+>  * @returns {object} 一个 "Thenable" 对象，可以被 await 关键字处理
+>  */
+> function sleep(ms) {
+>   return {
+>     then: function(resolve) {
+>       // await 关键字会调用这个 then 方法，
+>       // 并将 async 函数的后续部分作为 resolve 回调传入。
+>       // 我们使用 setTimeout 在指定时间后执行这个回调，
+>       // 从而让 async 函数恢复执行。
+>       setTimeout(resolve, ms);
+>     }
+>   };
+> }
+> 
+> // --- 使用示例 ---
+> async function main() {
+>   console.log('程序开始');
+>   console.log(`当前时间: ${new Date().toLocaleTimeString()}`);
+> 
+>   await sleep(3000); // 等待3秒
+> 
+>   console.log('3秒后，程序继续');
+>   console.log(`当前时间: ${new Date().toLocaleTimeString()}`);
+> }
+
 ### 用法
 `[返回值] = await [表达式]`
 
