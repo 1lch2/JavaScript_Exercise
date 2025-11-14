@@ -29,7 +29,7 @@
  * @param {number} target
  * @return {number[]}
  */
-var twoSum = function(nums, target) {
+var twoSum = function (nums, target) {
   for (let i = 0; i < nums.length; i++) {
     let residue = target - nums[i];
     let index = nums.indexOf(residue);
@@ -40,12 +40,31 @@ var twoSum = function(nums, target) {
 };
 
 /**
+ * 使用Map一边检查是否存在，一边更新
+ *
+ * @param {number[]} nums
+ * @param {number} target
+ * @return {number[]}
+ */
+const twoSumMap = function (nums, target) {
+  const map = new Map();
+  for (let i = 0; i < nums.length; i++) {
+    if (map.has(target - nums[i])) {
+      return [map.get(target - nums[i]), i];
+    }
+    map.set(nums[i], i);
+  }
+};
+
+/**
+ * 错解：要求返回的是下标，因此不能对原数组进行排序
+ *
  * @param {number[]} nums
  * @param {number} target
  * @return {number[][]}
  */
-var twoSum_dualPointer = function(nums, target) {
-  if(Math.min(...nums) > target) {
+var twoSum_dualPointer = function (nums, target) {
+  if (Math.min(...nums) > target) {
     return [];
   }
 
@@ -55,29 +74,28 @@ var twoSum_dualPointer = function(nums, target) {
   let left = 0;
   let right = nums.length - 1;
   let res = [];
-  while(left < right) {
+  while (left < right) {
     let leftVal = nums[left];
     let rightVal = nums[right];
     let sum = nums[left] + nums[right];
 
-    if(sum === target) {
+    if (sum === target) {
       res.push([leftVal, rightVal]);
       // 跳过重复
-      while(left < right && nums[left] === leftVal) {
+      while (left < right && nums[left] === leftVal) {
         left++;
       }
-      while(left < right && nums[right] === rightVal) {
+      while (left < right && nums[right] === rightVal) {
         right--;
       }
-
     } else if (sum < target) {
       // 跳过重复
-      while(left < right && nums[left] === leftVal) {
+      while (left < right && nums[left] === leftVal) {
         left++;
       }
     } else {
       // 跳过重复
-      while(left < right && nums[right] === rightVal) {
+      while (left < right && nums[right] === rightVal) {
         right--;
       }
     }
@@ -86,7 +104,7 @@ var twoSum_dualPointer = function(nums, target) {
   return res;
 };
 
-(function(){
-  console.log(twoSum_dualPointer([2,7,11,15], 9));
-  console.log(twoSum_dualPointer([3,2,4], 6));
+(function () {
+  console.log(twoSumMap([2, 7, 11, 15], 9));
+  console.log(twoSumMap([3, 2, 4], 6));
 })();
