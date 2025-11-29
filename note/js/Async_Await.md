@@ -307,6 +307,51 @@ new Promise((resolve) => {
 console.log(5);
 ```
 
+## async 函数返回值细节
+async 函数总是返回一个 Promise，但返回值的处理方式需要特别注意：
+
+```js
+// 1. 返回非 Promise 值 - 会被 Promise.resolve() 包装
+async function foo() {
+  return 1;  // 等价于 return Promise.resolve(1)
+}
+
+// 2. 返回 Promise - 直接返回该 Promise，不会双重包装
+async function bar() {
+  return Promise.resolve(2);  // 返回的就是这个 Promise，不会变成 Promise.resolve(Promise.resolve(2))
+}
+
+// 3. 返回 thenable 对象 - 会被 Promise.resolve() 处理
+async function baz() {
+  return {  // 会被 Promise.resolve() 解析
+    then(resolve) {
+      resolve(3);
+    }
+  };
+}
+
+foo().then(console.log);  // 1
+bar().then(console.log);  // 2
+baz().then(console.log);  // 3
+```
+
+**重要**：如果返回值是 Promise，async 函数返回的就是这个 Promise 对象本身，而不是再创建一个新的 Promise。这意味着：
+
+```js
+const p = Promise.resolve(42);
+
+async function foo() {
+  return p;  // 直接返回原 Promise
+}
+
+async function bar() {
+  return await p;  // await 解包后，再用 Promise.resolve() 包装
+}
+
+console.log(foo() === p);  // true，返回的是同一个 Promise
+console.log(bar() === p);  // false，返回的是新 Promise
+```
+
 ## 循环中的 await
 循环中使用 async/await 和直接使用 Promise.then 效果截然不同。
 
@@ -395,3 +440,209 @@ const arr = [0, 1, 2];
   }
 })();
 ```
+
+## async/await 的实现原理
+
+async/await 本质上是 **Generator 函数 + 自动执行器** 的语法糖。理解其实现需要掌握三个核心概念：
+
+### 1. Generator 函数回顾
+
+Generator 函数返回一个迭代器对象，通过 `yield` 关键字暂停执行，通过 `next()` 方法恢复执行：
+
+```js
+function* gen() {
+  console.log('start');
+  const x = yield 1;  // 暂停，返回 { value: 1, done: false }
+  console.log('x:', x);
+  const y = yield 2;  // 暂停，返回 { value: 2, done: false }
+  console.log('y:', y);
+  return 3;           // 结束，返回 { value: 3, done: true }
+}
+
+const iterator = gen();
+console.log(iterator.next());      // start → { value: 1, done: false }
+console.log(iterator.next('a'));   // x: a → { value: 2, done: false }
+console.log(iterator.next('b'));   // y: b → { value: 3, done: true }
+```
+
+### 2. Promise 的 then 方法
+
+Promise 的 `.then()` 方法可以将后续代码推迟到微任务中执行，这正是实现 await 的关键：
+
+```js
+Promise.resolve()
+  .then(() => console.log('microtask 1'))
+  .then(() => console.log('microtask 2'));
+console.log('sync');
+// 输出顺序：sync → microtask 1 → microtask 2
+```
+
+### 3. async/await 的 babel 转换
+
+下面是一个简单的 async 函数：
+
+```js
+async function fetchData() {
+  const response = await fetch('/api/data');
+  const data = await response.json();
+  return data;
+}
+```
+
+Babel 会将其转换为类似下面的代码（简化版）：
+
+```js
+function fetchData() {
+  return _asyncToGenerator(function* () {
+    const response = yield fetch('/api/data');
+    const data = yield response.json();
+    return data;
+  })();
+}
+
+function _asyncToGenerator(fn) {
+  return function() {
+    const gen = fn.apply(this, arguments);
+
+    return new Promise((resolve, reject) => {
+      function step(key, arg) {
+        let info;
+        try {
+          info = gen[key](arg);
+        } catch (error) {
+          return reject(error);
+        }
+
+        if (info.done) {
+          resolve(info.value);
+        } else {
+          Promise.resolve(info.value).then(
+            value => step('next', value),
+            error => step('throw', error)
+          );
+        }
+      }
+
+      step('next');
+    });
+  };
+}
+```
+
+### 核心实现逻辑
+
+1. **_asyncToGenerator** 是一个高阶函数，它：
+   - 返回一个新的函数
+   - 这个返回的函数返回一个 Promise
+
+2. **step 函数** 是自动执行器，它：
+   - 调用 `gen.next()` 让 Generator 执行到下一个 `yield`
+   - 如果返回 `done: true`，调用 `resolve(value)` 完成 Promise
+   - 如果返回 `done: false`：
+     - 将 `yield` 的值用 `Promise.resolve()` 包装
+     - 调用 `.then()` 将下一次 `step('next')` 加入微任务队列
+     - 这样就实现了"暂停"效果，当前代码执行完后再继续
+
+3. **await 的模拟**：
+   - `await promise` 相当于 `yield promise`
+   - 然后 `.then()` 将恢复执行加入微任务队列
+
+### 简化的 async/await 实现
+
+下面是一个极简的实现，展示了核心思想：
+
+```js
+// 手动实现 async/await
+function asyncFunction(generatorFunc) {
+  return function(...args) {
+    const generator = generatorFunc(...args);
+
+    return new Promise((resolve, reject) => {
+      function handle(result) {
+        // { value: ..., done: true/false }
+        if (result.done) {
+          resolve(result.value);
+        } else {
+          // result.value 就是 await 后面的表达式
+          Promise.resolve(result.value)
+            .then(res => handle(generator.next(res)))  // 将结果传回给 yield 表达式
+            .catch(err => handle(generator.throw(err)));  // 错误处理
+        }
+      }
+
+      handle(generator.next());
+    });
+  };
+}
+
+// 使用方式
+const fetchData = asyncFunction(function* () {
+  console.log('start');
+  const result1 = yield Promise.resolve(1);  // 相当于 await
+  console.log('result1:', result1);
+  const result2 = yield Promise.resolve(2);  // 相当于 await
+  console.log('result2:', result2);
+  return result1 + result2;
+});
+
+fetchData().then(console.log);
+// 输出：
+// start
+// result1: 1
+// result2: 2
+// 3
+```
+
+### 事件循环层面的理解
+
+从事件循环角度看，await 做了两件事：
+
+```js
+async function foo() {
+  console.log(1);
+  await somePromise;
+  console.log(2);
+}
+```
+
+相当于：
+
+```js
+function foo() {
+  return new Promise(resolve => {
+    console.log(1);
+
+    // await 做的事情：
+    // 1. 注册 promise 的回调
+    somePromise.then(() => {
+      // 2. 将后续代码包装成微任务
+      console.log(2);
+      resolve();
+    });
+  });
+}
+```
+
+### 为什么 await 后面即使立即值也会异步执行？
+
+```js
+await 42;
+```
+
+即使值立即可用，await 也会：
+1. 包装成 `Promise.resolve(42)`
+2. 注册 `.then()` 回调
+3. 这个回调会在当前同步代码执行完后的微任务阶段执行
+
+这就是 [Async_Await.md:140-159](Async_Await.md:140-159) 示例中 `await null` 会让后续代码异步执行的原因。
+
+### 总结
+
+async/await 的实现本质上是：
+- **语法糖**：Generator 的 yield + 自动执行器
+- **核心机制**：Promise 的 `.then()` 将代码推迟到微任务
+- **暂停效果**：yield 让函数暂停，Promise.then 恢复执行
+- **错误处理**：try/catch 转换为 generator.throw()
+
+这种设计让异步代码看起来像同步代码，同时保持了非阻塞的特性。
+

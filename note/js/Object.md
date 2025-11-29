@@ -166,3 +166,8 @@ obj["hi"]("world"); // hello world
 
 ### Object.prototype.valueOf()
 返回指定对象的原始值。
+
+## 和 Map 的区别
+区别最主要在于**键的类型限制**
+- Object 的键只能是字符串或 Symbol，任何其他类型作为键都会被强制转换为字符串
+- Map 的键可以是任意类型（对象、函数、基本类型等），且不做类型转换

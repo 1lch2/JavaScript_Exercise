@@ -154,3 +154,20 @@ function getArea(shape: Shape) {
 ```
 
 如果之后给联合类型 Shape 多加了一个类型，但是忘记在 switch 语句里加上对应的声明，那 default 部分就会报错。
+
+## if 块之外类型回归输入参数
+以下面的代码为例
+```ts
+function testTypeNarrowing(input: string | number | boolean) {
+  if (typeof input === 'string') {
+    console.log('string !');
+  } else if (typeof input === 'number') {
+    console.log('number !');
+  } else {
+    console.log('bool !');
+  }
+
+  console.log(input.toString());
+}
+```
+最后一行 console.log 不会报错，这时候 input 的类型是 `string | number | boolean`。
