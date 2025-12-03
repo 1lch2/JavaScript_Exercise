@@ -137,6 +137,33 @@ getProperty(x, "a");
 getProperty(x, "m"); // Argument of type '"m"' is not assignable to parameter of type '"a" | "b" | "c" | "d"'.
 ```
 
+### 参数类型安全
+以这段代码为例
+```ts
+// 需求：根据配置数组，批量提取对象中的指定字段值
+function pluckValues(items: any[], field: string): any[] {
+  return items.map(item => item[field]);
+}
+
+// 使用示例
+const users = [
+  { id: 1, name: 'Alice', age: 30 },
+  { id: 2, name: 'Bob', age: 25 }
+];
+
+const names = pluckValues(users, 'name');      // 类型是any[]
+const invalid = pluckValues(users, 'nonExist'); // 不报错！
+```
+
+field 字段并不能保证传入的键名在 items 对象中存在，因此需要使用泛型来限制参数类型，使用泛型改造后，代码如下：
+
+```ts
+function pluckValues<T, K extends keyof T>(items: T[], field: K): T[K][] {
+  return items.map(item => item[field]);
+}
+```
+这样保证约束K必须是T的键之一。
+
 ### 避免重载
 
 使用泛型函数可以减少使用函数重载的场景，不需要为不同参数类型重载函数，示例如下

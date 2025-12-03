@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>鼠标拖拽方块示例</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            user-select: none;
+            /* 防止拖拽时选中文本 */
+        }
+
+        .outer {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        #container {
+            width: 800px;
+            height: 600px;
+            max-width: 90vw;
+            /* 确保容器不会超出视口宽度 */
+            max-height: 80vh;
+            /* 确保容器不会超出视口高度 */
+            min-width: 300px;
+            /* 设置最小宽度 */
+            min-height: 200px;
+            /* 设置最小高度 */
+            margin-top: 20px;
+            border: 2px dashed #ccc;
+            background-color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        #draggable-box {
+            width: 100px;
+            height: 100px;
+            background-color: #4CAF50;
+            position: absolute;
+            left: 50px;
+            top: 50px;
+            cursor: move;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: box-shadow 0.3s ease;
+        }
+
+        #draggable-box:hover {
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        #draggable-box.dragging {
+            opacity: 0.8;
+            box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="outer">
+        <h2>鼠标拖拽方块示例</h2>
+        <div id="container">
+            <div id="draggable-box">拖拽我</div>
+        </div>
+    </div>
+
+    <script>
+        // 获取元素引用
+        const draggableBox = document.getElementById("draggable-box");
+        const container = document.getElementById("container");
+
+        // 定义变量来存储拖拽状态
+        let isDragging = false; // 是否正在拖拽
+        let currentX; // 当前鼠标X坐标
+        let currentY; // 当前鼠标Y坐标
+        let initialX; // 初始鼠标X坐标
+        let initialY; // 初始鼠标Y坐标
+        let xOffset = 0; // X轴偏移量
+        let yOffset = 0; // Y轴偏移量
+
+        // 为方块添加事件监听器
+        draggableBox.addEventListener("mousedown", dragStart);
+        document.addEventListener("mousemove", drag);
+        document.addEventListener("mouseup", dragEnd);
+
+        function dragStart(e) {
+            // 获取当前方块的初始位置
+            initialX = e.clientX - xOffset;
+            initialY = e.clientY - yOffset;
+
+            console.log('start position', e.clientX, e.clientY)
+
+            // 检查点击的是否是方块本身
+            if (e.target === draggableBox) {
+                isDragging = true;
+                draggableBox.classList.add("dragging");
+            }
+        }
+
+        function drag(e) {
+            // 如果正在拖拽
+            if (isDragging) {
+                // 阻止默认行为，防止选中文本等
+                e.preventDefault();
+
+                // 计算当前鼠标位置
+                currentX = e.clientX - initialX;
+                currentY = e.clientY - initialY;
+
+                // 更新偏移量
+                xOffset = currentX;
+                yOffset = currentY;
+
+                // 设置方块的新位置
+                setTranslate(currentX, currentY, draggableBox);
+            }
+        }
+
+        function dragEnd(e) {
+            // 重置拖拽状态
+            initialX = currentX;
+            initialY = currentY;
+            isDragging = false;
+            draggableBox.classList.remove("dragging");
+        }
+
+        function setTranslate(xPos, yPos, el) {
+            // 使用 transform 来移动元素，性能更好
+            el.style.transform = `translate3d(${xPos}px, ${yPos}px, 0)`;
+        }
+
+        // 可选：限制在容器内移动
+        function constrainToContainer(x, y) {
+            const containerRect = container.getBoundingClientRect();
+            const boxRect = draggableBox.getBoundingClientRect();
+
+            let constrainedX = x;
+            let constrainedY = y;
+
+            // 左边界
+            if (x < 0) constrainedX = 0;
+            // 上边界
+            if (y < 0) constrainedY = 0;
+            // 右边界
+            if (x > containerRect.width - boxRect.width) {
+                constrainedX = containerRect.width - boxRect.width;
+            }
+            // 下边界
+            if (y > containerRect.height - boxRect.height) {
+                constrainedY = containerRect.height - boxRect.height;
+            }
+
+            return { x: constrainedX, y: constrainedY };
+        }
+    </script>
+</body>
+
+</html>

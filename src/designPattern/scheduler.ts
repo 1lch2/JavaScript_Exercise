@@ -76,11 +76,9 @@ export class Scheduler {
     task
       .task()
       .then((result) => {
-        // 任务成功，用其结果解决返回给调用者的 Promise
         task.resolve(result);
       })
       .catch((error) => {
-        // 任务失败，用错误拒绝该 Promise
         task.reject(error);
       })
       .finally(() => {
@@ -185,6 +183,8 @@ async function demonstrateWithErrors(): Promise<void> {
 }
 
 // 要运行演示，请取消以下行的注释并直接执行文件
-// demonstrateScheduler().then(() => {
-//   return demonstrateWithErrors();
-// }).catch(console.error);
+demonstrateScheduler()
+  .then(() => {
+    return demonstrateWithErrors();
+  })
+  .catch(console.error);

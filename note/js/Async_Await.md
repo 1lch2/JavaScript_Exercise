@@ -86,6 +86,30 @@ test();
 // end
 ```
 
+上述例子，如果Promise reject时候不await，则下方catch块无法捕获到，例如
+```js
+// 这个例子会打印 err 1
+async () => {
+  try {
+    await Promise.reject(1);
+  } catch (err) {
+    console.log('err',err)
+  }
+}
+
+// 这个例子直接抛出错误
+// Uncaught (in promise) 1
+try {
+  Promise.reject(1); // 注意这里没有await
+} catch (err) {
+  console.log('err',err)
+}
+```
+
+原因在于 try/catch 只能捕获同步执行时候抛出的错误，而 Promise.reject() 是异步执行的。错误例子中，不用await的部分，Promise.reject() 只是返回了一个 promise 对象，并没有抛出错误。而之后 try 块结束，开始处理微任务队列中抛出错误的任务，此时已经在 try/catch 的作用域之外，因此catch块无法捕获这个错误。
+
+使用await 之后，操作同步化了。
+
 ## await
 await 操作符用于等待一个Promise 对象。它只能在异步函数 `async function` 中使用。
 
@@ -107,14 +131,14 @@ await 操作符用于等待一个Promise 对象。它只能在异步函数 `asyn
 >     }
 >   };
 > }
-> 
+>
 > // --- 使用示例 ---
 > async function main() {
 >   console.log('程序开始');
 >   console.log(`当前时间: ${new Date().toLocaleTimeString()}`);
-> 
+>
 >   await sleep(3000); // 等待3秒
-> 
+>
 >   console.log('3秒后，程序继续');
 >   console.log(`当前时间: ${new Date().toLocaleTimeString()}`);
 > }

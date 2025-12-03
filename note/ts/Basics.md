@@ -111,6 +111,142 @@ let arrayList: any[] = [1, false, "fine"];
 arrayList[1] = 100;
 ```
 
+## unknown
+
+unknown 类型是 TypeScript 3.0 中引入的，被称为"类型安全的 any"。和 any 类似，所有类型都可以赋值给 unknown，但 unknown 类型只能赋值给 unknown 和 any 类型。
+
+### 与 any 的区别
+
+**any** 是"关闭类型检查"，可以访问任何属性或方法，TS 不会进行类型检查：
+
+```ts
+let value: any;
+value = 42;
+value.toUpperCase(); // 运行时错误，但 TS 不会报错
+value.toExponential(); // 运行时错误，但 TS 不会报错
+```
+
+**unknown** 是"保留类型检查"，在使用前必须进行类型检查或类型断言：
+
+```ts
+let value: unknown;
+value = 42;
+
+value.toUpperCase(); // ❌ 报错：Object is of type 'unknown'
+
+// 必须先进行类型断言或类型检查
+if (typeof value === "string") {
+  value.toUpperCase(); // ✅ 正确：此时 value 被收窄为 string 类型
+}
+
+(value as string).toUpperCase(); // ✅ 正确：使用类型断言
+```
+
+### 使用场景
+
+1. **不确定类型的变量**：当你需要接收任意类型，但又想保持类型安全时
+
+```ts
+let userInput: unknown;
+
+userInput = "hello";
+userInput = 123;
+userInput = [1, 2, 3];
+
+// 使用前必须检查类型
+if (typeof userInput === "string") {
+  console.log(userInput.length);
+}
+```
+
+2. **处理动态数据**：从用户输入、API 响应或第三方库返回的数据
+
+```ts
+function parseJSON(json: string): unknown {
+  return JSON.parse(json);
+}
+
+const data = parseJSON('{"name": "Alice", "age": 30}');
+
+// 必须判断类型后才能使用
+if (
+  typeof data === "object" &&
+  data !== null &&
+  "name" in data &&
+  typeof (data as { name: unknown }).name === "string"
+) {
+  console.log(data.name);
+}
+```
+
+### 不使用 any 而选择 unknown 的场景
+
+```ts
+// ❌ 使用 any 会失去类型检查，可能导致运行时错误
+async function fetchUserData(userId: string): Promise<any> {
+  const response = await fetch(`/api/users/${userId}`);
+  return response.json();
+}
+
+// 使用时没有类型检查，容易出错
+const user = await fetchUserData("123");
+console.log(user.name); // 如果 API 返回的数据没有 name 属性，会返回 undefined，但不会报错
+console.log(user.age.toFixed(2)); // 如果 age 是字符串，运行时会报错
+```
+
+**推荐：使用 unknown**
+
+```ts
+// ✅ 使用 unknown 强制类型检查
+async function fetchUserData(userId: string): Promise<unknown> {
+  const response = await fetch(`/api/users/${userId}`);
+  return response.json();
+}
+
+// 使用前必须进行类型检查和断言
+const data = await fetchUserData("123");
+
+// 必须先验证数据结构的正确性
+if (
+  typeof data === "object" &&
+  data !== null &&
+  "name" in data &&
+  "age" in data &&
+  typeof (data as { name: unknown }).name === "string" &&
+  typeof (data as { age: unknown }).age === "number"
+) {
+  const user = data as { name: string; age: number };
+  console.log(user.name); // ✅ 安全
+  console.log(user.age.toFixed(2)); // ✅ 安全
+} else {
+  throw new Error("Invalid user data format");
+}
+```
+
+### 类型缩窄
+
+unknown 类型的值在使用前必须进行类型检查或类型断言，这促使开发者编写更安全的代码：
+
+```ts
+function processValue(value: unknown) {
+  // 错误示例
+  value + 1; // ❌ 报错：Operator '+' cannot be applied to types 'unknown' and 'number'
+
+  // 正确示例
+  if (typeof value === "number") {
+    return value + 1; // ✅ 正确
+  }
+
+  if (Array.isArray(value)) {
+    return value.length; // ✅ 正确
+  }
+
+  throw new Error("Unsupported value type");
+}
+```
+
+
+
 ## never
 
 never 是其他类型的子类型，代表从不会出现的值，声明为 never 类型的变量只能被 never 类型所赋值。
