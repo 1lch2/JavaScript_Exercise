@@ -67,19 +67,18 @@ export class Scheduler {
 
     // 从队列头部取出一个任务来执行（先进先出）
     // '!' 是非空断言，因为我们已经在前面检查过 queue.length > 0
-    const task = this.queue.shift()!;
+    const { task, resolve, reject } = this.queue.shift()!;
 
     // 在任务开始前，立刻增加正在运行的任务计数
     this.runningCount++;
 
     // 执行任务的异步函数
-    task
-      .task()
+    task()
       .then((result) => {
-        task.resolve(result);
+        resolve(result);
       })
       .catch((error) => {
-        task.reject(error);
+        reject(error);
       })
       .finally(() => {
         // 设计关键：`finally` 保证无论成功或失败，都会执行收尾工作
