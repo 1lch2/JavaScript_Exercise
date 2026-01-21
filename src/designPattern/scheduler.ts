@@ -107,7 +107,7 @@ export class Scheduler {
  * @param id - 任务标识符
  * @param duration - 持续时间（毫秒）
  */
-async function simulateTask(id: number, duration: number): Promise<string> {
+async function createTask(id: number, duration: number): Promise<string> {
   console.log(`任务 ${id} 已开始`);
   await new Promise((resolve) => setTimeout(resolve, duration));
   console.log(`任务 ${id} 已完成`);
@@ -125,11 +125,11 @@ async function demonstrateScheduler(): Promise<void> {
 
   // 添加多个任务
   const promises = [
-    scheduler.add(() => simulateTask(1, 1000)),
-    scheduler.add(() => simulateTask(2, 1500)),
-    scheduler.add(() => simulateTask(3, 500)),
-    scheduler.add(() => simulateTask(4, 1000)),
-    scheduler.add(() => simulateTask(5, 800)),
+    scheduler.add(() => createTask(1, 1000)),
+    scheduler.add(() => createTask(2, 1500)),
+    scheduler.add(() => createTask(3, 500)),
+    scheduler.add(() => createTask(4, 1000)),
+    scheduler.add(() => createTask(5, 800)),
   ];
 
   // 等待所有任务完成

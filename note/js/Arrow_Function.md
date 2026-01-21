@@ -76,7 +76,7 @@ const toggle = (props: Prop) => console.log(props.onDismiss() + " toggled");
 
 toggle({
   name: "name",
-  onDismiss: () => onDismiss() + " prop"
+  onDismiss: () => onDismiss() + " prop",
 }); // dismiss prop toggled
 
 interface Prop {
@@ -93,5 +93,5 @@ const prop: Prop = {
     return this.onDismiss();
   },
 };
-toggle(prop) // dismiss aaa toggled
+toggle(prop); // dismiss aaa toggled
 ```

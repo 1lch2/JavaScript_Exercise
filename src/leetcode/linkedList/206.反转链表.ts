@@ -52,6 +52,25 @@ const reverseListRecur = function (head: ListNode | null): ListNode | null {
   return newHead;
 };
 
+/**
+ * 头插法
+ */
+function reverseListHeadInsert(head: ListNode | null): ListNode | null {
+  if (head === null || head.next === null) {
+    return head;
+  }
+
+  const dummyHead = new ListNode(-1, null);
+  let curr: ListNode | null = head;
+  while (curr !== null) {
+    let currNext: ListNode | null = curr.next;
+    curr.next = dummyHead.next;
+    dummyHead.next = curr;
+    curr = currNext;
+  }
+  return dummyHead.next;
+}
+
 (function () {
   // let root = new ListNode(0);
   // root.next = new ListNode(1);
@@ -60,8 +79,8 @@ const reverseListRecur = function (head: ListNode | null): ListNode | null {
   // root.next.next.next.next = new ListNode(4);
   // root.next.next.next.next.next = new ListNode(5);
 
-  const root = buildLinkedList([0, 1, 2, 3, 4, 5]);
+  const root = buildLinkedList([1, 2, 3, 4, 5]);
 
-  let res = reverseList(root);
+  let res = reverseListHeadInsert(root);
   console.log(printLinkedList(res));
 })();
