@@ -96,3 +96,5 @@ Thumbs.db
 
 # JetBrains Fleet
 /.fleet
+
+.claude/settings.json
