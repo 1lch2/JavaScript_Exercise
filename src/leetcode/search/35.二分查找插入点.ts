@@ -28,36 +28,27 @@
 // nums 为无重复元素的升序排列数组
 // -104 <= target <= 104
 
-/**
- * @param {number[]} nums
- * @param {number} target
- * @return {number}
- */
-var searchInsert = function(nums, target) {
+function searchInsert(nums: number[], target: number): number {
   let low = 0;
   let high = nums.length - 1;
-  let mid;
-
-  while(low <= high) {
-    mid = Math.floor((low + high) / 2);
-
-    if(nums[mid] < target) {
+  let mid = 0;
+  while (low <= high) {
+    mid = (low + high) >> 1;
+    if (nums[mid] < target) {
+      // 不能使用 mid ，否则 low high 在找不到元素时候不会错开位置结束循环
       low = mid + 1;
     } else if (nums[mid] > target) {
       high = mid - 1;
-    } else if(nums[mid] === target) {
+    } else if (nums[mid] === target) {
       return mid;
     }
   }
 
-  if(nums[mid] > target) {
-    return mid;
-  } else {
-    return mid + 1;
-  }
-};
+  // 插入位置应该在比 target 小的元素的位置
+  return nums[mid] > target ? mid : mid + 1;
+}
 
-(function(){
+(function () {
   let a = searchInsert([1, 3, 5, 6], 7);
   console.log(a);
 })();
