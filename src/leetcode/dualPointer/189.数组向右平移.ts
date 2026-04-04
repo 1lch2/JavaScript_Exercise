@@ -11,7 +11,7 @@
 // 示例 2:
 // 输入：nums = [-1,-100,3,99], k = 2
 // 输出：[3,99,-1,-100]
-// 解释: 
+// 解释:
 // 向右轮转 1 步: [99,-1,-100,3]
 // 向右轮转 2 步: [3,99,-1,-100]
 
@@ -24,33 +24,23 @@
 // 尽可能想出更多的解决方案，至少有 三种 不同的方法可以解决这个问题。
 // 你可以使用空间复杂度为 O(1) 的 原地 算法解决这个问题吗？
 
-/**
- * @param {number[]} nums
- * @param {number} k
- * @return {void} Do not return anything, modify nums in-place instead.
- */
-var rotate = function(nums, k) {
-  /**
-   * 部分反转[start, end)
-   * 
-   * @param {Number} start 
-   * @param {Number} end 
-   */
-  Array.prototype.partReverse = function(start, end) {
+// 仅在模块加载时执行一次原型扩展
+
+const rotate = function (nums: number[], k: number): void {
+  const partReverse = (nums: number[], start: number, end: number) => {
     let i = start;
     let j = end - 1;
-    while(i < j) {
-      [this[i], this[j]] = [this[j], this[i]];
+    while (i < j) {
+      [nums[i], nums[j]] = [nums[j], nums[i]];
       i++;
       j--;
     }
   };
-
   // k 可能比数组长度大
   k = k % nums.length;
 
   // 先整体反转，再将两部分分别反转
   nums.reverse();
-  nums.partReverse(0, k);
-  nums.partReverse(k, nums.length);
+  partReverse(nums, 0, k);
+  partReverse(nums, k, nums.length);
 };
