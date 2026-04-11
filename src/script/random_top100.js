@@ -66,20 +66,25 @@ async function getLocalRandom(testNum) {
  * @returns {Promise<number[]>} Return cached data if it is still valid. Otherwise, return `[]` instead.
  */
 async function getLocalCache() {
-  let cache = await readFile(CACHE_PATH, { encoding: "utf-8" });
-  let cacheObj = JSON.parse(cache);
+  try {
+    let cache = await readFile(CACHE_PATH, { encoding: "utf-8" });
+    let cacheObj = JSON.parse(cache);
 
-  let timestamp = cacheObj.timestamp;
-  let data = cacheObj.data;
-  let now = Date.now();
+    let timestamp = cacheObj.timestamp;
+    let data = cacheObj.data;
+    let now = Date.now();
 
-  // Compare timestamp
-  // Return an empty array if local cache is exipred
-  if(now - timestamp > UPDATE_INTERVAL) {
+    // Compare timestamp
+    // Return an empty array if local cache is expired
+    if (now - timestamp > UPDATE_INTERVAL) {
+      return [];
+    }
+
+    return data;
+  } catch (err) {
+    // File not exists, read error or invalid JSON
     return [];
   }
-
-  return data;
 }
 
 /**
@@ -87,15 +92,18 @@ async function getLocalCache() {
  * @returns {Promise<number[]>} Top 100 LeetCode question id in an array.
  */
 async function fetchDataFromCodeTop() {
+  console.log("Updating Codetop Top 100 questions......");
   let testList = [];
   // Get top 100 code challanges
   for (let pageNum = 1; pageNum <= 5; pageNum++) {
-    let URL = BASE_URL + `?page=${pageNum}&search=&ordering=-frequency`;
-
-    let response = await axios.get(URL, {
+    let response = await axios.get(BASE_URL, {
+      params: {
+        page: pageNum,
+        ordering: "-frequency",
+      },
       headers: {
-        Accept: "application/json"
-      }
+        Accept: "application/json",
+      },
     });
 
     let data = response.data;
@@ -113,13 +121,17 @@ async function fetchDataFromCodeTop() {
   // Write to local cache.
   let newCache = {
     timestamp: Date.now(),
-    data: testList
+    data: testList,
   };
   try {
-    await writeFile(CACHE_PATH, JSON.stringify(newCache), { encoding: "utf-8" });
+    await writeFile(CACHE_PATH, JSON.stringify(newCache), {
+      encoding: "utf-8",
+    });
   } catch (err) {
     console.log(err);
   }
+
+  console.log("Codetop Top 100 question update complete.");
   return testList;
 }
 

@@ -97,3 +97,6 @@ Thumbs.db
 # Claude
 .claude/
 !.claude/CLAUDE.md
+
+# Top100 Leetcode cache
+script/cache.json
