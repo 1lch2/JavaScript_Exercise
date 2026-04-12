@@ -46,63 +46,20 @@ var twoSum = function (nums, target) {
  * @param {number} target
  * @return {number[]}
  */
-const twoSumMap = function (nums, target) {
-  const map = new Map();
+function twoSumMap(nums, target) {
+  const map = {};
+  let result = [];
   for (let i = 0; i < nums.length; i++) {
-    if (map.has(target - nums[i])) {
-      return [map.get(target - nums[i]), i];
+    const targetIndex = map[target - nums[i]];
+    // index 可能为0，手动转换为boolean
+    if (targetIndex !== undefined) {
+      result = [i, targetIndex];
+      break;
     }
-    map.set(nums[i], i);
+    map[nums[i]] = i;
   }
-};
-
-/**
- * 错解：要求返回的是下标，因此不能对原数组进行排序
- *
- * @param {number[]} nums
- * @param {number} target
- * @return {number[][]}
- */
-var twoSum_dualPointer = function (nums, target) {
-  if (Math.min(...nums) > target) {
-    return [];
-  }
-
-  // 升序排序
-  nums.sort((a, b) => a - b);
-
-  let left = 0;
-  let right = nums.length - 1;
-  let res = [];
-  while (left < right) {
-    let leftVal = nums[left];
-    let rightVal = nums[right];
-    let sum = nums[left] + nums[right];
-
-    if (sum === target) {
-      res.push([leftVal, rightVal]);
-      // 跳过重复
-      while (left < right && nums[left] === leftVal) {
-        left++;
-      }
-      while (left < right && nums[right] === rightVal) {
-        right--;
-      }
-    } else if (sum < target) {
-      // 跳过重复
-      while (left < right && nums[left] === leftVal) {
-        left++;
-      }
-    } else {
-      // 跳过重复
-      while (left < right && nums[right] === rightVal) {
-        right--;
-      }
-    }
-  }
-
-  return res;
-};
+  return result;
+}
 
 (function () {
   console.log(twoSumMap([2, 7, 11, 15], 9));

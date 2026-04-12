@@ -1,24 +1,17 @@
-interface DualLinkedListNode {
-  key: string | number;
-  val: any;
-  prev: DualLinkedListNode | null;
-  next: DualLinkedListNode | null;
-}
-
 /**
- * 双链表节点
- *
- * @param {Number} key key of the node
- * @param {Number} val value of the node
- * @param {DualLinkedListNode} prev pointer to the previous node
- * @param {DualLinkedListNode} next pointer to the next node
+ * 双向链表
  */
-class DualLinkedListNode implements DualLinkedListNode {
+class DualListNode {
+  key: number;
+  val: number;
+  prev: DualListNode | null;
+  next: DualListNode | null;
+
   constructor(
-    key: string | number,
-    val: any,
-    prev?: DualLinkedListNode,
-    next?: DualLinkedListNode
+    key: number,
+    val: number,
+    prev?: DualListNode | null,
+    next?: DualListNode | null,
   ) {
     this.key = key;
     this.val = val;
@@ -27,99 +20,102 @@ class DualLinkedListNode implements DualLinkedListNode {
   }
 }
 
-export interface LRUCache {
+interface LRUCache {
   capacity: number;
-  map: Map<string | number, DualLinkedListNode>;
-  dummyHead: DualLinkedListNode;
-  dummyTail: DualLinkedListNode;
+  store: Map<number, DualListNode>;
+  head: DualListNode;
+  tail: DualListNode;
+}
+
+class LRUCache {
+  constructor(capacity: number) {
+    this.capacity = capacity;
+    this.store = new Map<number, DualListNode>();
+    this.head = new DualListNode(-1, 0);
+    this.tail = new DualListNode(114514, 0);
+    this.head.next = this.tail;
+    this.tail.prev = this.head;
+  }
+
+  get(key: number): number {
+    const node = this.store.get(key);
+    if (!node) {
+      return -1;
+    }
+    this.moveToTop(node);
+    return node.val;
+  }
+
+  put(key: number, value: number): void {
+    const node = this.store.get(key);
+    // 若已经存在则更新值
+    if (node) {
+      node.val = value;
+      this.moveToTop(node);
+      return;
+    }
+
+    // 往头节点后添加
+    const newNode = new DualListNode(key, value);
+    const prevTop = this.head.next!; // 头节点的下一个节点一定不为空
+    this.head.next = newNode;
+    newNode.next = prevTop;
+    newNode.prev = this.head;
+    prevTop.prev = newNode;
+
+    this.store.set(key, newNode);
+
+    // 如果超出上限就移除最后一个
+    if (this.store.size > this.capacity) {
+      const currEnd = this.tail.prev!; // 尾节点的前一个一定不为空
+      const prevEnd = currEnd.prev!;
+      prevEnd.next = this.tail;
+      this.tail.prev = prevEnd;
+      currEnd.prev = null;
+      currEnd.next = null;
+      this.store.delete(currEnd.key);
+    }
+  }
+
+  moveToTop(node: DualListNode): void {
+    // 因为头尾节点一定不为空，其他kv节点都在头尾之间，所以使用非空断言
+    const prevNode = node.prev!;
+    const nextNode = node.next!;
+
+    if (prevNode === this.head) {
+      // 已经在第一个位置，不用操作
+      return;
+    }
+    prevNode.next = nextNode;
+    nextNode.prev = prevNode;
+
+    const prevTop = this.head.next!;
+    if (this.store.size === 1) {
+      // 目前只有一个元素，不用操作
+      return;
+    }
+
+    this.head.next = node;
+    node.next = prevTop;
+    prevTop.prev = node;
+    node.prev = this.head;
+  }
 }
 
 /**
- * @param {number} capacity
+ * Your LRUCache object will be instantiated and called as such:
+ * var obj = new LRUCache(capacity)
+ * var param_1 = obj.get(key)
+ * obj.put(key,value)
  */
-export class LRUCache implements LRUCache {
-  _FALLBACK_VALUE = -1;
 
-  constructor(capacity: number) {
-    this.capacity = capacity <= 0 ? 1 : capacity; // capacity
-    this.map = new Map<string | number, DualLinkedListNode>(); // hashmap，key为节点的key，value为节点的引用
-    this.dummyHead = new DualLinkedListNode(-1, -1); // 虚拟头结点
-    this.dummyTail = new DualLinkedListNode(-1, -1); // 虚拟尾节点
-
-    // 虚拟节点头尾相连
-    this.dummyHead.next = this.dummyTail;
-    this.dummyTail.prev = this.dummyHead;
-  }
-
-  get(key: DualLinkedListNode["key"]): DualLinkedListNode["val"] {
-    if (this.map.has(key)) {
-      let node = this.map.get(key);
-      if (node) {
-        this.moveToHead(node);
-        return node.val;
-      }
-    } else {
-      return this._FALLBACK_VALUE;
-    }
-  }
-
-  put(key: DualLinkedListNode["key"], value: DualLinkedListNode["val"]) {
-    if (this.map.has(key)) {
-      // 修改节点
-      let node = this.map.get(key);
-      if (node) {
-        node.val = value;
-        this.moveToHead(node);
-      }
-    } else {
-      // 创建新节点
-      let node = new DualLinkedListNode(key, value);
-
-      // 仅当key不存在且容量已满时执行移除操作
-      if (this.map.size === this.capacity) {
-        let lastNode = this.dummyTail.prev as DualLinkedListNode;
-
-        // 移除最后一个节点
-        lastNode.prev!.next = this.dummyTail; // 双链表必定不为空
-        this.dummyTail.prev = lastNode.prev;
-        lastNode.prev = null;
-        lastNode.next = null;
-
-        // 移除map中对应键值对
-        this.map.delete(lastNode.key);
-      }
-      // 插入或更新值
-      this.map.set(key, node);
-      this.moveToHead(node);
-    }
-  }
-
-  /**
-   * move the node to the front
-   *
-   * 靠近头结点的节点使用频次最高
-   */
-  moveToHead(node: DualLinkedListNode) {
-    if (node == undefined) {
-      return;
-    }
-
-    // 已在最前则不操作
-    if (node.prev === this.dummyHead) {
-      return;
-    }
-
-    // 非已存在节点则只执行插入操作
-    if (node.prev != null && node.next != null) {
-      // 将当前节点移出双链表
-      node.prev.next = node.next;
-      node.next.prev = node.prev;
-    }
-
-    // 将节点插入伪头结点之后
-    node.next = this.dummyHead.next;
-    node.prev = this.dummyHead;
-    this.dummyHead.next!.prev = node;
-    this.dummyHead.next = node;
-  }
-}
+const cache = new LRUCache(2);
+cache.put(1, 1);
+cache.put(2, 2);
+console.log(cache.get(1));
+cache.put(3, 3);
+console.log(cache.get(2));
+cache.put(4, 4);
+console.log(cache.get(1));
+console.log(cache.get(3));
+console.log(cache.get(4));
