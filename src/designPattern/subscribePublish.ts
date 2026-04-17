@@ -1,66 +1,66 @@
-type EventCallback = Function & { callback?: Function };
+type EventCallback = (...args: any[]) => any;
 
 class EventEmitter {
   // 每个事件名对应一组回调函数
-  private events: Map<string, EventCallback[]>;
+  private eventBus: Map<string, EventCallback[]>;
 
   constructor() {
-    this.events = new Map();
+    this.eventBus = new Map();
   }
 
   /**
    * 添加事件订阅以及对应的回调
-   * @param name 事件名
-   * @param fn 回调函数
+   * @param eventName 事件名
+   * @param callback 回调函数
    */
-  add(name: string, fn: EventCallback) {
-    const callbacks = this.events.get(name);
+  subscribe(eventName: string, callback: EventCallback) {
+    const callbacks = this.eventBus.get(eventName);
     if (callbacks) {
-      callbacks.push(fn);
+      callbacks.push(callback);
     } else {
-      this.events.set(name, [fn]);
+      this.eventBus.set(eventName, [callback]);
     }
+    return {
+      /**
+       * 移除对应的回调
+       */
+      unsubscribe: () => {
+        const callbacks = this.eventBus.get(eventName);
+        const index = callbacks?.findIndex((f) => f === callback);
+        if (index !== undefined && index !== -1) {
+          callbacks?.splice(index, 1);
+        }
+      },
+    };
   }
 
   /**
    * 添加一次性订阅，触发一次后自动移除
-   * @param name 事件名
-   * @param fn 回调函数
+   * @param eventName 事件名
+   * @param callback 回调函数
    */
-  once(name: string, fn: Function) {
-    // 包装一层：触发后先移除再执行原回调
-    const wrapper = (...args: unknown[]) => {
-      this.off(name, wrapper);
-      fn(...args);
-    };
-    // 保留对原回调的引用，以便 off 时仍可用原 fn 移除
-    wrapper.callback = fn;
-    this.add(name, wrapper);
-  }
-
-  /**
-   * 移除指定事件的某个回调
-   * @param name 事件名
-   * @param fn 要移除的回调函数
-   */
-  off(name: string, fn: Function) {
-    const tasks = this.events.get(name);
-    if (tasks) {
-      const index = tasks.findIndex((f) => f === fn || f.callback === fn);
-      if (index >= 0) {
-        tasks.splice(index, 1);
+  once(eventName: string, callback: EventCallback) {
+    const onceWrapper = (...args: any[]) => {
+      callback(...args);
+      const callbacks = this.eventBus.get(eventName);
+      if (callbacks) {
+        const index = callbacks.findIndex((f) => f === onceWrapper);
+        if (index !== -1) {
+          callbacks.splice(index, 1);
+        }
       }
-    }
+    };
+    return this.subscribe(eventName, onceWrapper);
   }
 
   /**
    * 触发指定事件
-   * @param name 事件名
+   * @param eventName 事件名
    * @param args 传递给回调的参数
    */
-  emit(name: string, ...args: unknown[]) {
-    const tasks = this.events.get(name);
-    if (tasks) {
+  emit(eventName: string, ...args: unknown[]) {
+    const tasks = this.eventBus.get(eventName);
+    if (tasks && tasks.length > 0) {
       // 创建副本，避免回调中继续注册相同事件导致死循环
       const tasksCopy = tasks.slice();
       for (const fn of tasksCopy) {
@@ -79,8 +79,31 @@ let fn2 = function (name: string) {
   console.log(`Hello, ${name}`);
 };
 
-eventBus.add("e1", fn1);
-eventBus.add("e2", fn2);
+eventBus.subscribe("e1", fn1);
+const { unsubscribe } = eventBus.subscribe("e2", fn2);
 
 eventBus.emit("e1", "A", "20");
 eventBus.emit("e2", "B", "10");
+
+unsubscribe();
+
+eventBus.emit("e2", "C", "30");
+
+// 测试 once：一次性订阅
+let onceFn = function (msg: string) {
+  console.log(`Once: ${msg}`);
+};
+eventBus.once("e3", onceFn);
+eventBus.emit("e3", "First");
+eventBus.emit("e3", "Second");
+
+// 测试同一事件多个订阅者
+let multiFn1 = function (data: number) {
+  console.log(`Multi 1: ${data}`);
+};
+let multiFn2 = function (data: number) {
+  console.log(`Multi 2: ${data}`);
+};
+eventBus.subscribe("e4", multiFn1);
+eventBus.subscribe("e4", multiFn2);
+eventBus.emit("e4", 42);
