@@ -76,4 +76,48 @@ module.exports = {
 ### 缩小构建目标
 少构建模块 比如babel-loader不解析node_modules
 
-### 使用Tree Shaking 擦除无用的JavaScript和CSS
+### 使用Tree Shaking 擦除无用的 JavaScript 和 CSS
+
+**JavaScript Tree Shaking**
+
+前提条件：使用 ES6 模块语法（`import/export`），因为只有静态声明的模块依赖才能在编译时被分析。
+
+```js
+// production 模式下自动开启 Tree Shaking
+module.exports = {
+  mode: 'production',
+};
+
+// 手动标记无副作用模块，帮助 webpack 更激进地摇树
+module.exports = {
+  optimization: {
+    sideEffects: true, // 读取 package.json 的 sideEffects 字段
+  },
+};
+```
+
+在模块的 `package.json` 中声明：
+```json
+{
+  "sideEffects": false
+}
+```
+
+**CSS Tree Shaking**
+
+使用 `PurgeCSS` 插件移除未使用的 CSS 选择器：
+
+```js
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const PurgecssPlugin = require('purgecss-webpack-plugin');
+
+module.exports = {
+  plugins: [
+    new PurgecssPlugin({
+      paths: glob.sync(`${PATHS.src}/**/*`, { nodir: true }),
+    }),
+  ],
+};
+```
+
+> PurgeCSS 必须配合 MiniCssExtractPlugin 使用，它只能分析提取后的 CSS 文件
