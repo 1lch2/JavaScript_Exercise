@@ -16,7 +16,7 @@
 // 链表中节点的数目范围是 [0, 5000]
 // -5000 <= Node.val <= 5000
 
-import { buildLinkedList, ListNode, printLinkedList } from "./buildLinkedList";
+import { ListNode } from "../../algorithms/linkedList.js";
 
 const reverseList = function (head: ListNode | null) {
   // 尾指针，指向当前节点被重新定向的目标
@@ -79,8 +79,8 @@ function reverseListHeadInsert(head: ListNode | null): ListNode | null {
   // root.next.next.next.next = new ListNode(4);
   // root.next.next.next.next.next = new ListNode(5);
 
-  const root = buildLinkedList([1, 2, 3, 4, 5]);
+  const root = ListNode.deserialize([1, 2, 3, 4, 5]);
 
   let res = reverseListHeadInsert(root);
-  console.log(printLinkedList(res));
+  console.log(ListNode.print(res));
 })();
