@@ -199,3 +199,7 @@ searchInput.addEventListener(
 - 使用小写和连字符：`debounce-function.js`
 - 避免特殊字符和空格
 - 保持命名语义化
+
+### 命令行调用
+
+你在Windows上运行，使用 Windows Powershell 而不是 Linux Bash。
