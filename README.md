@@ -6,6 +6,10 @@ Just a personal repository for ~~frontend-related~~ fullstack learning. Bro it's
 
 See directory `/note`. Notes are categorized by language and framework. Note that some notes are not completed, which will be finished in future, or never.
 
+## Run Java
+
+Install [Extension Pack for Java](https://marketplace.visualstudio.com/items?itemName=vscjava.vscode-java-pack) to run and debug Java code.
+
 ## Practice
 
 ### LeetCode
